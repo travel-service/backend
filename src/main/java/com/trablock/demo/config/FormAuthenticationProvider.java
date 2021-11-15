@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  * 로그인 시도, DB의 Password 와 일치, 불일치 판별
  * 아이디 중복은 검사 안함(회원가입 시 중복 차단)
  */
+
 @RequiredArgsConstructor
 @Component
 public class FormAuthenticationProvider implements AuthenticationProvider {
@@ -40,4 +41,5 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
+
 }

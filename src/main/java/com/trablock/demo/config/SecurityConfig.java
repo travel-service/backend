@@ -27,7 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login_proc")
-                .permitAll();
+                .permitAll()
+            .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true);
     }
 
     @Override
