@@ -1,12 +1,13 @@
 package com.trablock.demo.dto;
 
-import com.trablock.demo.domain.*;
+import com.trablock.demo.domain.member.Member;
+import com.trablock.demo.domain.member.MemberRole;
+import com.trablock.demo.domain.member.PersonInfo;
+import com.trablock.demo.domain.member.Profile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 /** Setter 없앨 예정 */
 @Getter @Setter

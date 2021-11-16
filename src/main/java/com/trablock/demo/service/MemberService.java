@@ -1,6 +1,6 @@
 package com.trablock.demo.service;
 
-import com.trablock.demo.domain.Member;
+import com.trablock.demo.domain.member.Member;
 import com.trablock.demo.dto.MemberSaveRequestDto;
 import com.trablock.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

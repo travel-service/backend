@@ -1,7 +1,7 @@
 package com.trablock.demo.service;
 
-import com.trablock.demo.domain.Member;
-import com.trablock.demo.domain.MemberContext;
+import com.trablock.demo.domain.member.Member;
+import com.trablock.demo.domain.member.MemberContext;
 import com.trablock.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

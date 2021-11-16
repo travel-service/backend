@@ -1,4 +1,4 @@
-package com.trablock.demo.domain;
+package com.trablock.demo.domain.member;
 
 import lombok.Getter;
 
