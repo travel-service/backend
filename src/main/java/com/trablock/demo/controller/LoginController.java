@@ -1,7 +1,7 @@
 package com.trablock.demo.controller;
 
-import com.trablock.demo.dto.MemberSaveRequestDto;
-import com.trablock.demo.service.MemberService;
+import com.trablock.demo.dto.member.MemberSaveRequestDto;
+import com.trablock.demo.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;

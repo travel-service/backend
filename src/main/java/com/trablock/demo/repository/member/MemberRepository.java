@@ -1,4 +1,4 @@
-package com.trablock.demo.repository;
+package com.trablock.demo.repository.member;
 
 import com.trablock.demo.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

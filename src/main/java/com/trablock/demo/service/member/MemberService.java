@@ -1,8 +1,8 @@
-package com.trablock.demo.service;
+package com.trablock.demo.service.member;
 
 import com.trablock.demo.domain.member.Member;
-import com.trablock.demo.dto.MemberSaveRequestDto;
-import com.trablock.demo.repository.MemberRepository;
+import com.trablock.demo.dto.member.MemberSaveRequestDto;
+import com.trablock.demo.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

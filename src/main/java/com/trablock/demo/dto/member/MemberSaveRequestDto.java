@@ -1,4 +1,4 @@
-package com.trablock.demo.dto;
+package com.trablock.demo.dto.member;
 
 import com.trablock.demo.domain.member.Member;
 import com.trablock.demo.domain.member.MemberRole;

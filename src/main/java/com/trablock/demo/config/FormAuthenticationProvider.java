@@ -1,7 +1,7 @@
 package com.trablock.demo.config;
 
 import com.trablock.demo.domain.member.MemberContext;
-import com.trablock.demo.service.CustomUserDetailService;
+import com.trablock.demo.service.member.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
