@@ -13,7 +13,7 @@ public class MemberContext extends User {
     private final Member member;
 
     public MemberContext(Member member) {
-        super(member.getUsername(), member.getPassword(), getAuthorities(member.getRole()));
+        super(member.getUserId(), member.getPassword(), getAuthorities(member.getRole()));
         this.member = member;
     }
 

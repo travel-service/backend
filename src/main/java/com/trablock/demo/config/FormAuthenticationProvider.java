@@ -24,10 +24,10 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+        String userId = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        MemberContext memberContext = (MemberContext) customUserDetailService.loadUserByUsername(username);
+        MemberContext memberContext = (MemberContext) customUserDetailService.loadUserByUsername(userId);
         String passwordFromDb = memberContext.getMember().getPassword();
 
         if(!encoder.matches(password, passwordFromDb)) {

@@ -19,8 +19,14 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    private String username;
+    @Column(length = 20, nullable = false)
+    private String userId;
+
+    @Column(nullable = false) // 길이제한 없는 이유는 난수화 떄문에 프론트가 처리해야합니다.
     private String password;
+
+    @Column(nullable = false)
+    private String username;
 
     @Embedded
     private Profile profile;
