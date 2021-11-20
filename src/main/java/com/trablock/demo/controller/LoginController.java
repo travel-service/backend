@@ -32,7 +32,7 @@ public class LoginController {
 
     @PostMapping("/signup")
     public String signup(MemberSaveRequestDto requestDto) {
-        memberService.save(requestDto);
+        memberService.join(requestDto);
         return "redirect:/";
     }
 

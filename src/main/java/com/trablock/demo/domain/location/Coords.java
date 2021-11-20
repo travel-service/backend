@@ -8,10 +8,7 @@ import javax.persistence.Embeddable;
 @Getter
 public class Coords {
 
-    private Long id;
-    private Location location;
-
+    //private Location location; 데이터 겹쳐서 주석
     private Float latitude;
     private Float longitude;
-
 }

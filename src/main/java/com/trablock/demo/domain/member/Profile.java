@@ -9,13 +9,13 @@ import javax.persistence.Embeddable;
 public class Profile {
 
     private String nickname;
-    private byte[] memberimg;
+    private byte[] memberImg;
 
     protected Profile() {} //JPA 스펙상 생성, 만질 필요 X
 
-    public Profile(String nickname, byte[] memberimg) {
+    public Profile(String nickname, byte[] memberImg) {
         this.nickname = nickname;
-        this.memberimg = memberimg;
+        this.memberImg = memberImg;
     }
 
 }

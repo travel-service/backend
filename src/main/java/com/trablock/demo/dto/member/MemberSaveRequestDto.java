@@ -1,13 +1,13 @@
 package com.trablock.demo.dto.member;
 
-import com.trablock.demo.domain.member.Member;
-import com.trablock.demo.domain.member.MemberRole;
-import com.trablock.demo.domain.member.PersonInfo;
-import com.trablock.demo.domain.member.Profile;
+import com.trablock.demo.domain.member.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static com.trablock.demo.domain.member.Gender.MALE;
+import static com.trablock.demo.domain.member.Gender.UNKNOWN;
 
 /** Setter 없앨 예정 */
 @Getter @Setter
@@ -17,16 +17,7 @@ public class MemberSaveRequestDto {
     private String password;
     private MemberRole role;
     private Profile profile;
-    private PersonInfo personInfo;
-
-    @Builder
-    public MemberSaveRequestDto(String username, String password, MemberRole role, Profile profile, PersonInfo personInfo) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.profile = profile;
-        this.personInfo = personInfo;
-    }
+    private PersonInfo personInfo = new PersonInfo(null, UNKNOWN, null, null, Boolean.TRUE); /** 회원가입 시 default 값, 성별 모름, 개인정보 동의는 TRUE */
 
     public Member toEntity() {
         return Member.builder()
@@ -35,9 +26,5 @@ public class MemberSaveRequestDto {
                 .role(MemberRole.USER)
                 .profile(profile)
                 .personInfo(personInfo).build();
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
