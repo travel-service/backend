@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="layout/header::userHead">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--    <link rel="icon" href="../../favicon.ico">-->
+
+    <title>GBSB</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/jumbotron-narrow.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="layout/top::header"></div>
+
+<div class="container">
+    <div class="navbar-header">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active"><a href="/member">Member</a></li>
+                <li role="presentation"><a href="/community">커뮤니티</a></li>
+                <li role="presentation"><a href="/myroom">마이룸</a></li>
+            </ul>
+        </nav>
+        <h3 class="text-muted"><a href="/">제발</a></h3>
+    </div>
+
+    <div class="jumbotron">
+        <h1>제발 작동해줘</h1>
+        <p>
+            <a class="btn btn-lg btn-info" href="/signup" role="button">회원가입</a>
+            <a class="btn btn-lg btn-info" href="/login" role="button">로그인</a>
+            <a class="btn btn-lg btn-primary" href="/oauth2/authorization/google" role="button">Google 로그인</a>
+            <a class="btn btn-lg btn-success" href="/oauth2/authorization/naver" role="button">네이버 로그인</a>
+            <a class="btn btn-lg btn-warning" href="/oauth2/authorization/kakao" role="button">카카오 로그인</a>
+            <a class="btn btn-lg btn-primary" href="/oauth2/authorization/facebook" role="button">Facebook 로그인</a>
+        </p>
+    </div>
+
+    <div class="row marketing">
+    </div>
+
+    <footer class="footer">
+        <p>© GBSB</p>
+    </footer>
+
+</div> <!-- /container -->
+
+<!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+<script src="js/bootstrap.min.js"></script>
+
+
+</body></html>
