@@ -1,12 +1,8 @@
 package com.trablock.demo.dto.location;
 
-import com.trablock.demo.domain.location.Coords;
-import com.trablock.demo.domain.location.Information;
-import com.trablock.demo.domain.location.Location;
-import com.trablock.demo.domain.location.LocationType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import com.trablock.demo.domain.location.*;
+import com.trablock.demo.domain.member.Member;
+import lombok.*;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
@@ -14,20 +10,24 @@ import java.util.stream.Collectors;
 
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LocationDto {
 
-    private Long id;
-    private String name;
-    private Coords coords;
-    private byte[] locationImg;
-    private Information information;
-    private LocationType locationType;
-
     /**
-     * Location response Dto
+     * Location response DTO
+     * Entity -> DTO
      */
     public static class Response {
+        private Long id;
+        private String name;
+        private Coords coords;
+        private String address1;
+        private String address2;
+        private byte[] locationImg;
+        private Information information;
+        private LocationType locationType;
 
         private static ModelMapper modelMapper = new ModelMapper();
 
@@ -36,21 +36,48 @@ public class LocationDto {
             return dto;
         }
 
+        public static List<Response> of(List<Location> locationList) {
+            return locationList.stream()
+                    .map(Response::of)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Location request DTO
+     * DTO -> Entity
+     */
+    public static class Request {
+
+        private Long id;
+        private String name;
+        private Member member;
+
+        private String address1; // 주소를 직접 입력하진 않을 것이다.
+        private String address2; // 주소, 좌표 변환은 프론트? 백엔드? 어디서?
+        private Coords coords;
+
+        private byte[] locationImg;
+        private Information information;
+        private LocationType locationType;
+
         /**
-         * 이 부분 학습 필요. AskList..?
+         * MemberLocation 생성
+         * @return
          */
-//        public static List<Response> of(List<Location> locationList) {
-//            return LocationAskList.stream()
-//                    .map(Response::of)
-//                    .collect(Collectors.toList());
-//        }
+        public MemberLocation toEntity() {
+            return MemberLocation.builder()
+                    .name(name)
+                    .member(member)
+                    .address1(address1)
+                    .address2(address2)
+                    .coords(coords)
+                    .locationImg(locationImg)
+                    .information(information)
+                    .locationType(locationType)
+                    .build();
+        }
+        
 
     }
-
-    @Builder
-    public static class Create {
-
-    }
-
-
 }

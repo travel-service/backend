@@ -1,6 +1,7 @@
 package com.trablock.demo.domain.location;
 
 import com.trablock.demo.domain.member.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Table(name = "member_location")
 @NoArgsConstructor
-@Getter
+@Getter @Builder
 public class MemberLocation extends Location {
 
     @Id
