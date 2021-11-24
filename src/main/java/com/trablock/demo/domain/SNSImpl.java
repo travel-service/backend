@@ -1,13 +1,17 @@
 package com.trablock.demo.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
-@Getter @Embeddable
-public class SNSImpl implements SNS{
+@Getter
+@Setter
+@Embeddable
+public class SNSImpl implements SNS {
 
     private String Instagram;
     private String Facebook;
