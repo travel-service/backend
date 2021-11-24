@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class LocationRepositoryImpl implements LocationRepository {
+public class LocationRepositoryImpl {
 
     private final EntityManager em;
 

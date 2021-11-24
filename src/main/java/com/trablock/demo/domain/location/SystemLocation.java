@@ -2,20 +2,19 @@ package com.trablock.demo.domain.location;
 
 
 import com.trablock.demo.domain.SNS;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
-public class SystemLocation extends Location {
+public abstract class SystemLocation extends Location {
 
     @Id
+    @Column(name = "SYSTEM_LOCATION_ID")
     private Long id;
+
     private String name;
 
     private String address1;

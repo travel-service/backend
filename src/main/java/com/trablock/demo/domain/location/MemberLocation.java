@@ -23,16 +23,19 @@ public class MemberLocation extends Location {
     @Column(name = "id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
+    @Column(nullable = false)
     private Member member;
 
     private String address1;
     private String address2;
 
     @Embedded
+    @Column(nullable = false)
     private Coords coords;
 
     private byte[] locationImg;
