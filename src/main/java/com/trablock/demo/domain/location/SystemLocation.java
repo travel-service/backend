@@ -32,4 +32,6 @@ public abstract class SystemLocation extends Location {
     @Embedded
     private LocationEnglishInfo englishInfo;
 
+    @Embedded
+    private SystemLocationCategory category;
 }
