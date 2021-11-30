@@ -1,17 +1,14 @@
 package com.trablock.demo.domain.member;
 
-import com.trablock.demo.domain.location.MemberLocation;
+import com.trablock.demo.domain.location.MemberLocations;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "id")
 @Entity
 public class Member {
 
@@ -31,6 +28,9 @@ public class Member {
     @Embedded
     private Profile profile;
 
+    @Embedded
+    private MemberLocations memberLocations;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id") /** 1:1 관계, PersonInfo PK == Member Pk라 판단, 그래서 이렇게 매핑, 의견 있으면 말해줘요 */
     private PersonInfo personInfo;
@@ -38,6 +38,4 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole role; // default : USER
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberLocation> memberLocations = new ArrayList<>();
 }

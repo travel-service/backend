@@ -7,9 +7,4 @@ import java.util.Optional;
 
 public interface LocationService {
 
-    public List<Location> findLocations();
-
-    public Location findOne(Long locationId);
-
-    public Location findByAddress();
 }

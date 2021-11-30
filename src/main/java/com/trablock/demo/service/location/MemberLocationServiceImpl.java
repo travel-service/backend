@@ -22,22 +22,5 @@ public class MemberLocationServiceImpl implements LocationService {
      * @param location
      * @return
      */
-    @Transactional
-    public Long enroll(MemberLocation location) {
-
-        locationRepository.save(location);
-        return location.getId();
-    }
-
-    @Override
-    public List<Location> findLocations() {
-        return locationRepository.findAll();
-    }
-
-    @Override
-    public Location findOne(Long locationId) {
-        return locationRepository.findOne(locationId);
-    }
-
 
 }

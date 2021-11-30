@@ -1,7 +1,8 @@
 package com.trablock.demo.service.location;
 
 import com.trablock.demo.domain.location.Location;
-import com.trablock.demo.repository.location.LocationRepositoryImpl;
+import com.trablock.demo.domain.location.SystemLocation;
+import com.trablock.demo.repository.location.SystemLocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +14,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SystemLocationServiceImpl implements LocationService {
 
-    private final LocationRepositoryImpl locationRepository;
+    private final SystemLocationRepository locationRepository;
 
-    @Override
-    public List<Location> findLocations() {
-        return null;
+    public List<SystemLocation> findAll() {
+
+        return locationRepository.findAll();
     }
 
-    @Override
-    public Location findOne(Long locationId) {
-        return null;
+//    public SystemLocation findOne(Long locationId) {
+//
+//        return locationRepository.findOne(locationId);
+//    }
+
+
+    public List<SystemLocation> findByAreaCode(int areaCode) {
+        return locationRepository.findByAreaCode(areaCode);
     }
+
 }

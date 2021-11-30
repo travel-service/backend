@@ -5,12 +5,16 @@ spring:
     password:
     driver-class-name: org.h2.Driver
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         # show_sql: true
         format_sql: true
+  h2:
+    console:
+      enabled: true
   security:
     user:
       name: user

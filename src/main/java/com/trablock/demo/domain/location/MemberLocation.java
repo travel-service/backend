@@ -1,47 +1,27 @@
 package com.trablock.demo.domain.location;
 
 import com.trablock.demo.domain.member.Member;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-import static javax.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 
 @Entity
+@DiscriminatorValue("MemberLocation")
+@NoArgsConstructor(access = PROTECTED)
+@Getter
+@SuperBuilder
 @Table(name = "member_location")
-@NoArgsConstructor
-@Getter @Builder
 public class MemberLocation extends Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    @Column(nullable = false)
+    @ManyToOne
     private Member member;
 
-    private String address1;
-    private String address2;
-
-    @Embedded
-    @Column(nullable = false)
-    private Coords coords;
-
-    private byte[] locationImg;
-
-    @Embedded
-    private Information information;
-
-    private LocationType locationType;
 }

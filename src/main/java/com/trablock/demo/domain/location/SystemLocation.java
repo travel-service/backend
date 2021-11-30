@@ -3,28 +3,21 @@ package com.trablock.demo.domain.location;
 
 import com.trablock.demo.domain.SNS;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
+@SuperBuilder
 public abstract class SystemLocation extends Location {
 
     @Id
-    @Column(name = "SYSTEM_LOCATION_ID")
     private Long id;
-
-    private String name;
-
-    private String address1;
-    private String address2;
-
-    @Embedded
-    private Coords coords;
-
-    @Embedded
-    private Information information;
 
     @Embedded
     private SNS sns;
@@ -34,4 +27,6 @@ public abstract class SystemLocation extends Location {
 
     @Embedded
     private SystemLocationCategory category;
+
+
 }

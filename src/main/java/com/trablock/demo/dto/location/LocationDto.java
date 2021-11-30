@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class LocationDto {
 
     /**
@@ -72,7 +71,6 @@ public class LocationDto {
                     .address1(address1)
                     .address2(address2)
                     .coords(coords)
-                    .locationImg(locationImg)
                     .information(information)
                     .locationType(locationType)
                     .build();

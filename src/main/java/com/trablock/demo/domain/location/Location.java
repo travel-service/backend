@@ -1,31 +1,28 @@
 package com.trablock.demo.domain.location;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "dtype")
-@Getter
-@Setter
+@NoArgsConstructor
+@MappedSuperclass
+@SuperBuilder
 public abstract class Location {
 
-    @Id @GeneratedValue
-    @Column(name = "location_id")
-    private Long id;
-
+    @Column(nullable = false)
     private String name;
+
     private String address1;
     private String address2;
 
     @Embedded
+    @Column(nullable = false)
     private Coords coords;
-
-    private byte[] locationImg ;
 
     @Embedded
     private Information information;
+
     private LocationType locationType;
 
 }

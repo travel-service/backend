@@ -10,7 +10,9 @@ public class Information {
 
     private Location location;
     private String summary;
-    private String information;
+    private String report;
+    private Byte[] image1;
+    private Byte[] image2;
     private String tel;
 
     protected Information() {
