@@ -10,4 +10,8 @@ public interface CultureLocationRepository extends JpaRepository<CultureLocation
 
     @Query
     List<CultureLocation> findByAreaCode(int areaCode);
+
+    @Query
+    List<CultureLocation> findByParkingTrue();
+
 }

@@ -11,4 +11,7 @@ public interface RestaurantLocationRepository extends JpaRepository<RestaurantLo
     @Query
     List<RestaurantLocation> findByAreaCode(int areaCode);
 
+    @Query
+    List<RestaurantLocation> findByParkingTrue();
+
 }

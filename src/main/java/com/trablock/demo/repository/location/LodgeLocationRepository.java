@@ -10,4 +10,7 @@ public interface LodgeLocationRepository extends JpaRepository<LodgeLocation, Lo
 
     @Query
     List<LodgeLocation> findByAreaCode(int areaCode);
+
+    @Query
+    List<LodgeLocation> findByParkingTrue();
 }

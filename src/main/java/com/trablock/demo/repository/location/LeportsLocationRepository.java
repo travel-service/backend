@@ -10,4 +10,7 @@ public interface LeportsLocationRepository extends JpaRepository<LeportsLocation
 
     @Query
     List<LeportsLocation> findByAreaCode(int areaCode);
+
+    @Query
+    List<LeportsLocation> findByParkingTrue();
 }

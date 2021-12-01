@@ -10,5 +10,8 @@ public interface AttractionLocationRepository extends JpaRepository<AttractionLo
 
     @Query
     List<AttractionLocation> findByAreaCode(int areaCode);
-        
+
+    @Query
+    List<AttractionLocation> findByParkingTrue();
+
 }
