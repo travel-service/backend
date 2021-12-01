@@ -16,8 +16,8 @@ import static lombok.AccessLevel.PROTECTED;
 @SuperBuilder
 public abstract class SystemLocation extends Location {
 
-    @Id
-    private Long id;
+//    @Id
+//    private Long id;
 
     @Embedded
     private SNS sns;

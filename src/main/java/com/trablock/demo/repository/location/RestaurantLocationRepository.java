@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface RestaurantLocationRepository extends JpaRepository<RestaurantLocation, Long> {
 
-    @Query
-    List<RestaurantLocation> findByAreaCode(int areaCode);
-
-    @Query
-    List<RestaurantLocation> findByParkingTrue();
+//    @Query
+//    List<RestaurantLocation> findByAreaCode(int areaCode);
+//
+//    @Query
+//    List<RestaurantLocation> findByParkingTrue();
 
 }

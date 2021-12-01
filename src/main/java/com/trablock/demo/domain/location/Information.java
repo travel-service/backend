@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class Information {
 
-    private Location location;
+    //private Location location;
     private String summary;
     private String report;
     private Byte[] image1;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FestivalLocationRepository extends JpaRepository<FestivalLocation, Long> {
 
-    @Query
-    List<FestivalLocation> findByAreaCode(int areaCode);
+//    @Query
+//    List<FestivalLocation> findByAreaCode(int areaCode);
 
 }

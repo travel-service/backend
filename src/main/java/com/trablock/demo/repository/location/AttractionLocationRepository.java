@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface AttractionLocationRepository extends JpaRepository<AttractionLocation, Long> {
 
-    @Query
-    List<AttractionLocation> findByAreaCode(int areaCode);
-
-    @Query
-    List<AttractionLocation> findByParkingTrue();
+//    @Query
+//    List<AttractionLocation> findByAreaCode(int areaCode);
+//
+//    @Query
+//    List<AttractionLocation> findByParkingTrue();
 
 }

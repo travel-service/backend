@@ -10,7 +10,7 @@ public interface SystemLocationRepository extends JpaRepository<SystemLocation, 
 
     List<SystemLocation> findAll();
 
-    @Query
-    List<SystemLocation> findByAreaCode(int areaCode);
+//    @Query
+//    List<SystemLocation> findByAreaCode(int areaCode);
 
 }

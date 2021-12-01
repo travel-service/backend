@@ -11,6 +11,9 @@ import javax.persistence.*;
 @SuperBuilder @Getter
 public abstract class Location {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @Column(nullable = false)
     private String name;
 
@@ -24,6 +27,7 @@ public abstract class Location {
     @Embedded
     private Information information;
 
+    @Enumerated(EnumType.STRING)
     private LocationType locationType;
 
 }

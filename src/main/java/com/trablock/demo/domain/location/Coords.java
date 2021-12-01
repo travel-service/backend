@@ -10,7 +10,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class Coords {
 
-    private Location location;
+    //private Location location;
     private Float latitude;
     private Float longitude;
 

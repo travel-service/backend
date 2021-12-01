@@ -19,5 +19,4 @@ public class MemberLocations {
     @OneToMany(targetEntity = MemberLocation.class, mappedBy = "member",
             cascade = PERSIST, fetch = EAGER)
     private static final List<MemberLocation> memberLocations = new ArrayList<>();
-
 }

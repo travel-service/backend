@@ -14,7 +14,7 @@ public interface MemberLocationRepository extends JpaRepository<MemberLocation, 
     @Transactional
     MemberLocation save(MemberLocation memberLocation);
 
-    @Query("select m from MemberLocation m where m.member =: id ")
+    @Query("select m from member_location m where m.member =: id ")
     List<MemberLocation> findByMember(@Param("id") Long memberId);
 
 

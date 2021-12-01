@@ -27,8 +27,8 @@ public class SystemLocationServiceImpl implements LocationService {
 //    }
 
 
-    public List<SystemLocation> findByAreaCode(int areaCode) {
-        return locationRepository.findByAreaCode(areaCode);
-    }
+//    public List<SystemLocation> findByAreaCode(int areaCode) {
+//        return locationRepository.findByAreaCode(areaCode);
+//    }
 
 }

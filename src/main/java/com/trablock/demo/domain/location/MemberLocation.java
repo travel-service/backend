@@ -10,20 +10,17 @@ import static javax.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 
-@Entity
+@Entity(name = "member_location")
 @NoArgsConstructor(access = PROTECTED)
 @Access(AccessType.FIELD)
-@Table(name = "member_location")
 @SuperBuilder @Getter
 public class MemberLocation extends Location {
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name="member_location_id")
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = IDENTITY)
+//    @Column(name="member_location_id")
+//    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
     private Member member;
-
 }

@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface CultureLocationRepository extends JpaRepository<CultureLocation, Long> {
 
-    @Query
-    List<CultureLocation> findByAreaCode(int areaCode);
-
-    @Query
-    List<CultureLocation> findByParkingTrue();
+//    @Query
+//    List<CultureLocation> findByAreaCode(int areaCode);
+//
+//    @Query
+//    List<CultureLocation> findByParkingTrue();
 
 }

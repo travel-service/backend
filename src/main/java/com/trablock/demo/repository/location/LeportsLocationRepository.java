@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface LeportsLocationRepository extends JpaRepository<LeportsLocation, Long> {
 
-    @Query
-    List<LeportsLocation> findByAreaCode(int areaCode);
-
-    @Query
-    List<LeportsLocation> findByParkingTrue();
+//    @Query
+//    List<LeportsLocation> findByAreaCode(int areaCode);
+//
+//    @Query
+//    List<LeportsLocation> findByParkingTrue();
 }
