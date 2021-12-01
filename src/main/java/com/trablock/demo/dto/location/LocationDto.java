@@ -67,7 +67,6 @@ public class LocationDto {
         public MemberLocation toEntity() {
             return MemberLocation.builder()
                     .name(name)
-                    .member(member)
                     .address1(address1)
                     .address2(address2)
                     .coords(coords)

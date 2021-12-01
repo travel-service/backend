@@ -1,5 +1,6 @@
 package com.trablock.demo.domain.location;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @MappedSuperclass
-@SuperBuilder
+@SuperBuilder @Getter
 public abstract class Location {
 
     @Column(nullable = false)

@@ -6,22 +6,24 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 
 @Entity
-@DiscriminatorValue("MemberLocation")
 @NoArgsConstructor(access = PROTECTED)
-@Getter
-@SuperBuilder
+@Access(AccessType.FIELD)
 @Table(name = "member_location")
+@SuperBuilder @Getter
 public class MemberLocation extends Location {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name="member_location_id")
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
 }

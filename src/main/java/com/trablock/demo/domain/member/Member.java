@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.*;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Entity
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -29,7 +31,7 @@ public class Member {
     private Profile profile;
 
     @Embedded
-    private MemberLocations memberLocations;
+    private MemberLocations memberLocations = new MemberLocations();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id") /** 1:1 관계, PersonInfo PK == Member Pk라 판단, 그래서 이렇게 매핑, 의견 있으면 말해줘요 */
@@ -37,5 +39,6 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role; // default : USER
+
 
 }
