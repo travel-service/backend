@@ -27,11 +27,11 @@ public class Member {
     @Id @GeneratedValue
     private Long id; //회원 번호
 
-    private String userId; //아이디
+    private String userName; //아이디
 
     private String password;
 
-    private String username; //회원 이름
+    private String realName; //회원 이름
 
     @Embedded
     private MemberProfile memberProfile;

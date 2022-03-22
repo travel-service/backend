@@ -27,10 +27,10 @@ public class LoginController {
     @PostMapping("/signup")
     public Long signup(@RequestBody Map<String, String> member) {
         return memberRepository.save(Member.builder()
-                .userId(member.get("userId"))
+                .userName(member.get("userName"))
                 .password(passwordEncoder.encode(member.get("password")))
-                .username(member.get("username"))
-                .memberProfile(new MemberProfile(member.get("nickname"), null))
+                .realName(member.get("realName"))
+                .memberProfile(new MemberProfile(member.get("nickName"), null))
                 .memberInfo(new MemberInfo(member.get("birthday"), Gender.valueOf(member.get("gender")), member.get("phoneNum"), member.get("email")))
                 .roles(Collections.singletonList("ROLE_USER")) // 일반 유저
                 .build()).getId();
@@ -38,12 +38,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> loginForm) {
-        Member member = memberRepository.findByUserId(loginForm.get("userId"))
+        Member member = memberRepository.findByUserName(loginForm.get("userName"))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
 
         if (!passwordEncoder.matches(loginForm.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호");
         }
-        return jwtTokenProvider.createToken(member.getUserId(), member.getRoles());
+        return jwtTokenProvider.createToken(member.getUserName(), member.getRoles());
     }
 }
