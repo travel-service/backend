@@ -15,6 +15,7 @@ public class Location {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "LOCATION_ID")
     private Long id;
 
     @Column(nullable = false)

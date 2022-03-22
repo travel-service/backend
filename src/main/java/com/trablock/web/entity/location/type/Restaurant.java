@@ -21,7 +21,7 @@ public class Restaurant extends TypeLocation {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "LOCATION_ID")
+    @Column(name = "LOCATION_ID")
     private Long locationId;
 
     @Column
@@ -38,6 +38,5 @@ public class Restaurant extends TypeLocation {
     private boolean smoking;
     @Column
     private String menu;
-
 
 }
