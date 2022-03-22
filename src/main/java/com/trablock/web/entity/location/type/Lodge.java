@@ -1,16 +1,24 @@
-package com.trablock.web.entity.location;
+package com.trablock.web.entity.location.type;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.*;
+
 @Entity
 @Getter
-public class Lodge {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
+public class Lodge extends TypeLocation {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @JoinColumn(name = "LOCATION_ID")

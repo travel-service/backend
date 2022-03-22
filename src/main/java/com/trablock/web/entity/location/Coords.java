@@ -1,13 +1,23 @@
 package com.trablock.web.entity.location;
 
+import lombok.*;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@Embeddable
-public class Coords {
-    @Column
-    private Float latitude;
+import static lombok.AccessLevel.*;
 
-    @Column
-    private Float longitude;
+@Embeddable
+@Builder
+@Getter
+@NoArgsConstructor(access = PROTECTED)
+public class Coords {
+
+    private String latitude;
+    private String longitude;
+
+    public Coords(String latitude, String longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

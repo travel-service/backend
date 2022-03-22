@@ -1,17 +1,24 @@
-package com.trablock.web.entity.location;
+package com.trablock.web.entity.location.type;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-public class Restaurant {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
+public class Restaurant extends TypeLocation {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @JoinColumn(name = "LOCATION_ID")
@@ -31,4 +38,6 @@ public class Restaurant {
     private boolean smoking;
     @Column
     private String menu;
+
+
 }
