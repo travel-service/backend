@@ -4,7 +4,6 @@ import com.trablock.web.entity.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Plan {
     private Member member;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<SelectedLocation> selectedLocations = new ArrayList<>();
+    private List<Day> selectedLocations = new ArrayList<>();
 
     private String concept;
     private String name;
@@ -35,4 +34,9 @@ public class Plan {
 
     @Enumerated(EnumType.STRING)
     private PlanStatus status;
+
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "directory")
+    private Directory directory;
+*/
 }
