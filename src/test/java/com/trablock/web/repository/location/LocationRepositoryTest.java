@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -28,7 +29,7 @@ class LocationRepositoryTest {
     EntityManager em;
 
     @Test
-    void 생성() {
+    void create() {
 
         //given
         Location loc = Location.builder()
@@ -53,7 +54,7 @@ class LocationRepositoryTest {
     }
 
     @Test
-    void test() throws Exception {
+    void createWith_typeLocation() throws Exception {
         //given
         Location loc = Location.builder()
                 .name("test")
@@ -83,8 +84,90 @@ class LocationRepositoryTest {
         assertThat(findLoc.get()).isEqualTo(savedLoc);
         assertThat(findLoc.get().getType()).isEqualTo(savedLoc.getType());
         assertThat(findLoc.get().getType()).isEqualTo(savedLoc.getType());
+    }
+
+    @Test
+    void read() {
+        //given
+        Location loc = Location.builder()
+                .name("test")
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .build();
+
+
+        //when
+        Location savedL = locationRepository.save(loc);
+        Optional<Location> findL = locationRepository.findById(savedL.getId());
+
+        //then
+        assertThat(findL.get().getId()).isEqualTo(savedL.getId());
+        assertThat(findL.get().getAddress1()).isEqualTo(savedL.getAddress1());
+        assertThat(findL.get().getAddress2()).isEqualTo(savedL.getAddress2());
+        assertThat(findL.get().getCoords()).isEqualTo(savedL.getCoords());
+    }
+
+    @Test
+    void update() throws Exception {
+
+        //given
+        Location loc = Location.builder()
+                .name("test")
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .build();
+
+        Location savedL = locationRepository.save(loc);
+
+        assertThat(savedL.getName()).isEqualTo("test");
+
+        //when
+        loc.changeName("랑데자뷰");
+        Location findL = locationRepository.findById(savedL.getId()).get();
+
+        //then
+        assertThat(findL.getName()).isEqualTo("랑데자뷰");
 
     }
 
+    @Test
+    void delete() throws Exception {
+        //given
+        Location loc1 = Location.builder()
+                .name("test1")
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .build();
+
+        Location loc2 = Location.builder()
+                .name("test2")
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .build();
+
+        Location save1 = locationRepository.save(loc1);
+        Location save2 = locationRepository.save(loc2);
+
+        Optional<Location> find1 = locationRepository.findByName("test1");
+
+        //when
+        find1.ifPresent(findLoc -> {
+            locationRepository.deleteById(find1.get().getId());
+        });
+
+        List<Location> all = locationRepository.findAll();
+
+        //then
+        assertThat(all.size()).isEqualTo(1);
+
+    }
 
 }

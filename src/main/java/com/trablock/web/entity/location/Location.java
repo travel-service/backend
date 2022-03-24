@@ -50,4 +50,8 @@ public class Location {
     public void setType(LocationType type) {
         this.type = type;
     }
+
+    public String changeName(String name) {
+        return this.name = name;
+    }
 }

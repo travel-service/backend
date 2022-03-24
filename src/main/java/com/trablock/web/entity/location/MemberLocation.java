@@ -25,11 +25,11 @@ public class MemberLocation {
     @JoinColumn(name = "LOCATION_ID")
     private Long locationId;
 
-    private boolean isPrivate;
+    private boolean isPublic;
 
-    public MemberLocation(Long memberId, Long locationId, boolean isPrivate) {
+    public MemberLocation(Long memberId, Long locationId, boolean isPublic) {
         this.memberId = memberId;
         this.locationId = locationId;
-        this.isPrivate = isPrivate;
+        this.isPublic = isPublic;
     }
 }
