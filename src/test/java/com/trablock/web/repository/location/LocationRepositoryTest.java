@@ -25,6 +25,7 @@ class LocationRepositoryTest {
     @Autowired
     LocationRepository locationRepository;
 
+
     @PersistenceContext
     EntityManager em;
 
@@ -108,6 +109,51 @@ class LocationRepositoryTest {
         assertThat(findL.get().getAddress2()).isEqualTo(savedL.getAddress2());
         assertThat(findL.get().getCoords()).isEqualTo(savedL.getCoords());
     }
+
+    @Test
+    void readByType() throws Exception {
+        //given
+        Location loc1 = Location.builder()
+                .name("test")
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .type(LocationType.RESTAURANT)
+                .build();
+        Location loc2 = Location.builder()
+                .name("test2")
+                .address1("경기도 수원시 권선구")
+                .address2("권선로 694번길 25")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .type(LocationType.LODGE)
+                .build();
+        Location loc3 = Location.builder()
+                .name("할리스")
+                .address1("경기도 수원시 권선구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .type(LocationType.RESTAURANT)
+                .build();
+
+        Location save1 = locationRepository.save(loc1);
+        Location save2 = locationRepository.save(loc2);
+        Location save3 = locationRepository.save(loc3);
+
+        //when
+        List<Location> locationByType = locationRepository.findLocationByType(LocationType.RESTAURANT);
+
+        //then
+        assertThat(locationByType.size()).isEqualTo(2);
+
+        for (Location location : locationByType) {
+            System.out.println("location = " + location.getName());
+        }
+
+    }
+
 
     @Test
     void update() throws Exception {

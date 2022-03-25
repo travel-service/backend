@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
@@ -17,6 +18,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findByNameContaining(@Param("name") String name);
 
     @Query("select l from Location l where l.type = :type")
-    Optional<Location> findLocationByType(@Param("type") LocationType type);
+    List<Location> findLocationByType(@Param("type") LocationType type);
 
 }
