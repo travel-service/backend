@@ -23,8 +23,12 @@ public class Plan {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<Day> selectedLocations = new ArrayList<>();
+    @OneToMany(mappedBy = "plan")
+    private List<Day> days = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_directory_id")
+    private MainDirectory mainDirectory;
 
     private String concept;
     private String name;
@@ -34,9 +38,4 @@ public class Plan {
 
     @Enumerated(EnumType.STRING)
     private PlanStatus status;
-
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "directory")
-    private Directory directory;
-*/
 }

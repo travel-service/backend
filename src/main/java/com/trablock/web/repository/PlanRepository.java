@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,4 +15,6 @@ public class PlanRepository {
     public void save(Plan plan) {
         em.persist(em);
     }
+
+
 }

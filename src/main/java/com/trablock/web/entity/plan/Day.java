@@ -8,17 +8,16 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Table(name = "selected_location")
 @NoArgsConstructor
+@Table(name = "days")
 public class Day {
 
     @Id @GeneratedValue
-    @Column(name = "selected_location_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
-    private Plan planId;
+    private Plan plan;
 
     private int days;
     private int sequence;
@@ -29,9 +28,6 @@ public class Day {
 
     @Embedded
     private MovingData movingData;
-
-    @Embedded
-    private TimeData timeData;
 
     @Enumerated(EnumType.STRING)
     private SelectStatus status;

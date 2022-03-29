@@ -8,11 +8,11 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Directory {
+public class MainDirectory {
 
     @Id @GeneratedValue
-    private Long canvasId;
+    private Long id;
 
-    /*@OneToMany(mappedBy = "plan")
-    private List<Plan> plans = new ArrayList<>();*/
+    @OneToMany(mappedBy = "mainDirectory")
+    private List<Plan> plans = new ArrayList<>();
 }
