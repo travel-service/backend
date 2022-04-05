@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,14 +27,18 @@ public class LoginController {
 
     @PostMapping("/signup")
     public Long signup(@RequestBody Map<String, String> member) {
-        return memberRepository.save(Member.builder()
-                .userName(member.get("userName"))
-                .password(passwordEncoder.encode(member.get("password")))
-                .realName(member.get("realName"))
-                .memberProfile(new MemberProfile(member.get("nickName"), null))
-                .memberInfo(new MemberInfo(member.get("birthday"), Gender.valueOf(member.get("gender")), member.get("phoneNum"), member.get("email")))
-                .roles(Collections.singletonList("ROLE_USER")) // 일반 유저
-                .build()).getId();
+        Optional<Member> valid = memberRepository.findByUserName(member.get("userName"));
+
+        if (valid.isEmpty()) {
+            return memberRepository.save(Member.builder()
+                    .userName(member.get("userName"))
+                    .password(passwordEncoder.encode(member.get("password")))
+                    .realName(member.get("realName"))
+                    .memberProfile(new MemberProfile(member.get("nickName"), null))
+                    .memberInfo(new MemberInfo(member.get("birthday"), Gender.valueOf(member.get("gender")), member.get("phoneNum"), member.get("email")))
+                    .roles(Collections.singletonList("ROLE_USER")) // 일반 유저
+                    .build()).getId();
+        } else throw new IllegalArgumentException("중복 되는 아이디 존재");
     }
 
     @PostMapping("/login")
