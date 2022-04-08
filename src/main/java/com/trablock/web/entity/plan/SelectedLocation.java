@@ -1,36 +1,34 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.BaseEntity;
 import com.trablock.web.entity.location.Location;
+import com.trablock.web.entity.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Day extends BaseEntity {
+public class SelectedLocation {
 
     @Id @GeneratedValue
-    @Column(name = "day_id")
+    @Column(name = "selected_location_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
     private Plan plan;
 
-    private int sequence;
-    private int days;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location locations;
-
-    @Embedded
-    private MovingData movingData;
-
+    @Enumerated(EnumType.STRING)
+    private SelectStatus selectStatus;
 }
