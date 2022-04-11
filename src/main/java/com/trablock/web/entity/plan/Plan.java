@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Plan extends BaseEntity {
+public class Plan {
 
     @Id
     @GeneratedValue
@@ -30,14 +30,10 @@ public class Plan extends BaseEntity {
     @OneToMany(mappedBy = "plan")
     private List<SelectedLocation> selectedLocations = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "main_directory_id")
-    private MainDirectory mainDirectory;
-
     private String concept;
     private String name;
     private String destination;
-    private int periods;
+    private String periods;
     private String depart;
     private String thumbnail;
 

@@ -17,8 +17,5 @@ public class MainDirectory {
     @Column(name = "main_directory_id")
     private Long id;
 
-    @OneToMany(mappedBy = "mainDirectory")
-    private List<Plan> plans = new ArrayList<>();
-
     private String name;
 }

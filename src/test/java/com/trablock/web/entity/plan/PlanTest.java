@@ -42,7 +42,6 @@ class PlanTest {
 
         Plan plan1 = Plan.builder()
                 .member(member1)
-                .mainDirectory(mainDirectory)
                 .concept("test")
                 .name("test")
                 .destination("test")
@@ -54,7 +53,6 @@ class PlanTest {
 
         Plan plan2 = Plan.builder()
                 .member(member1)
-                .mainDirectory(mainDirectory)
                 .concept("test")
                 .name("test")
                 .destination("test")
@@ -66,7 +64,6 @@ class PlanTest {
 
         Plan plan3 = Plan.builder()
                 .member(member1)
-                .mainDirectory(mainDirectory)
                 .concept("test")
                 .name("test")
                 .destination("test")

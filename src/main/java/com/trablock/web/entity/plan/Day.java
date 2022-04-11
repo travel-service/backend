@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Day extends BaseEntity {
+public class Day{
 
     @Id @GeneratedValue
     @Column(name = "day_id")
