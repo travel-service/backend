@@ -1,12 +1,13 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.dto.LocationDto;
+import com.trablock.web.entity.location.LocationType;
 
 import java.util.List;
 
 public interface LocationService {
 
-    void create(LocationDto locationDto);
+    Long create(LocationDto locationDto);
 
     LocationDto findLocation(Long locationId);
 
@@ -16,4 +17,5 @@ public interface LocationService {
 
     List<LocationDto> findAllPublicLocationByMember(Long memberId);
 
+    List<LocationDto> findAllLocationByType(LocationType type);
 }

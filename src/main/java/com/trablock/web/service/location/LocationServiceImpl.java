@@ -1,6 +1,7 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.dto.LocationDto;
+import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.TypeRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,9 @@ public class LocationServiceImpl implements LocationService {
     private final TypeRepository typeRepository;
 
     @Override
-    public void create(LocationDto locationDto) {
+    public Long create(LocationDto locationDto) {
 
+        return 0L;
     }
 
     @Override
@@ -40,6 +42,11 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDto> findAllPublicLocationByMember(Long memberId) {
+        return null;
+    }
+
+    @Override
+    public List<LocationDto> findAllLocationByType(LocationType type) {
         return null;
     }
 }
