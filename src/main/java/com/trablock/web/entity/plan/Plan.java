@@ -33,7 +33,7 @@ public class Plan {
     private String concept;
     private String name;
     private String destination;
-    private String periods;
+    private int periods;
     private String depart;
     private String thumbnail;
 
