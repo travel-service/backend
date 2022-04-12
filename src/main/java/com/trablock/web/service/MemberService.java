@@ -21,9 +21,9 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public Long MemberSignUp(MemberSaveDto memberSaveDto) {
-        Optional<Member> valid = memberRepository.findByUserName(memberSaveDto.getUserName());
+        boolean CanSignUp = MemberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
 
-        if (valid.isEmpty()) {
+        if (CanSignUp) {
             return memberRepository.save(Member.builder()
                             .userName(memberSaveDto.getUserName())
                             .password(passwordEncoder.encode(memberSaveDto.getPassword()))
@@ -45,6 +45,17 @@ public class MemberService {
         }
         else {
             return jwtTokenProvider.createToken(member.getUserName(), member.getRoles());
+        }
+    }
+
+    public boolean MemberValidation(String userName) {
+        Optional<Member> member = memberRepository.findByUserName(userName);
+
+        if (member.isEmpty()) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }
