@@ -6,12 +6,14 @@ import com.trablock.web.entity.member.*;
 import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -20,16 +22,19 @@ import java.util.Optional;
 @RestController
 public class LoginController {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
-    
+
+    @GetMapping("/user/test")
+    public String getInfo() {
+        return "TOKEN OK";
+    }
     @PostMapping("/signup")
     public Long signup(@RequestBody MemberSaveDto signupForm) {
         return memberService.MemberSignUp(signupForm);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginForm loginForm) {
-        return memberService.MemberLogin(loginForm);
+    public String login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
+        return memberService.MemberLogin(loginForm, response);
     }
 }

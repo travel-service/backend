@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -36,16 +38,24 @@ public class MemberService {
         } else throw new IllegalArgumentException("중복 되는 아이디 존재");
     }
 
-    public String MemberLogin(LoginForm loginForm) {
+    public String MemberLogin(LoginForm loginForm, HttpServletResponse response) {
         Member member = memberRepository.findByUserName(loginForm.getUserName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
         if (!passwordEncoder.matches(loginForm.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        else {
-            return jwtTokenProvider.createToken(member.getUserName(), member.getRoles());
-        }
+
+        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        response.setHeader("X-AUTH-TOKEN", token);
+
+        Cookie cookie = new Cookie("X-AUTH-TOKEN", token);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return member.getMemberProfile().getNickName();
     }
 
     public boolean MemberValidation(String userName) {

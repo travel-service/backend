@@ -1,5 +1,6 @@
 package com.trablock.web.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MemberSaveDto {
+
     private String userName;
     private String password;
     private String realName;
@@ -15,4 +17,5 @@ public class MemberSaveDto {
     private String gender;
     private String phoneNum;
     private String email;
+
 }

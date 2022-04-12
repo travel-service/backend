@@ -22,7 +22,7 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private String secretKey = "trablock";
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     //토큰 유효시간
     private long tokenValidTime = 60 * 60 * 1000L;
@@ -59,7 +59,7 @@ public class JwtTokenProvider {
 
     //Request Header 에서 토큰 값 추출
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTHp-TOKEN");
+        return request.getHeader("X-AUTH-TOKEN");
     }
 
     // 토큰 validation
