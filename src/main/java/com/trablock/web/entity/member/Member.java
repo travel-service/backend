@@ -53,6 +53,12 @@ public class Member implements UserDetails{
     @OneToMany(mappedBy = "member")
     private List<Plan> plan = new ArrayList<>();
 
+
+    /**
+     * 하위 로직은 TOKEN 기반 로그인을 위해 필요
+     * Entity에 존재해야 하는지도 의문이고 없애고 싶고 없앨 수 있을거 같음
+     * 근데 로직을 겉할기만 해서 아직은 못합니다.
+    * */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()

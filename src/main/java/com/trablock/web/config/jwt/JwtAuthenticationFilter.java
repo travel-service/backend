@@ -1,34 +1,57 @@
 package com.trablock.web.config.jwt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // 헤더에서 토큰 추출
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
-        // 유효성 검사
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("토큰 OK");
+        //유효한 토큰인가?
+        if (accessToken != null) {
+            // AccessToken 이 유효하면?
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                this.setAuthentication(accessToken);
+            }
+            // AccessToken 은 만료, RefreshToken 은 존재
+            else if(!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {
+                //RefreshToken 유효?
+                boolean validRefreshToken = jwtTokenProvider.validateToken(refreshToken);
+                //RefreshToken DB에 존재?
+                boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
+
+                if (validRefreshToken && isRefreshToken) {
+                    String userName = jwtTokenProvider.getUserName(refreshToken);
+                    List<String> roles = jwtTokenProvider.getRoles(userName);
+                    String newAccessToken = jwtTokenProvider.createAccessToken(userName, roles);
+                    jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+                    this.setAuthentication(newAccessToken);
+                }
+            }
         }
-        //다음 필터 있으면 진행, 없으면 stop
         chain.doFilter(request, response);
+    }
+
+    public void setAuthentication(String token) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

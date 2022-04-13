@@ -24,16 +24,17 @@ public class LoginController {
 
     private final MemberService memberService;
 
-    @GetMapping("/user/test")
+    @GetMapping("/api/user/test")
     public String getInfo() {
         return "TOKEN OK";
     }
-    @PostMapping("/signup")
+
+    @PostMapping("/api/signup")
     public Long signup(@RequestBody MemberSaveDto signupForm) {
         return memberService.MemberSignUp(signupForm);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public String login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
         return memberService.MemberLogin(loginForm, response);
     }

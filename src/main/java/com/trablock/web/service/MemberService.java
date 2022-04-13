@@ -3,8 +3,10 @@ package com.trablock.web.service;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.dto.MemberSaveDto;
+import com.trablock.web.entity.auth.RefreshToken;
 import com.trablock.web.entity.member.*;
 import com.trablock.web.repository.MemberRepository;
+import com.trablock.web.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenRepository tokenRepository;
 
     public Long MemberSignUp(MemberSaveDto memberSaveDto) {
         boolean CanSignUp = MemberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
@@ -46,14 +49,12 @@ public class MemberService {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
 
-        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
-        response.setHeader("X-AUTH-TOKEN", token);
+        String accessToken = jwtTokenProvider.createAccessToken(member.getUsername(), member.getRoles());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getUsername(), member.getRoles());
+        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
+        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
-        Cookie cookie = new Cookie("X-AUTH-TOKEN", token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
+        tokenRepository.save(new RefreshToken(refreshToken));
 
         return member.getMemberProfile().getNickName();
     }
