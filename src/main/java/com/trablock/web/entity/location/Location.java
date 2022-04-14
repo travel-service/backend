@@ -48,13 +48,13 @@ public class Location {
     }
 
     @Getter
-    public static class simpleLocDto {
+    public static class SimpleLocDto {
         private String name;
         private Coords coords;
         private LocationType type;
 
         @Builder
-        public simpleLocDto(String name, Coords coords, LocationType type) {
+        public SimpleLocDto(String name, Coords coords, LocationType type) {
             this.name = name;
             this.coords = coords;
             this.type = type;

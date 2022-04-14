@@ -34,15 +34,31 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public List<SimpleLocDto> toSimpleDto() {
+        List<Location> all = locationRepository.findAll();
+        for (Location location : all) {
+            SimpleLocDto simpleLocDto = SimpleLocDto.builder()
+                    .name(location.getName())
+                    .coords(location.getCoords())
+                    .type(location.getType())
+                    .build();
+            ((List<SimpleLocDto>) new ArrayList<SimpleLocDto>()).add(simpleLocDto);
+        }
+        return new ArrayList<SimpleLocDto>();
+    }
+
+    @Override
     public LocationDto toDto(Long locationId) {
-        Location location = locationRepository.findById(locationId).get();
-        return locationMapper.toDto(location);
+        Optional<Location> location = locationRepository.findById(locationId);
+
+        return location.map(locationMapper::toDto).orElse(null);
     }
 
     @Override
     public LocationDto toDto(String locationName) {
-        Location location = locationRepository.findByName(locationName).get();
-        return locationMapper.toDto(location);
+        Optional<Location> location = locationRepository.findByName(locationName);
+
+        return location.map(locationMapper::toDto).orElse(null);
     }
 
     @Override

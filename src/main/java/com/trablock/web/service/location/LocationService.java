@@ -12,6 +12,8 @@ public interface LocationService {
 
     Long create(LocationSaveRequestDto locationDto);
 
+    List<SimpleLocDto> toSimpleDto();
+
     LocationDto toDto(Long locationId);
 
     LocationDto toDto(String locationName);
