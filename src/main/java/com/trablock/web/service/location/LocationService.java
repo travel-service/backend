@@ -1,21 +1,26 @@
 package com.trablock.web.service.location;
 
-import com.trablock.web.dto.LocationDto;
+import com.trablock.web.dto.location.LocationDto;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.LocationType;
 
 import java.util.List;
 
+import static com.trablock.web.entity.location.Location.*;
+
 public interface LocationService {
 
-    Long create(LocationDto locationDto);
+    Long create(LocationSaveRequestDto locationDto);
 
-    LocationDto findLocation(Long locationId);
+    LocationDto toDto(Long locationId);
 
-    LocationDto findLocationByName(String locationName);
+    LocationDto toDto(String locationName);
 
-    List<LocationDto> findAllLocationByMember(Long memberId);
+    Location toEntity(LocationDto locationDto);
 
-    List<LocationDto> findAllPublicLocationByMember(Long memberId);
+    List<LocationDto> getMemberLocations(Long memberId);
 
-    List<LocationDto> findAllLocationByType(LocationType type);
+    List<LocationDto> getPublicMemberLocation(Long memberId);
+
+    List<LocationDto> getLocationWithType(LocationType type);
 }

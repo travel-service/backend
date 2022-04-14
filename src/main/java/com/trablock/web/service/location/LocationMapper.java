@@ -1,6 +1,6 @@
 package com.trablock.web.service.location;
 
-import com.trablock.web.dto.LocationDto;
+import com.trablock.web.dto.location.LocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.service.GenericMapper;
 import org.mapstruct.Mapper;

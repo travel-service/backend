@@ -1,6 +1,6 @@
 package com.trablock.web.service.location;
 
-import com.trablock.web.dto.LocationDto;
+import com.trablock.web.dto.location.LocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.type.*;
@@ -21,8 +21,9 @@ public class TypeServiceImpl implements TypeService {
 
     private final LocationRepository locationRepository;
 
-
-
+    public LocationDto getWithType() {
+        return null;
+    }
 
     @Override
     public Attraction getAttraction(Long locationId) {
@@ -56,15 +57,12 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public LocationType checkType(LocationDto locationDto) {
-        Optional<Location> findLocation = locationRepository.findById(locationId);
+        Optional<Location> findLocation = locationRepository.findById(locationDto.getId());
 
         if (findLocation.isPresent()) {
             Location loc = findLocation.get();
         }
 
-        LocationDto.simpleLocDto.builder()
-                .name()
-                .build();
-        return LocationDto.simpleLocDto.getType();
+        return locationDto.getType();
     }
 }
