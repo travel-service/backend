@@ -26,7 +26,6 @@ public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
-    private final TypeLocationRepository typeLocationRepository;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
 
     @Override
@@ -37,8 +36,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<SimpleLocDto> toSimpleDto() {
-        List<Location> all = locationRepository.findAll();
-        for (Location location : all) {
+        for (Location location : locationRepository.findAll()) {
             SimpleLocDto simpleLocDto = SimpleLocDto.builder()
                     .name(location.getName())
                     .coords(location.getCoords())
@@ -70,33 +68,28 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDto> getMemberLocations(Long memberId) {
-        List<MemberLocation> locByMemberId = memberLocationRepository.findAllByMemberId(memberId);
 
-        List<LocationDto> locationDtoList = new ArrayList<LocationDto>();
-        for (MemberLocation memberLocation : locByMemberId) {
+        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberId(memberId)) {
             Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> locationDtoList.add(locationMapper.toDto(location)));
+            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
         }
-        return locationDtoList;
+        return new ArrayList<LocationDto>();
     }
 
     @Override
     public List<LocationDto> getPublicMemberLocation(Long memberId) {
-        List<MemberLocation> locByMemberId = memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId);
 
-        List<LocationDto> locationDtoList = new ArrayList<LocationDto>();
-        for (MemberLocation memberLocation : locByMemberId) {
+        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId)) {
             Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> locationDtoList.add(locationMapper.toDto(location)));
+            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
         }
-        return locationDtoList;
+        return new ArrayList<LocationDto>();
     }
 
     @Override
     public List<SimpleLocDto> viewSimple(LocationType type) {
-        List<Location> byType = locationRepository.findLocationByType(type);
 
-        for (Location location : byType) {
+        for (Location location : locationRepository.findLocationByType(type)) {
             ((List<SimpleLocDto>) new ArrayList<SimpleLocDto>()).add(SimpleLocDto.builder()
                     .locationId(location.getId())
                     .name(location.getName())
