@@ -35,8 +35,6 @@ public class Restaurant extends TypeLocation {
     @Column
     private String restDate;
     @Column
-    private boolean smoking;
-    @Column
     private String menu;
 
 }

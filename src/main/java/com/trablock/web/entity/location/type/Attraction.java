@@ -29,7 +29,8 @@ public class Attraction extends TypeLocation {
 
 
     @Builder
-    public Attraction(boolean parking, String restDate) {
+    public Attraction(boolean parking, String restDate, Long locationId) {
+        this.locationId = locationId;
         this.parking = parking;
         this.restDate = restDate;
     }

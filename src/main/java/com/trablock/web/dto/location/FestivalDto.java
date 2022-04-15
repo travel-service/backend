@@ -1,54 +1,25 @@
-package com.trablock.web.entity.location.type;
+package com.trablock.web.dto.location;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Festival extends TypeLocation {
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-
-    @JoinColumn(name = "LOCATION_ID")
-    private Long locationId;
-
-    @Column
+public class FestivalDto {
     private String endDate;
-
-    @Column
     private String homepage;
-
-    @Column
     private String place;
-
-    @Column
     private String startDate;
-
-    @Column
     private String placeInfo;
-
-    @Column
     private String playTime;
-
-    @Column
     private String program;
-
-    @Column
     private String fee;
 
     @Builder
-    public Festival(Long locationId, String endDate, String homepage, String place, String startDate,
-                    String placeInfo, String playTime, String program, String fee) {
-        this.locationId = locationId;
+    public FestivalDto(String endDate, String homepage, String place, String startDate, String placeInfo, String playTime, String program, String fee) {
         this.endDate = endDate;
         this.homepage = homepage;
         this.place = place;

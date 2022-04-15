@@ -10,14 +10,14 @@ import java.util.Optional;
 
 
 @Repository
-public class TypeRepository {
+public class TypeLocationRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-    public Attraction saveAttraction(Attraction attraction) {
+    public Long saveAttraction(Attraction attraction) {
         em.persist(attraction);
-        return attraction;
+        return attraction.getId();
     }
 
     public void deleteAttraction(Attraction attraction) {
@@ -34,9 +34,9 @@ public class TypeRepository {
         }
     }
 
-    public Restaurant saveRestaurant(Restaurant restaurant) {
+    public Long saveRestaurant(Restaurant restaurant) {
         em.persist(restaurant);
-        return restaurant;
+        return restaurant.getId();
     }
 
     public void deleteRestaurant(Restaurant restaurant) {
@@ -55,9 +55,9 @@ public class TypeRepository {
         }
     }
 
-    public Culture saveCulture(Culture culture) {
+    public Long saveCulture(Culture culture) {
         em.persist(culture);
-        return culture;
+        return culture.getId();
     }
 
     public void deleteCulture(Culture culture) {
@@ -74,9 +74,9 @@ public class TypeRepository {
         }
     }
 
-    public Festival saveFestival(Festival festival) {
+    public Long saveFestival(Festival festival) {
         em.persist(festival);
-        return festival;
+        return festival.getId();
     }
 
     public void deleteFestival(Festival festival) {
@@ -93,9 +93,9 @@ public class TypeRepository {
         }
     }
 
-    public Lodge saveLodge(Lodge lodge) {
+    public Long saveLodge(Lodge lodge) {
         em.persist(lodge);
-        return lodge;
+        return lodge.getId();
     }
 
     public void deleteLodge(Lodge lodge) {
@@ -112,9 +112,9 @@ public class TypeRepository {
         }
     }
 
-    public Leports saveLeports(Leports leports) {
+    public Long saveLeports(Leports leports) {
         em.persist(leports);
-        return leports;
+        return leports.getId();
     }
 
     public void deleteLeports(Leports leports) {

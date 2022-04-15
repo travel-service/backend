@@ -40,8 +40,9 @@ public class Leports extends TypeLocation {
     private String useTime;
 
     @Builder
-    public Leports(String openPeriod, boolean parking, String reservation, String restDate,
+    public Leports(Long locationId, String openPeriod, boolean parking, String reservation, String restDate,
                    String fee, String useTime) {
+        this.locationId = locationId;
         this.openPeriod = openPeriod;
         this.parking = parking;
         this.reservation = reservation;

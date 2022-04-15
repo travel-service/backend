@@ -72,7 +72,6 @@ class LocationRepositoryTest {
                 .openTime("09:00")
                 .packing(true)
                 .parking(false)
-                .smoking(false)
                 .restDate("연중무휴")
                 .menu("음료")
                 .build();

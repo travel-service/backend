@@ -24,5 +24,5 @@ public interface LocationService {
 
     List<LocationDto> getPublicMemberLocation(Long memberId);
 
-    List<LocationDto> getLocationWithType(LocationType type);
+    List<SimpleLocDto> viewSimple(LocationType type);
 }

@@ -49,12 +49,14 @@ public class Location {
 
     @Getter
     public static class SimpleLocDto {
+        private Long locationId;
         private String name;
         private Coords coords;
         private LocationType type;
 
         @Builder
-        public SimpleLocDto(String name, Coords coords, LocationType type) {
+        public SimpleLocDto(Long locationId, String name, Coords coords, LocationType type) {
+            this.locationId = locationId;
             this.name = name;
             this.coords = coords;
             this.type = type;

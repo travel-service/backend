@@ -6,7 +6,8 @@ import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
-import com.trablock.web.repository.location.TypeRepository;
+import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.service.location.mapper.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,17 @@ import java.util.Optional;
 import static com.trablock.web.entity.location.Location.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
-    private final TypeRepository typeRepository;
+    private final TypeLocationRepository typeLocationRepository;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
 
     @Override
+    @Transactional
     public Long create(LocationSaveRequestDto requestDto) {
         return locationRepository.save(requestDto.toEntity()).getId();
     }
@@ -91,8 +93,17 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<LocationDto> getLocationWithType(LocationType type) {
-        locationRepository.findLocationByType(type);
-        return null;
+    public List<SimpleLocDto> viewSimple(LocationType type) {
+        List<Location> byType = locationRepository.findLocationByType(type);
+
+        for (Location location : byType) {
+            ((List<SimpleLocDto>) new ArrayList<SimpleLocDto>()).add(SimpleLocDto.builder()
+                    .locationId(location.getId())
+                    .name(location.getName())
+                    .coords(location.getCoords())
+                    .type(location.getType())
+                    .build());
+        }
+        return new ArrayList<SimpleLocDto>();
     }
 }

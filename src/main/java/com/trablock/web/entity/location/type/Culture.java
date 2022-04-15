@@ -32,7 +32,8 @@ public class Culture extends TypeLocation {
     private String spendTime;
 
     @Builder
-    public Culture(boolean parking, String parkingFee, String restDate, String fee, String useTime, String spendTime) {
+    public Culture(Long locationId, boolean parking, String parkingFee, String restDate, String fee, String useTime, String spendTime) {
+        this.locationId = locationId;
         this.parking = parking;
         this.parkingFee = parkingFee;
         this.restDate = restDate;

@@ -1,4 +1,4 @@
-package com.trablock.web.service.location;
+package com.trablock.web.service.location.mapper;
 
 import com.trablock.web.dto.location.LocationDto;
 import com.trablock.web.entity.location.Location;
