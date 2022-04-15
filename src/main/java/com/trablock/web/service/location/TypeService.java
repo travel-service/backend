@@ -1,23 +1,23 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.dto.location.LocationDto;
+import com.trablock.web.dto.location.TypeDto;
 import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.type.*;
 
+import static com.trablock.web.dto.location.TypeDto.*;
+
 public interface TypeService {
 
-    LocationType checkType(LocationDto locationDto);
+    attractionDto toAttractionDto(Long locationId);
 
-    Attraction getAttraction(Long locationId);
+    restaurantDto toRestaurantDto(Long locationId);
 
-    Restaurant getRestaurant(Long locationId);
+    cultureDto toCultureDto(Long locationId);
 
-    Culture getCulture(Long locationId);
+    festivalDto toFestivalDto(Long locationId);
 
-    Festival getFestival(Long locationId);
+    lodgeDto toLodgeDto(Long locationId);
 
-    Lodge getLodge(Long locationId);
-
-    Leports getLeports(Long locationId);
-
+    leportsDto toLeportsDto(Long locationId);
 }
