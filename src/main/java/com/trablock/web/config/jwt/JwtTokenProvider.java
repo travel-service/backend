@@ -13,8 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
@@ -32,11 +34,11 @@ public class JwtTokenProvider {
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
 
-    // AccessToken 유효시간 20s
-    private long accessTokenValidTime = 20 * 1000L;
+    // AccessToken 유효시간 1m
+    private long accessTokenValidTime = 1 * 60 * 1000L;
 
-    // RefreshToken 유효시간 1m
-    private long refreshTokenValidTime = 1 * 60 * 1000L;
+    // RefreshToken 유효시간 2m
+    private long refreshTokenValidTime = 2 * 60 * 1000L;
     
     //secretKey 암호화
     @PostConstruct
@@ -85,8 +87,16 @@ public class JwtTokenProvider {
 
     //Request Header 에서 RefreshToken 값 추출
     public String resolveRefreshToken(HttpServletRequest request) {
-        if(request.getHeader("refreshToken") != null)
-            return request.getHeader("refreshToken").substring(7);
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refreshToken")) {
+                    System.out.println("cookie.getValue() = " + cookie.getValue());
+                    return cookie.getValue();
+                }
+            }
+        }
         return null;
     }
 
@@ -108,7 +118,13 @@ public class JwtTokenProvider {
 
     //RefreshToken response
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("refreshToken", "bearer " + refreshToken);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/"); //쿠키의 유효범위 추후 서비스 발전시 쿠키의 범위 설정 필요
+        cookie.setMaxAge(24 * 7 * 60 * 60 * 1000);
+
+        response.addCookie(cookie);
     }
 
     //Token 존재?
