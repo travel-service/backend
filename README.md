@@ -1,7 +1,8 @@
 # JWT 토큰 & POSTMAN 테스트 방법
 
-현재 AccessToken 유효시간 : 20s \
-현재 RefreshToken 유효시간 : 1m
+현재 AccessToken 유효시간 : 1m \
+현재 RefreshToken 유효시간 : 2m
+
 
 ## 1. /api/signup 
 
