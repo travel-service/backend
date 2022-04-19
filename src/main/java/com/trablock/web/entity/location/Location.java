@@ -47,54 +47,6 @@ public class Location {
         this.type = type;
     }
 
-    @Getter
-    public static class SimpleLocDto {
-        private Long locationId;
-        private String name;
-        private Coords coords;
-        private LocationType type;
-
-        @Builder
-        public SimpleLocDto(Long locationId, String name, Coords coords, LocationType type) {
-            this.locationId = locationId;
-            this.name = name;
-            this.coords = coords;
-            this.type = type;
-        }
-    }
-
-    @Getter
-    public static class LocationSaveRequestDto {
-        private final String name;
-        private final String address1;
-        private final String address2;
-        private final Coords coords;
-        private final Byte image;
-        private final LocationType type;
-
-        @Builder
-        public LocationSaveRequestDto(String name, String address1, String address2,
-                                      Coords coords, Byte image, LocationType type) {
-            this.name = name;
-            this.address1 = address1;
-            this.address2 = address2;
-            this.coords = coords;
-            this.image = image;
-            this.type = type;
-        }
-
-        public Location toEntity() {
-            return Location.builder()
-                    .name(name)
-                    .address1(address1)
-                    .address2(address2)
-                    .coords(coords)
-                    .image(image)
-                    .type(type)
-                    .build();
-        }
-
-    }
 
     public void setType(LocationType type) {
         this.type = type;

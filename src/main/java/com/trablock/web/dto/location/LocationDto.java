@@ -5,14 +5,13 @@ import lombok.*;
 
 import static lombok.AccessLevel.*;
 
-@Data
-@NoArgsConstructor(access = PROTECTED)
+@Getter
 public class LocationDto {
 
-    private Long id;
-    private String name;
-    private String address1;
-    private String address2;
+    private final Long id;
+    private final String name;
+    private final String address1;
+    private final String address2;
     private Byte image1;
     private Byte image2;
     private String tel;

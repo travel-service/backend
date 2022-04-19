@@ -1,12 +1,13 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.dto.location.LocationDto;
+import com.trablock.web.dto.location.LocationSaveRequestDto;
+import com.trablock.web.dto.location.SimpleLocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
-import com.trablock.web.repository.location.TypeLocationRepository;
 import com.trablock.web.service.location.mapper.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.trablock.web.entity.location.Location.*;
+import static com.trablock.web.entity.location.LocationType.*;
+import static com.trablock.web.entity.location.LocationType.CULTURE;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,16 +38,16 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<SimpleLocDto> toSimpleDto() {
+    public List<SimpleLocationDto> toSimpleDto() {
         for (Location location : locationRepository.findAll()) {
-            SimpleLocDto simpleLocDto = SimpleLocDto.builder()
+            SimpleLocationDto simpleLocDto = SimpleLocationDto.builder()
                     .name(location.getName())
                     .coords(location.getCoords())
                     .type(location.getType())
                     .build();
-            ((List<SimpleLocDto>) new ArrayList<SimpleLocDto>()).add(simpleLocDto);
+            ((List<SimpleLocationDto>) new ArrayList<SimpleLocationDto>()).add(simpleLocDto);
         }
-        return new ArrayList<SimpleLocDto>();
+        return new ArrayList<SimpleLocationDto>();
     }
 
     @Override
@@ -87,16 +90,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<SimpleLocDto> viewSimple(LocationType type) {
+    public List<SimpleLocationDto> viewSimpleAll() {
+        List<SimpleLocationDto> result = viewSimple(LODGE);
+        result.addAll(viewSimple(RESTAURANT));
+        result.addAll(viewSimple(ATTRACTION));
+        result.addAll(viewSimple(LEPORTS));
+        result.addAll(viewSimple(FESTIVAL));
+        result.addAll(viewSimple(CULTURE));
+
+        return result;
+    }
+
+    @Override
+    public List<SimpleLocationDto> viewSimple(LocationType type) {
 
         for (Location location : locationRepository.findLocationByType(type)) {
-            ((List<SimpleLocDto>) new ArrayList<SimpleLocDto>()).add(SimpleLocDto.builder()
-                    .locationId(location.getId())
+            ((List<SimpleLocationDto>) new ArrayList<SimpleLocationDto>()).add(SimpleLocationDto.builder()
+                    .id(location.getId())
                     .name(location.getName())
                     .coords(location.getCoords())
                     .type(location.getType())
                     .build());
         }
-        return new ArrayList<SimpleLocDto>();
+        return new ArrayList<SimpleLocationDto>();
     }
 }
