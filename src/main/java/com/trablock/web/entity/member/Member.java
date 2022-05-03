@@ -2,6 +2,7 @@ package com.trablock.web.entity.member;
 
 import com.trablock.web.entity.BaseEntity;
 import com.trablock.web.entity.BaseTimeEntity;
+import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.SelectedLocation;
 import lombok.*;
@@ -26,6 +27,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<SelectedLocation> memberSelectedLocations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Concept> concepts = new ArrayList<>();
 
     public Member(String name) {
         this.name = name;

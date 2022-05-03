@@ -24,13 +24,15 @@ public class Plan {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plan")
     private List<Day> days = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plan")
     private List<SelectedLocation> selectedLocations = new ArrayList<>();
 
-    private String concept;
+    @OneToMany(mappedBy = "plan")
+    private List<Concept> concepts = new ArrayList<>();
+
     private String name;
     private String destination;
     private int periods;
