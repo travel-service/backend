@@ -1,6 +1,8 @@
 package com.trablock.web;
 
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
+import com.trablock.web.repository.LocationRepository;
 import com.trablock.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ public class InitDB {
     static class InitService {
 
         private final MemberRepository memberRepository;
+        private final LocationRepository locationRepository;
 
         public void dbInit() {
             Member member1 = new Member("member1");
@@ -38,6 +41,19 @@ public class InitDB {
 
             Member member4 = new Member("member4");
             memberRepository.save(member4);
+
+            Location location1 = new Location();
+            Location location2 = new Location();
+            Location location3 = new Location();
+            Location location4 = new Location();
+            Location location5 = new Location();
+            Location location6 = new Location();
+            locationRepository.save(location1);
+            locationRepository.save(location2);
+            locationRepository.save(location3);
+            locationRepository.save(location4);
+            locationRepository.save(location5);
+            locationRepository.save(location6);
         }
     }
 }

@@ -27,7 +27,7 @@ public class Plan {
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<Day> days = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plan")
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<SelectedLocation> selectedLocations = new ArrayList<>();
 
     private String concept;

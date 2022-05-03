@@ -15,5 +15,4 @@ public class PlanForm {
     private int periods;
     private PlanStatus planStatus;
     private String thumbnail;
-
 }
