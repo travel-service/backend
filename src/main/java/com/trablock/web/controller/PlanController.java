@@ -1,12 +1,11 @@
 package com.trablock.web.controller;
 
+import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.*;
-import com.trablock.web.repository.DayRepository;
 import com.trablock.web.repository.LocationRepository;
 import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.SelectedLocationRepository;
 import com.trablock.web.service.ConceptService;
 import com.trablock.web.service.DayService;
 import com.trablock.web.service.PlanService;
@@ -23,42 +22,47 @@ public class PlanController {
 
     private final PlanService planService;
     private final MemberRepository memberRepository;
-    private final DayRepository dayRepository;
     private final DayService dayService;
     private final SelectedLocationService selectedLocationService;
     private final LocationRepository locationRepository;
     private final ConceptService conceptService;
 
     @PostMapping("/members/{memberId}/plan")
-    public String createPlan(@PathVariable("memberId") Long memberId, @RequestBody PlanForm planForm) {
+    public String createPlan(@PathVariable("memberId") Long memberId, @RequestBody Form form) {
 
-        Member findMemberId = memberRepository.findMemberId(memberId);
+        Plan plan = getPlan(form, memberRepository.findMemberId(memberId));
 
-        Plan plan = Plan.builder()
-                .depart(planForm.getDepart())
-                .destination(planForm.getDestination())
-                .member(findMemberId)
-                .name(planForm.getName())
-                .periods(planForm.getPeriods())
-                .planStatus(planForm.getPlanStatus())
-                .thumbnail(planForm.getThumbnail())
-                .build();
+        getConcept(form, memberRepository.findMemberId(memberId), plan);
 
-        planService.savePlan(plan);
+        getSelectedLocation(form, memberRepository.findMemberId(memberId), plan);
 
-        for (int i = 0; i < planForm.getConcept().size(); i++) {
-            Concept concept = Concept.builder()
+        getDay(form, plan);
+
+        return "redirect:/";
+    }
+
+    private void getDay(Form form, Plan plan) {
+        for (int i = 0; i < form.getDayForm().getLocations().size(); i++) {
+            Location locationId = locationRepository.findLocationId(form.getDayForm().getLocations().get(i).getId());
+
+            Day day = Day.builder()
+                    .locations(locationId)
+                    .copyLocationId(form.getDayForm().getLocations().get(i).getCopyLocationId())
+                    .days(form.getDayForm().getLocations().get(i).getDays())
                     .plan(plan)
-                    .member(findMemberId)
-                    .conceptName(planForm.getConcept().get(i))
+                    .stayTime(form.getDayForm().getLocations().get(i).getStayTime())
+                    .startTime(form.getDayForm().getLocations().get(i).getStartTime())
+                    .vehicle(form.getDayForm().getLocations().get(i).getVehicle())
+                    .movingTime(form.getDayForm().getLocations().get(i).getMovingTime())
                     .build();
 
-            conceptService.saveConcept(concept);
+            dayService.saveDay(day);
         }
+    }
 
-
-        for (int i = 0; i < planForm.getSelectedLocation().size(); i++) {
-            Location locationId = locationRepository.findLocationId(planForm.getSelectedLocation().get(i));
+    private void getSelectedLocation(Form form, Member findMemberId, Plan plan) {
+        for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
+            Location locationId = locationRepository.findLocationId(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .member(findMemberId)
                     .plan(plan)
@@ -67,25 +71,32 @@ public class PlanController {
 
             selectedLocationService.saveSelectedLocation(selectedLocation);
         }
+    }
 
-        for (int i = 0; i < planForm.getLocations().size(); i++) {
-            Location locationId = locationRepository.findLocationId(planForm.getLocations().get(i).getId());
-
-            Day day = Day.builder()
-                    .locations(locationId)
-                    .copyLocationId(planForm.getLocations().get(i).getCopyLocationId())
-                    .days(planForm.getLocations().get(i).getDays())
+    private void getConcept(Form form, Member findMemberId, Plan plan) {
+        for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
+            Concept concept = Concept.builder()
                     .plan(plan)
-                    .stayTime(planForm.getLocations().get(i).getStayTime())
-                    .startTime(planForm.getLocations().get(i).getStartTime())
-                    .vehicle(planForm.getLocations().get(i).getVehicle())
-                    .movingTime(planForm.getLocations().get(i).getMovingTime())
-                    .sequence(planForm.getLocations().get(i).getSequence())
+                    .member(findMemberId)
+                    .conceptName(form.getConceptForm().getConcept().get(i))
                     .build();
 
-            dayService.saveDay(day);
+            conceptService.saveConcept(concept);
         }
+    }
 
-        return "redirect:/";
+    private Plan getPlan(Form form, Member findMemberId) {
+        Plan plan = Plan.builder()
+                .depart(form.getPlanForm().getDepart())
+                .destination(form.getPlanForm().getDestination())
+                .member(findMemberId)
+                .name(form.getPlanForm().getName())
+                .periods(form.getPlanForm().getPeriods())
+                .planStatus(form.getPlanForm().getPlanStatus())
+                .thumbnail(form.getPlanForm().getThumbnail())
+                .build();
+
+        planService.savePlan(plan);
+        return plan;
     }
 }

@@ -52,7 +52,6 @@ class DayTest {
 
         Plan plan1 = Plan.builder()
                 .member(member1)
-                .concept("test")
                 .name("test")
                 .destination("test")
                 .periods(3)
@@ -63,7 +62,6 @@ class DayTest {
 
         Plan plan2 = Plan.builder()
                 .member(member1)
-                .concept("test2")
                 .name("test2")
                 .destination("test2")
                 .periods(4)
@@ -85,7 +83,6 @@ class DayTest {
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .location(allLocation)
                     .member(member1)
-                    .selectStatus(SelectStatus.UNSELECTED)
                     .plan(plan1)
                     .build();
             selectedLocationRepository.save(selectedLocation);
