@@ -27,7 +27,7 @@ public class PlanForm {
     private List<Long> selectedLocation;
 
     //day form
-    private Long locationId;
+    private Long id;
     private List<Day> locations;
     private int sequence;
     private int days;

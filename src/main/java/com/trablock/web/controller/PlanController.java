@@ -73,6 +73,7 @@ public class PlanController {
 
             Day day = Day.builder()
                     .locations(locationId)
+                    .copyLocationId(planForm.getLocations().get(i).getCopyLocationId())
                     .days(planForm.getLocations().get(i).getDays())
                     .plan(plan)
                     .stayTime(planForm.getLocations().get(i).getStayTime())
