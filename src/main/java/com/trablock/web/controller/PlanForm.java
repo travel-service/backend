@@ -1,5 +1,6 @@
 package com.trablock.web.controller;
 
+import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.MovingData;
 import com.trablock.web.entity.plan.PlanStatus;
 import lombok.Builder;
@@ -26,7 +27,14 @@ public class PlanForm {
     private List<Long> selectedLocation;
 
     //day form
-    private MovingData movingData;
+    private Long locationId;
+    private List<Day> locations;
     private int sequence;
-    private int location_id;
+    private int days;
+    private String vehicle;
+    private String movingTime;
+    private String stayTime;
+    private String startTime;
+    private String copyLocationId;
+
 }

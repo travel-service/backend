@@ -8,6 +8,7 @@ import com.trablock.web.repository.LocationRepository;
 import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.SelectedLocationRepository;
 import com.trablock.web.service.ConceptService;
+import com.trablock.web.service.DayService;
 import com.trablock.web.service.PlanService;
 import com.trablock.web.service.SelectedLocationService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class PlanController {
     private final PlanService planService;
     private final MemberRepository memberRepository;
     private final DayRepository dayRepository;
+    private final DayService dayService;
     private final SelectedLocationService selectedLocationService;
     private final LocationRepository locationRepository;
     private final ConceptService conceptService;
@@ -32,7 +34,6 @@ public class PlanController {
 
         Member findMemberId = memberRepository.findMemberId(memberId);
 
-        System.out.println(planForm.getPeriods());
         Plan plan = Plan.builder()
                 .depart(planForm.getDepart())
                 .destination(planForm.getDestination())
@@ -60,7 +61,6 @@ public class PlanController {
             Location locationId = locationRepository.findLocationId(planForm.getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .member(findMemberId)
-                    //.selectStatus(SelectStatus.UNSELECTED)
                     .plan(plan)
                     .location(locationId)
                     .build();
@@ -68,15 +68,22 @@ public class PlanController {
             selectedLocationService.saveSelectedLocation(selectedLocation);
         }
 
-//        for (int i = 1; i <= planForm.getPeriods(); i++) {
-//            locationRepository.findLocationId(planForm.g)
-//            Day day = Day.builder()
-//                    .days()
-//                    .plan()
-//                    .movingData()
-//                    .sequence()
-//                    .build();
-//        }
+        for (int i = 0; i < planForm.getLocations().size(); i++) {
+            Location locationId = locationRepository.findLocationId(planForm.getLocations().get(i).getId());
+
+            Day day = Day.builder()
+                    .locations(locationId)
+                    .days(planForm.getLocations().get(i).getDays())
+                    .plan(plan)
+                    .stayTime(planForm.getLocations().get(i).getStayTime())
+                    .startTime(planForm.getLocations().get(i).getStartTime())
+                    .vehicle(planForm.getLocations().get(i).getVehicle())
+                    .movingTime(planForm.getLocations().get(i).getMovingTime())
+                    .sequence(planForm.getLocations().get(i).getSequence())
+                    .build();
+
+            dayService.saveDay(day);
+        }
 
         return "redirect:/";
     }

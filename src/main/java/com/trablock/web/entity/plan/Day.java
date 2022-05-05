@@ -30,7 +30,12 @@ public class Day{
     @JoinColumn(name = "location_id")
     private Location locations;
 
-    @Embedded
-    private MovingData movingData;
+//    @Embedded
+//    private MovingData movingData;
 
+    private String vehicle;
+    private String movingTime;
+    private String stayTime;
+    private String startTime;
+    private String copyLocationId;
 }
