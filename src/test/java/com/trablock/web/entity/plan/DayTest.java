@@ -99,13 +99,12 @@ class DayTest {
                     Day day = Day.builder()
                             .plan(plan)
                             .days(i)
-                            .sequence(i)
                             .locations(selectedLocation.getLocation())
-                            .movingData(MovingData.builder()
-                                    .movingTime("1111test")
-                                    .startTime("1111test")
-                                    .stayTime("1111test")
-                                    .vehicle("1111test").build())
+                            //.movingData(MovingData.builder()
+                            //        .movingTime("1111test")
+                            //        .startTime("1111test")
+                            //        .stayTime("1111test")
+                            //        .vehicle("1111test").build())
                             .build();
                     dayRepository.save(day);
                 }

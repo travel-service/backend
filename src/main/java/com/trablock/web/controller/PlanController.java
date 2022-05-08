@@ -30,18 +30,18 @@ public class PlanController {
     @PostMapping("/members/{memberId}/plan")
     public String createPlan(@PathVariable("memberId") Long memberId, @RequestBody Form form) {
 
-        Plan plan = getPlan(form, memberRepository.findMemberId(memberId));
+        Plan plan = savePlan(form, memberRepository.findMemberId(memberId));
 
-        getConcept(form, memberRepository.findMemberId(memberId), plan);
+        saveConcept(form, memberRepository.findMemberId(memberId), plan);
 
-        getSelectedLocation(form, memberRepository.findMemberId(memberId), plan);
+        saveSelectedLocation(form, memberRepository.findMemberId(memberId), plan);
 
-        getDay(form, plan);
+        saveDay(form, plan);
 
         return "redirect:/";
     }
 
-    private void getDay(Form form, Plan plan) {
+    private void saveDay(Form form, Plan plan) {
         for (int i = 0; i < form.getDayForm().getLocations().size(); i++) {
             Location locationId = locationRepository.findLocationId(form.getDayForm().getLocations().get(i).getId());
 
@@ -60,7 +60,7 @@ public class PlanController {
         }
     }
 
-    private void getSelectedLocation(Form form, Member findMemberId, Plan plan) {
+    private void saveSelectedLocation(Form form, Member findMemberId, Plan plan) {
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
             Location locationId = locationRepository.findLocationId(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
@@ -73,7 +73,7 @@ public class PlanController {
         }
     }
 
-    private void getConcept(Form form, Member findMemberId, Plan plan) {
+    private void saveConcept(Form form, Member findMemberId, Plan plan) {
         for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
             Concept concept = Concept.builder()
                     .plan(plan)
@@ -85,7 +85,7 @@ public class PlanController {
         }
     }
 
-    private Plan getPlan(Form form, Member findMemberId) {
+    private Plan savePlan(Form form, Member findMemberId) {
         Plan plan = Plan.builder()
                 .depart(form.getPlanForm().getDepart())
                 .destination(form.getPlanForm().getDestination())

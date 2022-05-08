@@ -1,19 +1,17 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.BaseEntity;
+import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.location.Location;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Day{
+public class Day extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "day_id")
@@ -23,7 +21,7 @@ public class Day{
     @JoinColumn(name = "plan_id")
     private Plan plan;
 
-    private int sequence;
+    //private int sequence;
     private int days;
 
     @ManyToOne(fetch = FetchType.LAZY)
