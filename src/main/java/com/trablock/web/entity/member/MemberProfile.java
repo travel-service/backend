@@ -10,7 +10,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class MemberProfile {
     private String nickName;
-    private byte[] memberImg;
+    private String memberImg;
 
     protected MemberProfile() {}
 }

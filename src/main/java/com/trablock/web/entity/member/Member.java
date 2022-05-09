@@ -51,10 +51,6 @@ public class Member implements UserDetails{
     @OneToMany(mappedBy = "member")
     private List<MemberLocation> memberLocation = new ArrayList<>();
 
-    //임시, 추후 수정
-    @OneToMany(mappedBy = "member")
-    private List<Plan> plan = new ArrayList<>();
-
     /**
      * 종수 추가(연관 관계)
      */
