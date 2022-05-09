@@ -1,23 +1,61 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.entity.BaseEntity;
 import com.trablock.web.entity.member.Member;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static javax.persistence.FetchType.*;
-
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Plan {
 
     @Id
+    @GeneratedValue
+    @Column(name = "plan_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "plan")
+    private List<Day> days = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plan")
+    private List<SelectedLocation> selectedLocations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plan")
+    private List<Concept> concepts = new ArrayList<>();
+
+    private String name;
+    private String destination;
+    private int periods;
+    private String depart;
+    private String thumbnail;
+
+    @Enumerated(EnumType.STRING)
+    private PlanStatus planStatus;
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getPlans().add(this);
+    }
+
+    public void addDay(Day day) {
+        days.add(day);
+    }
+
+    //==생성 메서드==//
+//    public static Plan createPlan(Member member, Day... days) {
+//        Plan plan = new Plan();
+//        plan.setMember(member);
+//
+//    }
 }
