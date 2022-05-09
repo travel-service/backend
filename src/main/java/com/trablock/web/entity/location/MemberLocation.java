@@ -1,5 +1,7 @@
 package com.trablock.web.entity.location;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class MemberLocation {
 
@@ -25,9 +29,4 @@ public class MemberLocation {
 
     private boolean isPublic;
 
-    public MemberLocation(Long memberId, Long locationId, boolean isPublic) {
-        this.memberId = memberId;
-        this.locationId = locationId;
-        this.isPublic = isPublic;
-    }
 }

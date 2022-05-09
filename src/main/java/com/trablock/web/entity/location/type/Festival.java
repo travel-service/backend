@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location.type;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class Festival extends TypeLocation {
 
@@ -33,29 +36,16 @@ public class Festival extends TypeLocation {
     @Column
     private String startDate;
 
-    @Column
+    @Column(length = 1000)
     private String placeInfo;
 
-    @Column
+    @Column(length = 1000)
     private String playTime;
 
     @Column
     private String program;
 
-    @Column
+    @Column(length = 1000)
     private String fee;
 
-    @Builder
-    public Festival(Long locationId, String endDate, String homepage, String place, String startDate,
-                    String placeInfo, String playTime, String program, String fee) {
-        this.locationId = locationId;
-        this.endDate = endDate;
-        this.homepage = homepage;
-        this.place = place;
-        this.startDate = startDate;
-        this.placeInfo = placeInfo;
-        this.playTime = playTime;
-        this.program = program;
-        this.fee = fee;
-    }
 }

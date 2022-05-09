@@ -34,7 +34,7 @@ public class Restaurant extends TypeLocation {
     private boolean parking;
     @Column
     private String restDate;
-    @Column
+    @Column(length = 2000)
     private String menu;
 
 }

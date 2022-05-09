@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location.type;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class Leports extends TypeLocation {
 
@@ -21,7 +24,7 @@ public class Leports extends TypeLocation {
     @JoinColumn(name = "LOCATION_ID")
     private Long locationId;
 
-    @Column
+    @Column(length = 1000)
     private String openPeriod;
 
     @Column
@@ -33,21 +36,10 @@ public class Leports extends TypeLocation {
     @Column
     private String restDate;
 
-    @Column
+    @Column(length = 1000)
     private String fee;
 
-    @Column
+    @Column(length = 1000)
     private String useTime;
 
-    @Builder
-    public Leports(Long locationId, String openPeriod, boolean parking, String reservation, String restDate,
-                   String fee, String useTime) {
-        this.locationId = locationId;
-        this.openPeriod = openPeriod;
-        this.parking = parking;
-        this.reservation = reservation;
-        this.restDate = restDate;
-        this.fee = fee;
-        this.useTime = useTime;
-    }
 }

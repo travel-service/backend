@@ -21,12 +21,11 @@ public class EnglishInfo {
     @JoinColumn(name = "LOCATION_ID")
     private Long locationId;
 
-    @Column
     private String summary;
 
-    @Column
-    private String information;
+    @Column(length = 2000)
+    private String report;
 
-    @Column
     private String address;
+
 }

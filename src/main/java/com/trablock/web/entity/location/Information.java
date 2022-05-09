@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class Information {
 
@@ -21,24 +24,13 @@ public class Information {
     @JoinColumn(name = "LOCATION_ID")
     private Long locationId;
 
-    @Column
     private String summary;
 
-    @Column
-    private Byte image1;
+    @Column(length = 2000)
+    private String report;
 
-    @Column
-    private Byte image2;
-
-    @Column
+    private String image1;
+    private String image2;
     private String tel;
 
-    @Builder
-    public Information(Long locationId, String summary, Byte image1, Byte image2, String tel) {
-        this.locationId = locationId;
-        this.summary = summary;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.tel = tel;
-    }
 }

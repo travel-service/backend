@@ -28,21 +28,10 @@ public class Lodge extends TypeLocation {
     private String checkOutTime;
     private boolean cooking;
     private boolean parking;
+    private Integer numOfRooms;
 
-    private String reservationURL;
+    private String reservationUrl;
 
     private String subFacility;
-    private boolean barbecue;
-    private boolean beauty;
-    private boolean beverage;
-    private boolean bicycle;
-    private boolean campfire;
-    private boolean fitness;
-    private boolean singingRoom;
-    private boolean publicBath;
-    private boolean publicPC;
-    private boolean sauna;
-    private boolean seminar;
-    private boolean sports;
 
 }
