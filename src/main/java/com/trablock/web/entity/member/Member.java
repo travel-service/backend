@@ -2,7 +2,9 @@ package com.trablock.web.entity.member;
 
 
 import com.trablock.web.entity.location.MemberLocation;
+import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.SelectedLocation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,6 +54,18 @@ public class Member implements UserDetails{
     //임시, 추후 수정
     @OneToMany(mappedBy = "member")
     private List<Plan> plan = new ArrayList<>();
+
+    /**
+     * 종수 추가(연관 관계)
+     */
+    @OneToMany(mappedBy = "member")
+    private List<Plan> plans = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<SelectedLocation> selectedLocations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Concept> concepts = new ArrayList<>();
 
 
     /**
