@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.trablock.web.entity.location.Location.*;
 import static com.trablock.web.entity.location.LocationType.*;
 import static com.trablock.web.entity.location.LocationType.CULTURE;
 
@@ -37,17 +38,22 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.save(requestDto.toEntity()).getId();
     }
 
+    public List<SimpleLocationDto> getSimpleLocations() {
+        List<Location> locations = locationRepository.findAll();
+        return locations.stream().map(this::toSimpleDto)
+                .collect(Collectors.toList());
+    }
+
     @Override
-    public List<SimpleLocationDto> toSimpleDto() {
-        for (Location location : locationRepository.findAll()) {
-            SimpleLocationDto simpleLocDto = SimpleLocationDto.builder()
-                    .name(location.getName())
-                    .coords(location.getCoords())
-                    .type(location.getType())
-                    .build();
-            ((List<SimpleLocationDto>) new ArrayList<SimpleLocationDto>()).add(simpleLocDto);
-        }
-        return new ArrayList<SimpleLocationDto>();
+    public SimpleLocationDto toSimpleDto(Location location) {
+        SimpleLocationDto simpleDto = SimpleLocationDto.builder()
+                .id(location.getId())
+                .name(location.getName())
+                .type(location.getType())
+                .coords(location.getCoords())
+                .build();
+
+        return simpleDto;
     }
 
     @Override
@@ -90,15 +96,16 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<SimpleLocationDto> viewSimpleAll() {
-        List<SimpleLocationDto> result = viewSimple(LODGE);
-        result.addAll(viewSimple(RESTAURANT));
-        result.addAll(viewSimple(ATTRACTION));
-        result.addAll(viewSimple(LEPORTS));
-        result.addAll(viewSimple(FESTIVAL));
-        result.addAll(viewSimple(CULTURE));
+    public HashMap<String, Object> viewSimpleAll() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("Lodge", viewSimple(LODGE));
+        map.put("Lodge", viewSimple(RESTAURANT));
+        map.put("Lodge", viewSimple(ATTRACTION));
+        map.put("Lodge", viewSimple(LEPORTS));
+        map.put("Lodge", viewSimple(FESTIVAL));
+        map.put("Lodge", viewSimple(CULTURE));
 
-        return result;
+        return map;
     }
 
     @Override

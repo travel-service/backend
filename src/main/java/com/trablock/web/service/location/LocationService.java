@@ -6,6 +6,7 @@ import com.trablock.web.dto.location.SimpleLocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.LocationType;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -13,7 +14,9 @@ public interface LocationService {
 
     Long create(LocationSaveRequestDto locationDto);
 
-    List<SimpleLocationDto> toSimpleDto();
+    List<SimpleLocationDto> getSimpleLocations();
+
+    SimpleLocationDto toSimpleDto(Location location);
 
     LocationDto toDto(Long locationId);
 
@@ -25,7 +28,7 @@ public interface LocationService {
 
     List<LocationDto> getPublicMemberLocation(Long memberId);
 
-    List<SimpleLocationDto> viewSimpleAll();
+    HashMap<String, Object> viewSimpleAll();
 
     List<SimpleLocationDto> viewSimple(LocationType type);
 }
