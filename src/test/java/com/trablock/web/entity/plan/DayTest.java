@@ -3,6 +3,7 @@ package com.trablock.web.entity.plan;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.repository.*;
+import com.trablock.web.repository.location.LocationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +29,8 @@ class DayTest {
     @Autowired DayRepository dayRepository;
     @Autowired SelectedLocationRepository selectedLocationRepository;
     @Autowired MainDirectoryRepository mainDirectoryRepository;
-    @Autowired LocationRepository locationRepository;
+    @Autowired
+    LocationRepository locationRepository;
 
     @Test
     public void dayEntityTest() throws Exception {

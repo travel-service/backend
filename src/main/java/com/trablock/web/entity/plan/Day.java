@@ -25,5 +25,8 @@ public class Day extends BaseTimeEntity {
     @JoinColumn(name = "location_id")
     private Location locations;
 
+    @Embedded
+    private MovingData movingData;
+
     private String copyLocationId;
 }
