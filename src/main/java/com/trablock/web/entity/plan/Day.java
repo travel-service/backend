@@ -21,19 +21,12 @@ public class Day extends BaseTimeEntity {
     @JoinColumn(name = "plan_id")
     private Plan plan;
 
-    //private int sequence;
-    private int days;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location locations;
 
-//    @Embedded
-//    private MovingData movingData;
+    @Embedded
+    private MovingData movingData;
 
-    private String vehicle;
-    private String movingTime;
-    private String stayTime;
-    private String startTime;
     private String copyLocationId;
 }

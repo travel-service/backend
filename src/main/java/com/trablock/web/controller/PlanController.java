@@ -42,21 +42,19 @@ public class PlanController {
     }
 
     private void saveDay(Form form, Plan plan) {
-        for (int i = 0; i < form.getDayForm().getLocations().size(); i++) {
-            Location locationId = locationRepository.findLocationId(form.getDayForm().getLocations().get(i).getId());
+        for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
+            for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
+                Location locationId = locationRepository.findLocationId(form.getDayForm().getTravelDay().get(i).get(j).getId());
 
-            Day day = Day.builder()
-                    .locations(locationId)
-                    .copyLocationId(form.getDayForm().getLocations().get(i).getCopyLocationId())
-                    .days(form.getDayForm().getLocations().get(i).getDays())
-                    .plan(plan)
-                    .stayTime(form.getDayForm().getLocations().get(i).getStayTime())
-                    .startTime(form.getDayForm().getLocations().get(i).getStartTime())
-                    .vehicle(form.getDayForm().getLocations().get(i).getVehicle())
-                    .movingTime(form.getDayForm().getLocations().get(i).getMovingTime())
-                    .build();
+                Day day = Day.builder()
+                        .locations(locationId)
+                        .copyLocationId(form.getDayForm().getTravelDay().get(i).get(j).getCopyLocationId())
+                        .plan(plan)
+                        .movingData(form.getDayForm().getTravelDay().get(i).get(j).getMovingData())
+                        .build();
 
-            dayService.saveDay(day);
+                dayService.saveDay(day);
+            }
         }
     }
 
