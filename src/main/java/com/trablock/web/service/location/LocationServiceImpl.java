@@ -1,10 +1,10 @@
 package com.trablock.web.service.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.LocationDto;
 import com.trablock.web.dto.location.LocationSaveRequestDto;
 import com.trablock.web.dto.location.SimpleLocationDto;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.trablock.web.entity.location.LocationType.*;
-import static com.trablock.web.entity.location.LocationType.CULTURE;
+import static com.trablock.web.domain.LocationType.*;
 
 @Service
 @Transactional(readOnly = true)

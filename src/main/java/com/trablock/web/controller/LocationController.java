@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
-import static com.trablock.web.entity.location.LocationType.*;
+import static com.trablock.web.domain.LocationType.*;
+
 
 @RequiredArgsConstructor
 @RestController

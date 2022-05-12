@@ -1,7 +1,7 @@
 package com.trablock.web.repository.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.LocationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

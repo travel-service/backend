@@ -1,10 +1,10 @@
 package com.trablock.web.service.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.LocationDto;
 import com.trablock.web.dto.location.LocationSaveRequestDto;
 import com.trablock.web.dto.location.SimpleLocationDto;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.LocationType;
 
 import java.util.HashMap;
 import java.util.List;

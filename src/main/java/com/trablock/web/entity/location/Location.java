@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location;
 
+import com.trablock.web.domain.LocationType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +44,10 @@ public class Location {
 
     public void setType(LocationType type) {
         this.type = type;
+    }
+
+    public LocationType getType() {
+        return this.type;
     }
 
     public String changeName(String name) {

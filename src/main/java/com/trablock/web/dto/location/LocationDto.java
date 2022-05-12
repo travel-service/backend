@@ -1,6 +1,6 @@
 package com.trablock.web.dto.location;
 
-import com.trablock.web.entity.location.LocationType;
+import com.trablock.web.domain.LocationType;
 import lombok.*;
 
 import static lombok.AccessLevel.*;

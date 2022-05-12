@@ -1,8 +1,8 @@
 package com.trablock.web.repository.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.LocationType;
 import com.trablock.web.entity.location.type.Restaurant;
 import com.trablock.web.repository.location.type.*;
 import org.junit.jupiter.api.Test;
