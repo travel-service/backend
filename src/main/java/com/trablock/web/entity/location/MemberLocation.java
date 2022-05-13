@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location;
 
+import com.trablock.web.entity.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class MemberLocation {
 
     @JoinColumn(name = "LOCATION_ID")
     private Long locationId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     private boolean isPublic;
 
