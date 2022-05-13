@@ -31,8 +31,12 @@ class PlanTest {
     @Test
     public void planEntityTest() throws Exception {
         //given
-        Member member1 = new Member("member1");
-        Member member2 = new Member("member2");
+        Member member1 = Member.builder()
+                .userName("member1")
+                .build();
+        Member member2 = Member.builder()
+                .userName("member2")
+                .build();
         memberRepository.save(member1);
         memberRepository.save(member2);
 

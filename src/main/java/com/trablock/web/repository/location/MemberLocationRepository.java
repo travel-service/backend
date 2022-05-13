@@ -1,15 +1,23 @@
 package com.trablock.web.repository.location;
 
 import com.trablock.web.entity.location.MemberLocation;
+import com.trablock.web.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MemberLocationRepository extends JpaRepository<MemberLocation, Long> {
+
+    @Query("select m from MemberLocation m where m.member = :member")
+    Optional<MemberLocation> findByMember(@Param("member") Member member);
+
+    @Query("select m from MemberLocation m where m.member = :member")
+    List<MemberLocation> findAllByMember(@Param("member") Member member);
 
     @Query("select m from MemberLocation m where m.memberId = :memberId")
     List<MemberLocation> findAllByMemberId(@Param("memberId") Long memberId);
@@ -19,6 +27,22 @@ public interface MemberLocationRepository extends JpaRepository<MemberLocation, 
 
     @Query("select m from MemberLocation m where m.memberId = :memberId and m.isPublic = true")
     List<MemberLocation> findAllByMemberIdAndIsPublicTrue(@Param("memberId") Long memberId);
+
+    @Query("select m from MemberLocation m where m.member = :member and m.isPublic = true")
+    List<MemberLocation> findAllByMemberAndIsPublicTrue(@Param("member") Member member);
+
+    /**
+     * https://www.baeldung.com/spring-data-partial-update
+     *
+     * @return
+     */
+    @Modifying
+    @Query("update MemberLocation m set m.isPublic = false where m.locationId = :locationId ")
+    void updateMemberLocationBeingPrivate(@Param("locationId") Long locationId);
+
+    @Modifying
+    @Query("update MemberLocation m set m.isPublic = true where m.locationId = :locationId ")
+    void updateMemberLocationBeingPublic(@Param("locationId") Long locationId);
 
     @Modifying
     @Query("delete from MemberLocation m where m.locationId = :locationId")

@@ -25,12 +25,12 @@ public class Location {
     private String name;
 
     @Column(nullable = false)
-    private Long areaCode;
+    private Integer areaCode;
 
     @Column(nullable = false)
     private String address1;
 
-    @Column(nullable = false)
+    @Column
     private String address2;
 
     @Embedded

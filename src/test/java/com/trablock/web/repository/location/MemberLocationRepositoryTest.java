@@ -1,9 +1,14 @@
 package com.trablock.web.repository.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.MemberLocation;
-import com.trablock.web.entity.location.type.Restaurant;
+import com.trablock.web.entity.member.Member;
+import com.trablock.web.repository.MemberRepository;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +21,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.*;
 
 @SpringBootTest
 @Transactional
 class MemberLocationRepositoryTest {
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     LocationRepository locationRepository;
@@ -31,126 +40,228 @@ class MemberLocationRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
-    @Test
-    void create() throws Exception {
-        //given
+
+    /**
+     * fixture
+     */
+    Location savedLoc;
+    Location savedLoc2;
+    Location savedLoc3;
+    Member savedMember;
+
+    @BeforeEach
+    void init() {
+        Member member = Member.builder()
+                .userName("name")
+                .password("1234")
+                .realName("john doe")
+                .build();
+
+        savedMember = memberRepository.save(member);
+
         Location loc = Location.builder()
                 .name("test")
+                .areaCode(123)
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
                         .latitude("37.123").longitude("127.123").build())
+                .image("url/url")
+                .type(LocationType.LODGE)
                 .build();
 
-        locationRepository.save(loc);
+        Location loc2 = Location.builder()
+                .name("test2")
+                .areaCode(123)
+                .address1("경기도 수원시 권선구")
+                .address2("권선동 1059-3")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .image("url/url")
+                .type(LocationType.LODGE)
+                .build();
 
-        Long locId = loc.getId();
-        Long memberId = 1L;
+        Location loc3 = Location.builder()
+                .name("test3")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("인계동")
+                .coords(Coords.builder()
+                        .latitude("37.123").longitude("127.123").build())
+                .image("url/url")
+                .type(LocationType.LODGE)
+                .build();
 
-        MemberLocation memLoc = new MemberLocation(memberId, locId, true);
+        savedLoc = locationRepository.save(loc);
+        savedLoc2 = locationRepository.save(loc2);
+        savedLoc3 = locationRepository.save(loc3);
+    }
+
+    @Test
+    void create() throws Exception {
+        //given
+        Long savedLocId = savedLoc.getId();
+
+        MemberLocation memberLocation = MemberLocation.builder()
+                .locationId(savedLocId)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
 
         //when
-        MemberLocation savedMemLoc = memberLocationRepository.save(memLoc);
-        MemberLocation findMemLoc = memberLocationRepository.findByLocationId(locId).get();
+        memberLocationRepository.save(memberLocation);
 
-        //then
-        assertThat(findMemLoc).isEqualTo(savedMemLoc);
+        em.flush();
+        em.clear();
+
+        Optional<MemberLocation> byLocationId = memberLocationRepository.findByLocationId(savedLocId);
+        assumingThat(byLocationId.isPresent(), () -> {
+            MemberLocation target = byLocationId.get();
+
+            //then
+            assertThat(target.getId()).isEqualTo(memberLocation.getId());
+            assertThat(target.getLocationId()).isEqualTo(memberLocation.getLocationId());
+
+            // 프록시를 꺼냈으므로 객체는 다름. Id는 같다.
+            assertThat(target.getMember().getId()).isEqualTo(memberLocation.getMember().getId());
+
+            System.out.println("target = " + target);
+        });
     }
 
     @Test
     void read() throws Exception {
         //given
-        Location loc1 = Location.builder()
-                .name("test")
-                .address1("경기도 수원시 팔달구")
-                .address2("권광로180번길 53-26")
-                .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+        Long savedMemberId = savedMember.getId();
+        Long savedLocId = savedLoc.getId();
+        Long savedLocId2 = savedLoc2.getId();
+        Long savedLocId3 = savedLoc3.getId();
+
+        MemberLocation memberLocation = MemberLocation.builder()
+                .locationId(savedLocId)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation2 = MemberLocation.builder()
+                .locationId(savedLocId2)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation3 = MemberLocation.builder()
+                .locationId(savedLocId3)
+                .member(savedMember)
+                .isPublic(true)
                 .build();
 
-        locationRepository.save(loc1);
 
-        Location loc2 = Location.builder()
-                .name("test")
-                .address1("경기도 수원시 팔달구")
-                .address2("권광로180번길 53-26")
-                .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
-                .build();
+        memberLocationRepository.save(memberLocation);
+        memberLocationRepository.save(memberLocation2);
+        memberLocationRepository.save(memberLocation3);
 
-        locationRepository.save(loc2);
-
-
-        Long locId1 = loc1.getId();
-        Long locId2 = loc2.getId();
-        Long memberId = 1L;
-
-        MemberLocation memLoc1 = new MemberLocation(memberId, locId1, true);
-        MemberLocation memLoc2 = new MemberLocation(memberId, locId2, false);
-
-        MemberLocation save1 = memberLocationRepository.save(memLoc1);
-        MemberLocation save2 = memberLocationRepository.save(memLoc2);
+        em.flush();
+        em.clear();
 
         //when
-        MemberLocation find1 = memberLocationRepository.findByLocationId(locId1).get();
-        MemberLocation find2 = memberLocationRepository.findByLocationId(locId2).get();
-        List<MemberLocation> allByMemberId = memberLocationRepository.findAllByMemberId(memberId);
-        List<MemberLocation> allByMemberIdAndIsPublicTrue = memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId);
+        List<MemberLocation> allByMember = memberLocationRepository.findAllByMember(savedMember);
+        List<MemberLocation> allByMemberAndIsPublicTrue = memberLocationRepository.findAllByMemberAndIsPublicTrue(savedMember);
 
         //then
-        assertThat(find1).isEqualTo(save1);
-        assertThat(find2).isEqualTo(save2);
-        assertThat(allByMemberId.size()).isEqualTo(2);
-        assertThat(allByMemberIdAndIsPublicTrue.size()).isEqualTo(1);
+        for (MemberLocation location : allByMember) {
+            assertThat(location.getMember().getId()).isEqualTo(savedMember.getId());
+            assertThat(location.isPublic()).isEqualTo(true);
+        }
+
+        for (MemberLocation location : allByMemberAndIsPublicTrue) {
+            assertThat(location.getMember().getId()).isEqualTo(savedMember.getId());
+            assertThat(location.isPublic()).isEqualTo(true);
+        }
+    }
+
+    @Test
+    void update() throws Exception {
+        //given
+        Long savedMemberId = savedMember.getId();
+        Long savedLocId = savedLoc.getId();
+        Long savedLocId2 = savedLoc2.getId();
+        Long savedLocId3 = savedLoc3.getId();
+
+        MemberLocation memberLocation = MemberLocation.builder()
+                .locationId(savedLocId)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation2 = MemberLocation.builder()
+                .locationId(savedLocId2)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation3 = MemberLocation.builder()
+                .locationId(savedLocId3)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+
+        memberLocationRepository.save(memberLocation);
+        memberLocationRepository.save(memberLocation2);
+        memberLocationRepository.save(memberLocation3);
+
+        em.flush();
+        em.clear();
+
+        List<MemberLocation> allByMember = memberLocationRepository.findAllByMember(savedMember);
+        assumeTrue(allByMember.size() == 3);
+
+        //when
+        memberLocationRepository.updateMemberLocationBeingPrivate(savedLocId);
+
+        em.flush();
+        em.clear();
+
+        List<MemberLocation> allByMemberAndIsPublicTrue = memberLocationRepository.findAllByMemberAndIsPublicTrue(savedMember);
+        Optional<MemberLocation> target = memberLocationRepository.findByLocationId(savedLocId);
+        //then
+        assertThat(target.get().isPublic()).isEqualTo(false);
+        assertThat(allByMemberAndIsPublicTrue.size()).isEqualTo(2);
     }
 
     @Test
     void delete() throws Exception {
         //given
-        Location loc1 = Location.builder()
-                .name("test")
-                .address1("경기도 수원시 팔달구")
-                .address2("권광로180번길 53-26")
-                .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+        Long savedMemberId = savedMember.getId();
+        Long savedLocId = savedLoc.getId();
+        Long savedLocId2 = savedLoc2.getId();
+        Long savedLocId3 = savedLoc3.getId();
+
+        MemberLocation memberLocation = MemberLocation.builder()
+                .locationId(savedLocId)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation2 = MemberLocation.builder()
+                .locationId(savedLocId2)
+                .member(savedMember)
+                .isPublic(true)
+                .build();
+        MemberLocation memberLocation3 = MemberLocation.builder()
+                .locationId(savedLocId3)
+                .member(savedMember)
+                .isPublic(true)
                 .build();
 
-        locationRepository.save(loc1);
 
-        Location loc2 = Location.builder()
-                .name("test")
-                .address1("경기도 수원시 팔달구")
-                .address2("권광로180번길 53-26")
-                .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
-                .build();
+        memberLocationRepository.save(memberLocation);
+        memberLocationRepository.save(memberLocation2);
+        memberLocationRepository.save(memberLocation3);
 
-        locationRepository.save(loc2);
+        em.flush();
+        em.clear();
 
-        Long locId1 = loc1.getId();
-        Long locId2 = loc2.getId();
-        Long memberId = 1L;
+        // when
+        memberLocationRepository.deleteMemberLocationByLocationId(savedLocId);
+        List<MemberLocation> allByMember = memberLocationRepository.findAllByMember(savedMember);
 
-        MemberLocation memLoc1 = new MemberLocation(memberId, locId1, true);
-        MemberLocation memLoc2 = new MemberLocation(memberId, locId2, false);
-
-        memberLocationRepository.save(memLoc1);
-        memberLocationRepository.save(memLoc2);
-
-        Optional<MemberLocation> find1 = memberLocationRepository.findByLocationId(locId1);
-        Optional<MemberLocation> find2 = memberLocationRepository.findByLocationId(locId2);
-
-        //when
-
-        find1.ifPresent(selectMLoc -> {
-            memberLocationRepository.deleteMemberLocationByLocationId(locId1);
-        });
-
-        List<MemberLocation> allByMemberId = memberLocationRepository.findAllByMemberId(memberId);
-
-        //then
-        assertThat(allByMemberId.size()).isEqualTo(1);
-
+        // then
+        assertThat(allByMember.size()).isEqualTo(2);
     }
 
 }
