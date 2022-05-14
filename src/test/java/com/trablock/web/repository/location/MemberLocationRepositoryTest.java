@@ -222,6 +222,10 @@ class MemberLocationRepositoryTest {
         //then
         assertThat(target.get().isPublic()).isEqualTo(false);
         assertThat(allByMemberAndIsPublicTrue.size()).isEqualTo(2);
+        memberLocationRepository.updateMemberLocationBeingPublic(savedLocId);
+        List<MemberLocation> allByMemberAndIsPublicTrue2 = memberLocationRepository.findAllByMemberAndIsPublicTrue(savedMember);
+        assertThat(allByMemberAndIsPublicTrue2.size()).isEqualTo(3);
+
     }
 
     @Test
