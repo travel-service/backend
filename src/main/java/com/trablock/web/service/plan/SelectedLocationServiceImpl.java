@@ -36,11 +36,11 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     @Transactional
     public void createSelectedLocation(Form form, Member findMemberId, Plan plan) {
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
-            Location locationId = locationRepository.findLocationId(form.getSelectedLocationForm().getSelectedLocation().get(i));
+            //Location locationId = locationRepository.findLocationId(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .member(findMemberId)
                     .plan(plan)
-                    .location(locationId)
+                    //.location(locationId)
                     .build();
 
             saveSelectedLocation(selectedLocation);
