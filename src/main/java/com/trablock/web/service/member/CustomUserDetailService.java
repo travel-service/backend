@@ -1,4 +1,4 @@
-package com.trablock.web.service;
+package com.trablock.web.service.member;
 
 import com.trablock.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

@@ -35,6 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * API 요청이 안된다면 permitAll() 부분 문제일 수 있습니다. 꼭 체크해주세요.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -43,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/user/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
