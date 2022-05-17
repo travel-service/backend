@@ -5,45 +5,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum LocationType {
-    MEMBER(0) {
-        @Override
-        public boolean isMember() {
-            return true;
-        }
-    },
-    LODGE(1) {
-        @Override
-        public boolean isLodge() {
-            return true;
-        }
-    },
-    RESTAURANT(2) {
-        @Override
-        public boolean isRestaurant() {
-            return true;
-        }
-    },
-    ATTRACTION(3) {
+    ATTRACTION(0) {
         @Override
         public boolean isAttraction() {
             return true;
         }
     },
-    CULTURE(4) {
+    CULTURE(1) {
         @Override
         public boolean isCulture() {
             return true;
         }
     },
-    FESTIVAL(5) {
+    FESTIVAL(2) {
         @Override
         public boolean isFestival() {
             return true;
         }
     },
-    LEPORTS(6) {
+    LEPORTS(3) {
         @Override
         public boolean isLeports() {
+            return true;
+        }
+    },
+    LODGE(4) {
+        @Override
+        public boolean isLodge() {
+            return true;
+        }
+    },
+    RESTAURANT(5) {
+        @Override
+        public boolean isRestaurant() {
             return true;
         }
     };

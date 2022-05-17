@@ -25,13 +25,11 @@ class LocationRepositoryTest {
     @Autowired
     LocationRepository locationRepository;
 
-
     @PersistenceContext
     EntityManager em;
 
     @Test
     void create() {
-
         //given
         Location loc = Location.builder()
                 .name("test")
@@ -213,6 +211,15 @@ class LocationRepositoryTest {
         //then
         assertThat(all.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    void 조회() {
+        List<Location> all = locationRepository.findAll();
+        System.out.println("all = " + all);
+        for (Location location : all) {
+            System.out.println("location = " + location);
+        }
     }
 
 }

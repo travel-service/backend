@@ -1,4 +1,4 @@
-package com.trablock.web.repository.location.type;
+package com.trablock.web.repository.location;
 
 import com.trablock.web.entity.location.EnglishInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

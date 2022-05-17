@@ -11,6 +11,6 @@ import java.util.Optional;
 
 public interface LeportsRepository extends JpaRepository<Leports, Long> {
     @Query("select l from Leports l where l.locationId =: locationId")
-    Optional<Leports> findByLocationId(@Param("locationId") Long locationId);
+    Leports findByLocationId(@Param("locationId") Long locationId);
 
 }

@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface CultureRepository extends JpaRepository<Culture, Long> {
-    @Query("select c from Culture c where c.locationId =: locationId")
-    Optional<Culture> findCultureByLocationId(@Param("locationId") Long locationId);
+    @Query("select c from Culture c where c.locationId = :locationId")
+    Culture findByLocationId(@Param("locationId") Long locationId);
 }

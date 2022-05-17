@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface LodgeRepository extends JpaRepository<Lodge, Long> {
     @Query("select l from Lodge l where l.locationId =: locationId")
-    Optional<Lodge> findByLocationId(@Param("locationId") Long locationId);
+    Lodge findByLocationId(@Param("locationId") Long locationId);
 }

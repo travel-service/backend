@@ -18,12 +18,6 @@ public interface LocationService {
 
     SimpleLocationDto toSimpleDto(Location location);
 
-    LocationDto toDto(Long locationId);
-
-    LocationDto toDto(String locationName);
-
-    Location toEntity(LocationDto locationDto);
-
     List<LocationDto> getMemberLocations(Long memberId);
 
     List<LocationDto> getPublicMemberLocation(Long memberId);
@@ -31,4 +25,6 @@ public interface LocationService {
     HashMap<String, Object> viewSimpleAll();
 
     List<SimpleLocationDto> viewSimple(LocationType type);
+
+    LocationDto getLocationDetails(Long locationId);
 }

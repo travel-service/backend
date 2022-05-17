@@ -8,11 +8,15 @@ import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
+import com.trablock.web.repository.location.TypeLocationRepository;
 import com.trablock.web.service.location.mapper.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +34,7 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
+    private final TypeLocationRepository typeRepository = new TypeLocationRepository();
 
     @Override
     @Transactional
@@ -37,6 +42,15 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.save(requestDto.toEntity()).getId();
     }
 
+    @Override
+    public LocationDto getLocationDetails(Long locationId) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        Optional<Location> locationById = locationRepository.findLocationById(locationId);
+        return locationById.map(locationMapper::toDto).orElse(null);
+    }
+
+    // MarkLocationDto or PointLocationDto
+    @Override
     public List<SimpleLocationDto> getSimpleLocations() {
         List<Location> locations = locationRepository.findAll();
         return locations.stream().map(this::toSimpleDto)
@@ -53,25 +67,6 @@ public class LocationServiceImpl implements LocationService {
                 .build();
 
         return simpleDto;
-    }
-
-    @Override
-    public LocationDto toDto(Long locationId) {
-        Optional<Location> location = locationRepository.findById(locationId);
-
-        return location.map(locationMapper::toDto).orElse(null);
-    }
-
-    @Override
-    public LocationDto toDto(String locationName) {
-        Optional<Location> location = locationRepository.findByName(locationName);
-
-        return location.map(locationMapper::toDto).orElse(null);
-    }
-
-    @Override
-    public Location toEntity(LocationDto locationDto) {
-        return locationMapper.toEntity(locationDto);
     }
 
     @Override
@@ -98,11 +93,11 @@ public class LocationServiceImpl implements LocationService {
     public HashMap<String, Object> viewSimpleAll() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("Lodge", viewSimple(LODGE));
-        map.put("Lodge", viewSimple(RESTAURANT));
-        map.put("Lodge", viewSimple(ATTRACTION));
-        map.put("Lodge", viewSimple(LEPORTS));
-        map.put("Lodge", viewSimple(FESTIVAL));
-        map.put("Lodge", viewSimple(CULTURE));
+        map.put("Restaurant", viewSimple(RESTAURANT));
+        map.put("Attraction", viewSimple(ATTRACTION));
+        map.put("Leports", viewSimple(LEPORTS));
+        map.put("Festival", viewSimple(FESTIVAL));
+        map.put("Culture", viewSimple(CULTURE));
 
         return map;
     }

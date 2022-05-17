@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface FestivalRepository extends JpaRepository<Festival, Long> {
-    @Query("select f from Festival f where f.locationId =: locationId")
-    Optional<Festival> findByLocationId(@Param("locationId") Long locationId);
+    @Query("select f from Festival f where f.locationId = :locationId")
+    Festival findByLocationId(@Param("locationId") Long locationId);
 }
