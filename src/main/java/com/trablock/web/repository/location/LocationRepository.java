@@ -13,7 +13,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
 
     @Query("select l from Location l where l.type = :type")
-    List<Location> findLocationsByType(@Param("type") LocationType locationType);
+    List<Location> findAllByType(@Param("type") LocationType locationType);
 
     @Query("select l from Location l where l.name = :name")
     Optional<Location> findByName(@Param("name") String name);

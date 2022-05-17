@@ -2,20 +2,18 @@ package com.trablock.web.controller;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.LocationDto;
-import com.trablock.web.dto.location.SimpleLocationDto;
+import com.trablock.web.dto.location.MarkLocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.location.LocationService;
 import com.trablock.web.service.location.LocationServiceImpl;
 import com.trablock.web.service.location.TypeLocationService;
 import com.trablock.web.service.location.TypeLocationServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import static com.trablock.web.domain.LocationType.*;
 
@@ -58,19 +56,19 @@ public class LocationController {
     @RequestMapping(value = "/locations", method = RequestMethod.GET)
     public HashMap<String, Object> viewAll() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("Lodge", locationService.viewSimple(LODGE));
-        map.put("Restaurant", locationService.viewSimple(RESTAURANT));
-        map.put("Attraction", locationService.viewSimple(ATTRACTION));
-        map.put("Culture", locationService.viewSimple(CULTURE));
-        map.put("Festival", locationService.viewSimple(FESTIVAL));
-        map.put("Leports", locationService.viewSimple(LEPORTS));
+        map.put("Lodge", locationService.getMarkLocationsWithType(LODGE));
+        map.put("Restaurant", locationService.getMarkLocationsWithType(RESTAURANT));
+        map.put("Attraction", locationService.getMarkLocationsWithType(ATTRACTION));
+        map.put("Culture", locationService.getMarkLocationsWithType(CULTURE));
+        map.put("Festival", locationService.getMarkLocationsWithType(FESTIVAL));
+        map.put("Leports", locationService.getMarkLocationsWithType(LEPORTS));
         return map;
     }
 
     @ResponseBody
     @RequestMapping(value = "/simples", method = RequestMethod.GET)
-    public List<SimpleLocationDto> viewSimple() {
-        return locationService.getSimpleLocations();
+    public List<MarkLocationDto> viewSimple() {
+        return locationService.getMarkLocationDtos();
     }
 
     @ResponseBody

@@ -2,7 +2,7 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.LocationSaveRequestDto;
-import com.trablock.web.dto.location.SimpleLocationDto;
+import com.trablock.web.dto.location.MarkLocationDto;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.member.Gender;
 import com.trablock.web.entity.member.Member;
@@ -14,14 +14,10 @@ import com.trablock.web.service.location.mapper.LocationMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -53,10 +49,10 @@ class LocationServiceImplTest {
 
     @Test
     void viewSimpleLoc() {
-        List<SimpleLocationDto> simpleLocationDtos = locationService.viewSimple(LocationType.LODGE);
+        List<MarkLocationDto> markLocationDtos = locationService.getMarkLocationsWithType(LocationType.LODGE);
 
-        for (SimpleLocationDto simpleLocationDto : simpleLocationDtos) {
-            System.out.println("simpleLocationDto = " + simpleLocationDto);
+        for (MarkLocationDto markLocationDto : markLocationDtos) {
+            System.out.println("simpleLocationDto = " + markLocationDto);
         }
     }
 
