@@ -5,10 +5,7 @@ import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.SelectedLocation;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,8 +29,10 @@ public class Member implements UserDetails{
     @Column(name = "member_id")
     private Long id; //회원 번호
 
+    @NonNull
     private String userName; //아이디
 
+    @NonNull
     private String password;
 
     private String realName; //회원 이름

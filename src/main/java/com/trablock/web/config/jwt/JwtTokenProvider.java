@@ -35,10 +35,10 @@ public class JwtTokenProvider {
     private final MemberRepository memberRepository;
 
     // AccessToken 유효시간 1m
-    private long accessTokenValidTime = 1 * 60 * 1000L;
+    private long accessTokenValidTime = 2 * 60 * 1000L;
 
     // RefreshToken 유효시간 2m
-    private long refreshTokenValidTime = 2 * 60 * 1000L;
+    private long refreshTokenValidTime = 20 * 60 * 1000L;
     
     //secretKey 암호화
     @PostConstruct

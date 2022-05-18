@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
@@ -73,4 +71,23 @@ public class FileService {
             throw new RuntimeException("파일이 디렉토리에 없습니다. 파일명 : " + filename, e);
         }
     }
+
+    /**
+     * @param multipartFile
+     * @param userName
+     * @return /경로/userName.png
+     * 사용자가 이전에 저장한 프로필 사진을 원하면? 히스토리를 구현해야 할까?
+     */
+    public String saveProfileImg(MultipartFile multipartFile, String userName) {
+        String filename = userName + ".png";
+        try {
+            Path targetLocation = dirLocation.resolve(filename);
+            Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            return "OK";
+
+        } catch (IOException e) {
+            throw new RuntimeException("해당 파일을 저장에 실패했습니다. 이유는 ..." + filename, e);
+        }
+    }
+
 }

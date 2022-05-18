@@ -5,12 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
@@ -21,7 +20,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/file")
+//@RequestMapping("/api/user/file")
 public class FileController {
 
     private final FileService fileService;
