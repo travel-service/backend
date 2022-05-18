@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.trablock.web.domain.LocationType.*;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -46,10 +44,9 @@ public class LocationServiceImpl implements LocationService {
         return locationById.map(locationMapper::toDto).orElse(null);
     }
 
-    // MarkLocationDto or PointLocationDto
     @Override
     public List<MarkLocationDto> getMarkLocationDtos() {
-        List<Location> locations = locationRepository.findAll();
+        List<Location> locations = locationRepository.findAllByIsMemberFalse();
         return locations.stream().map(this::toMarkLocationDto)
                 .collect(Collectors.toList());
     }
@@ -89,7 +86,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<MarkLocationDto> getMarkLocationsWithType(LocationType type) {
         List<MarkLocationDto> markLocationDtos = new ArrayList<MarkLocationDto>();
-        List<Location> locations = locationRepository.findAllByType(type);
+        List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
         locations.forEach(location -> markLocationDtos.add(toMarkLocationDto(location)));
         return markLocationDtos;
     }

@@ -11,7 +11,6 @@ import static lombok.AccessLevel.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-
 public class LocationSaveRequestDto {
     private String name;
     private String address1;

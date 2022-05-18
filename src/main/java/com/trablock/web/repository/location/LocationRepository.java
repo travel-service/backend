@@ -11,9 +11,11 @@ import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
+    @Query("select l from Location l where l.type = :type and l.isMember = false")
+    List<Location> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType);
 
-    @Query("select l from Location l where l.type = :type")
-    List<Location> findAllByType(@Param("type") LocationType locationType);
+    @Query("select l from Location l where l.isMember = false")
+    List<Location> findAllByIsMemberFalse();
 
     @Query("select l from Location l where l.name = :name")
     Optional<Location> findByName(@Param("name") String name);

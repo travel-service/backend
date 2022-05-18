@@ -41,6 +41,9 @@ public class Location {
     @Column
     private LocationType type;
 
+    @Column
+    private Boolean isMember;
+
     public void setType(LocationType type) {
         this.type = type;
     }
