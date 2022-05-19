@@ -1,9 +1,9 @@
 package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.repository.MainDirectoryRepository;
+//import com.trablock.web.repository.MainDirectoryRepository;
 import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.PlanRepository;
+//import com.trablock.web.repository.PlanRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,9 +24,9 @@ class PlanTest {
 
     @PersistenceContext
     EntityManager em;
-    @Autowired PlanRepository planRepository;
+//    @Autowired PlanRepository planRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired MainDirectoryRepository mainDirectoryRepository;
+//    @Autowired MainDirectoryRepository mainDirectoryRepository;
 
     @Test
     public void planEntityTest() throws Exception {
@@ -40,14 +40,14 @@ class PlanTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        MainDirectory mainDirectory = new MainDirectory();
-        mainDirectoryRepository.save(mainDirectory);
+        UserDirectory mainDirectory = new UserDirectory();
+//        mainDirectoryRepository.save(mainDirectory);
 
 
         Plan plan1 = Plan.builder()
                 .member(member1)
                 .name("test")
-                .destination("test")
+//                .destination("test")
                 .periods(3)
                 .depart("test")
                 .thumbnail("test")
@@ -57,7 +57,7 @@ class PlanTest {
         Plan plan2 = Plan.builder()
                 .member(member1)
                 .name("test")
-                .destination("test")
+//                .destination("test")
                 .periods(3)
                 .depart("test")
                 .thumbnail("test")
@@ -67,16 +67,16 @@ class PlanTest {
         Plan plan3 = Plan.builder()
                 .member(member1)
                 .name("test")
-                .destination("test")
+//                .destination("test")
                 .periods(3)
                 .depart("test")
                 .thumbnail("test")
                 .planStatus(PlanStatus.MAIN)
                 .build();
 
-        planRepository.save(plan1);
-        planRepository.save(plan2);
-        planRepository.save(plan3);
+//        planRepository.save(plan1);
+//        planRepository.save(plan2);
+//        planRepository.save(plan3);
 
 
         em.flush();

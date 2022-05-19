@@ -5,6 +5,7 @@ import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.SelectedLocation;
+import com.trablock.web.entity.plan.UserDirectory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,10 +59,13 @@ public class Member implements UserDetails{
     private List<Plan> plans = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<SelectedLocation> selectedLocations = new ArrayList<>();
+    private List<UserDirectory> userDirectories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<Concept> concepts = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<SelectedLocation> selectedLocations = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "member")
+//    private List<Concept> concepts = new ArrayList<>();
 
 
     /**
@@ -105,4 +109,5 @@ public class Member implements UserDetails{
     public int hashCode() {
         return super.hashCode();
     }
+
 }

@@ -18,10 +18,6 @@ public class SelectedLocation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location location;
 
@@ -29,6 +25,4 @@ public class SelectedLocation {
     @JoinColumn(name = "plan_id")
     private Plan plan;
 
-    //@Enumerated(EnumType.STRING)
-    //private SelectStatus selectStatus;
 }

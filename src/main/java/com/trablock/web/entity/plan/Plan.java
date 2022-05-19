@@ -1,6 +1,6 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.BaseEntity;
+import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Plan {
+public class Plan extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -33,8 +33,10 @@ public class Plan {
     @OneToMany(mappedBy = "plan")
     private List<Concept> concepts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PlanItem> planItems = new ArrayList<>();
+
     private String name;
-    private String destination;
     private int periods;
     private String depart;
     private String thumbnail;
@@ -42,20 +44,41 @@ public class Plan {
     @Enumerated(EnumType.STRING)
     private PlanStatus planStatus;
 
-    //==연관관계 메서드==//
-    public void setMember(Member member) {
-        this.member = member;
-        member.getPlans().add(this);
+    //==비지니스 로직==//
+    /**
+     * 플랜 삭제
+     */
+    public void trash() {
+        if (getPlanStatus() == PlanStatus.TRASH) {
+            throw new IllegalStateException("이미 휴지통으로 이동된 플랜입니다.");
+        }
+
+        this.setPlanStatus(PlanStatus.TRASH);
     }
 
-    public void addDay(Day day) {
-        days.add(day);
+    /**
+     * 플랜 삭제
+     */
+    public void delete() {
+        if (getPlanStatus() == PlanStatus.MAIN) {
+            throw new IllegalStateException("휴지통으로 먼저 이동하시오");
+        }
+
+        this.setPlanStatus(PlanStatus.DELETE);
     }
 
-    //==생성 메서드==//
-//    public static Plan createPlan(Member member, Day... days) {
-//        Plan plan = new Plan();
-//        plan.setMember(member);
-//
-//    }
+    /**
+     * 플랜 복구
+     */
+    public void revert() {
+        if (getPlanStatus() == PlanStatus.MAIN) {
+            throw new IllegalStateException("이미 복구된 플랜입니다.");
+        }
+
+        this.setPlanStatus(PlanStatus.MAIN);
+    }
+
+    public void setPlanStatus(PlanStatus planStatus) {
+        this.planStatus = planStatus;
+    }
 }

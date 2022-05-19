@@ -1,4 +1,4 @@
-package com.trablock.web.repository;
+package com.trablock.web.repository.plan;
 
 import com.trablock.web.entity.plan.SelectedLocation;
 import org.springframework.data.jpa.repository.JpaRepository;

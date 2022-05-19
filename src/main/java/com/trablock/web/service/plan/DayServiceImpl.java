@@ -1,26 +1,20 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.Form;
-import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.repository.DayRepository;
+import com.trablock.web.repository.plan.DayRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.plan.planInterface.DayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DayServiceImpl implements DayService {
 
-    @PersistenceContext
-    EntityManager em;
     private final DayRepository dayRepository;
     private final LocationRepository locationRepository;
 

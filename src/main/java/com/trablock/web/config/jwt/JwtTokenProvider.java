@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
@@ -35,10 +34,10 @@ public class JwtTokenProvider {
     private final MemberRepository memberRepository;
 
     // AccessToken 유효시간 1m
-    private long accessTokenValidTime = 1 * 60 * 1000L;
+    private long accessTokenValidTime = 60 * 60 * 1000L;
 
     // RefreshToken 유효시간 2m
-    private long refreshTokenValidTime = 2 * 60 * 1000L;
+    private long refreshTokenValidTime = 60 * 60 * 1000L;
     
     //secretKey 암호화
     @PostConstruct
