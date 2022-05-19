@@ -14,17 +14,6 @@
 
 ![image](https://user-images.githubusercontent.com/76652908/163234178-9caaec72-4c65-4070-8ed2-050d895c9424.png)
 
-## 3. /api/user/test
-(현재)
-1. Reqeust Header에 AccessToeken, Cookie에 refreshToken 심어서 요청
-
-AccessToken 유효 = TOKEN OK 메시지 \
-AccessToken 만료, RefreshToken 유효 = response Header에 newAccessToken 발행, TOKEN OK 메시지 \
-AccessToken 만료, RefreshToken 만료 = Denied
-
-![image](https://user-images.githubusercontent.com/76652908/163234501-b3c9c1a8-191f-4816-a1d7-54bb3e9050b2.png)
-
-
 # 이미지 업로드, 다운로드
 ### 네이밍 규칙 생성 필요
 ## 1. /upload 
@@ -34,4 +23,4 @@ AccessToken 만료, RefreshToken 만료 = Denied
 ![file2](https://user-images.githubusercontent.com/76652908/168603062-c8fa11ed-ca84-4722-a078-40d92d2a7d22.PNG)
 
 ### 파일명을 어떻게 알아내나요?
-upload 요청 시 return 값으로 /경로/파일명 돌려줍니다.
+현재 프로필 사진 기능만 구현, 따라서 사용자이름.png 로 자동저장. 
