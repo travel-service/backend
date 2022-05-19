@@ -6,12 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
-public class MemberDto {
+public class MemberUpdateDto {
     private String nickName;
-    private String memberImg;
-    private String comment;
+    private String bio;
     private String birthday;
     private Gender gender;
     private String phoneNum;

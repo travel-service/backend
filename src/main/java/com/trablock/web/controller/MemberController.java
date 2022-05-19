@@ -1,9 +1,8 @@
 package com.trablock.web.controller;
 
 import com.trablock.web.config.jwt.JwtTokenService;
-import com.trablock.web.dto.member.MemberProfileDto;
 import com.trablock.web.dto.member.MemberSaveDto;
-import com.trablock.web.dto.member.MemberDto;
+import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.member.*;
 import com.trablock.web.service.file.FileService;
 import com.trablock.web.service.member.MemberServiceImpl;
@@ -15,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
-import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -63,8 +60,10 @@ public class MemberController {
     }
 
     // 회원 - 개인정보 수정
-//    @PutMapping("/api/user/profile/edit")
-
+    @PutMapping("/api/user/profile/edit")
+    public void editMemberProfile(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+        memberServiceImpl.updateMember(memberUpdateDto, request);
+    }
 
     // 회원 - 한 줄 소개 수정 - 사용보류
     @PutMapping("/api/user/profile/{bio}")
@@ -74,7 +73,7 @@ public class MemberController {
 
     // 회원
     @PutMapping("/api/user/profile/update")
-    public void updateProfile(@RequestBody MemberDto memberUpdateDto, HttpServletRequest request, HttpServletResponse response) {
+    public void updateProfile(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request, HttpServletResponse response) {
         return;
     }
 

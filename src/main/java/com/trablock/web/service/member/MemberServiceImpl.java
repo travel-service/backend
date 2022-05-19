@@ -3,10 +3,8 @@ package com.trablock.web.service.member;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.config.jwt.JwtTokenService;
-import com.trablock.web.dto.member.MemberInfoDto;
-import com.trablock.web.dto.member.MemberProfileDto;
 import com.trablock.web.dto.member.MemberSaveDto;
-import com.trablock.web.dto.member.MemberDto;
+import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.auth.RefreshToken;
 import com.trablock.web.entity.member.*;
 import com.trablock.web.repository.MemberRepository;
@@ -14,7 +12,6 @@ import com.trablock.web.repository.TokenRepository;
 import com.trablock.web.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.bridge.Message;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -128,6 +125,7 @@ public class MemberServiceImpl implements MemberService{
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
+
         return ResponseEntity.ok()
                 .contentType(parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileResource.getFilename() + "\"")
@@ -165,8 +163,23 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(member);
     }
 
-    public String MemberUpdate(MemberDto memberUpdateDto, HttpServletRequest request) {
-        return "OK";
+    /**
+     * 회원 개인정보 수정 (아이디, 비밀번호, 프사 제외)
+     * @param memberUpdateDto
+     * @param request
+     */
+    public void updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+        Long id = jwtTokenService.TokenToUserId(request);
+        Member member = memberRepository.findMemberId(id);
+
+        member.getMemberProfile().setNickName(memberUpdateDto.getNickName());
+        member.getMemberProfile().setBio(memberUpdateDto.getBio());
+        member.getMemberInfo().setBirthday(memberUpdateDto.getBirthday());
+        member.getMemberInfo().setEmail(memberUpdateDto.getEmail());
+        member.getMemberInfo().setGender(memberUpdateDto.getGender());
+        member.getMemberInfo().setPhoneNum(memberUpdateDto.getPhoneNum());
+
+        memberRepository.save(member);
     }
 
     // 회원가입한 사용자인지 검증
