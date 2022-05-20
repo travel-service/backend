@@ -46,22 +46,36 @@ public class LocationController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/locations", method = RequestMethod.GET)
-    public HashMap<String, Object> viewAll() {
+    @RequestMapping(value = "/locations/mark", method = RequestMethod.GET)
+    public HashMap<String, Object> viewMarkLocationsOnMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("Lodge", locationService.getMarkLocationsWithType(LODGE));
-        map.put("Restaurant", locationService.getMarkLocationsWithType(RESTAURANT));
-        map.put("Attraction", locationService.getMarkLocationsWithType(ATTRACTION));
-        map.put("Culture", locationService.getMarkLocationsWithType(CULTURE));
-        map.put("Festival", locationService.getMarkLocationsWithType(FESTIVAL));
-        map.put("Leports", locationService.getMarkLocationsWithType(LEPORTS));
+        map.put("Lodge", locationService.getMarkLocationListWithType(LODGE));
+        map.put("Restaurant", locationService.getMarkLocationListWithType(RESTAURANT));
+        map.put("Attraction", locationService.getMarkLocationListWithType(ATTRACTION));
+        map.put("Culture", locationService.getMarkLocationListWithType(CULTURE));
+        map.put("Festival", locationService.getMarkLocationListWithType(FESTIVAL));
+        map.put("Leports", locationService.getMarkLocationListWithType(LEPORTS));
         return map;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/simples", method = RequestMethod.GET)
+    @RequestMapping(value = "/locations/block", method = RequestMethod.GET)
+    public HashMap<String, Object> viewBlockLocationList() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("Lodge", locationService.getBlockLocationListWithType(LODGE));
+        map.put("Restaurant", locationService.getBlockLocationListWithType(RESTAURANT));
+        map.put("Attraction", locationService.getBlockLocationListWithType(ATTRACTION));
+        map.put("Culture", locationService.getBlockLocationListWithType(CULTURE));
+        map.put("Festival", locationService.getBlockLocationListWithType(FESTIVAL));
+        map.put("Leports", locationService.getBlockLocationListWithType(LEPORTS));
+        return map;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/simple", method = RequestMethod.GET)
     public List<MarkLocationDto> viewSimple() {
-        return locationService.getMarkLocationDtos();
+        return locationService.getMarkLocationList();
     }
 
     /**

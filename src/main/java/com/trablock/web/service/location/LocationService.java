@@ -13,15 +13,19 @@ public interface LocationService {
 
     MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto);
 
-    List<MarkLocationDto> getMarkLocationDtos();
+    List<MarkLocationDto> getMarkLocationList();
+
+    List<LocationDto> getMemberLocationList(Long memberId);
+
+    List<LocationDto> getPublicMemberLocationList(Long memberId);
+
+    List<MarkLocationDto> getMarkLocationListWithType(LocationType type);
+
+    List<BlockLocatioDto> getBlockLocationListWithType(LocationType type);
+
+    LocationDto getLocationDetails(Long locationId);
 
     MarkLocationDto toMarkLocationDto(Location location);
 
-    List<LocationDto> getMemberLocations(Long memberId);
-
-    List<LocationDto> getPublicMemberLocation(Long memberId);
-
-    List<MarkLocationDto> getMarkLocationsWithType(LocationType type);
-
-    LocationDto getLocationDetails(Long locationId);
+    BlockLocatioDto toBlockLocationDto(Location location);
 }

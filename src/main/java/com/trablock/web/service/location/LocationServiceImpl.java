@@ -38,6 +38,7 @@ public class LocationServiceImpl implements LocationService {
     /**
      * ID 값 반환이 아니라 DTO를 반환한다면?
      * 굳이 DTO를 또 찾을 필요가 없지 않을까.
+     *
      * @param memberLocationSaveDto
      * @return
      */
@@ -55,26 +56,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<MarkLocationDto> getMarkLocationDtos() {
+    public List<MarkLocationDto> getMarkLocationList() {
         List<Location> locations = locationRepository.findAllByIsMemberFalse();
         return locations.stream().map(this::toMarkLocationDto)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public MarkLocationDto toMarkLocationDto(Location location) {
-        MarkLocationDto markLocationDto = MarkLocationDto.builder()
-                .id(location.getId())
-                .name(location.getName())
-                .type(location.getType())
-                .coords(location.getCoords())
-                .build();
-
-        return markLocationDto;
-    }
 
     @Override
-    public List<LocationDto> getMemberLocations(Long memberId) {
+    public List<LocationDto> getMemberLocationList(Long memberId) {
 
         for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberId(memberId)) {
             Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
@@ -84,7 +74,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<LocationDto> getPublicMemberLocation(Long memberId) {
+    public List<LocationDto> getPublicMemberLocationList(Long memberId) {
 
         for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId)) {
             Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
@@ -94,10 +84,41 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<MarkLocationDto> getMarkLocationsWithType(LocationType type) {
+    public List<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
         List<MarkLocationDto> markLocationDtos = new ArrayList<MarkLocationDto>();
         List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
         locations.forEach(location -> markLocationDtos.add(toMarkLocationDto(location)));
         return markLocationDtos;
     }
+
+    @Override
+    public List<BlockLocatioDto> getBlockLocationListWithType(LocationType type) {
+        List<BlockLocatioDto> blockLocatioDtoList = new ArrayList<BlockLocatioDto>();
+        List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
+        locations.forEach(location -> blockLocatioDtoList.add(toBlockLocationDto(location)));
+        return blockLocatioDtoList;
+    }
+
+    @Override
+    public MarkLocationDto toMarkLocationDto(Location location) {
+        return MarkLocationDto.builder()
+                .id(location.getId())
+                .name(location.getName())
+                .type(location.getType())
+                .coords(location.getCoords())
+                .build();
+    }
+
+    @Override
+    public BlockLocatioDto toBlockLocationDto(Location location) {
+        return BlockLocatioDto.builder()
+                .id(location.getId())
+                .name(location.getName())
+                .address1(location.getAddress1())
+                .address2(location.getAddress2())
+                .image(location.getImage())
+                .type(location.getType())
+                .build();
+    }
+
 }

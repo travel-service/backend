@@ -49,7 +49,7 @@ class LocationServiceImplTest {
 
     @Test
     void viewSimpleLoc() {
-        List<MarkLocationDto> markLocationDtos = locationService.getMarkLocationsWithType(LocationType.LODGE);
+        List<MarkLocationDto> markLocationDtos = locationService.getMarkLocationListWithType(LocationType.LODGE);
 
         for (MarkLocationDto markLocationDto : markLocationDtos) {
             System.out.println("simpleLocationDto = " + markLocationDto);
