@@ -1,6 +1,7 @@
 package com.trablock.web.controller;
 
 import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.member.*;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,13 +40,13 @@ public class MemberController {
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)
     @GetMapping("/api/user/my-page")
     public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
-        return memberServiceImpl.MemberPage(request);
+        return memberServiceImpl.getMemberPage(request);
     }
 
     // 회원 - 회원 개인페이지 프로필 사진
     @GetMapping("/api/user/my-page/img")
     public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
-        return memberServiceImpl.MemberImg(request);
+        return memberServiceImpl.getMemberImg(request);
     }
 
     // 회원 - 개인정보 수정페이지 필요 DATA
@@ -66,17 +68,14 @@ public class MemberController {
     }
 
     // 회원 - 한 줄 소개 수정 - 사용보류
-    @PutMapping("/api/user/profile/{bio}")
+    @PutMapping("/api/user/profile/edit/{bio}")
     public void updateComment(@PathVariable("bio") String bio, HttpServletRequest request) {
         memberServiceImpl.UpdateComment(bio, request);
     }
 
-    // 회원
-    @PutMapping("/api/user/profile/update")
-    public void updateProfile(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request, HttpServletResponse response) {
-        return;
+    // 회원 - 비밀번호 수정
+    @PutMapping("/api/user/profile/edit/pwd")
+    public void updateMemberPwd(HttpServletRequest request, @RequestBody MemberPwdDto memberPwdDto) {
+        memberServiceImpl.updateMemberPwd(request, memberPwdDto);
     }
-
-
-
 }

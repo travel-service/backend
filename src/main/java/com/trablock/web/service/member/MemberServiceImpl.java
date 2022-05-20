@@ -3,6 +3,8 @@ package com.trablock.web.service.member;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.controller.exception.MemberException;
+import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.auth.RefreshToken;
@@ -14,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +33,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
@@ -88,7 +93,7 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      * @return nickname, bio, + .. 추가 가능
      */
-    public ResponseEntity<?> MemberPage(HttpServletRequest request) {
+    public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
         String userName = jwtTokenService.TokenToUserName(request);
         Member member = memberRepository.findByUserName(userName).get();
 
@@ -110,7 +115,7 @@ public class MemberServiceImpl implements MemberService{
      * @return MemberImg
      * @throws FileNotFoundException
      */
-    public ResponseEntity<?> MemberImg(HttpServletRequest request) throws FileNotFoundException {
+    public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
         String fileName = jwtTokenService.TokenToUserName(request) + ".png";
 
         Resource fileResource = fileService.loadFile(fileName);
@@ -180,6 +185,20 @@ public class MemberServiceImpl implements MemberService{
         member.getMemberInfo().setPhoneNum(memberUpdateDto.getPhoneNum());
 
         memberRepository.save(member);
+    }
+
+    public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
+        Long id = jwtTokenService.TokenToUserId(request);
+        Member member = memberRepository.findMemberId(id);
+
+        String origin = memberPwdDto.getOriginPwd();
+
+        if (passwordEncoder.matches(origin, member.getPassword())) {
+            String newPwd = passwordEncoder.encode(memberPwdDto.getNewPwd());
+            memberRepository.updateMemberPwd(newPwd, id);
+        } else {
+            throw new MemberException("잘못된 비밀번호 입력.");
+        }
     }
 
     // 회원가입한 사용자인지 검증
