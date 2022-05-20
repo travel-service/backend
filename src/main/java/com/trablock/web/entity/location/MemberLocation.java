@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location;
 
+import com.trablock.web.dto.location.MemberLocationDto;
 import com.trablock.web.entity.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,5 +33,13 @@ public class MemberLocation {
     private Member member;
 
     private boolean isPublic;
+
+    public MemberLocationDto toDto() {
+        return MemberLocationDto.builder()
+                .memberId(member.getId())
+                .locationId(locationId)
+                .isPublic(isPublic)
+                .build();
+    }
 
 }

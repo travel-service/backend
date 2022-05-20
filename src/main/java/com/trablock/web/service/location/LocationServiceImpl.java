@@ -1,14 +1,11 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
-import com.trablock.web.dto.location.LocationDto;
-import com.trablock.web.dto.location.LocationSaveRequestDto;
-import com.trablock.web.dto.location.MarkLocationDto;
+import com.trablock.web.dto.location.*;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
-import com.trablock.web.repository.location.TypeLocationRepository;
 import com.trablock.web.service.location.mapper.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -29,12 +26,25 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
-    private final TypeLocationRepository typeRepository = new TypeLocationRepository();
 
     @Override
     @Transactional
-    public Long create(LocationSaveRequestDto requestDto) {
-        return locationRepository.save(requestDto.toEntity()).getId();
+    public LocationDto createLocation(LocationSaveRequestDto requestDto) {
+        Location save = locationRepository.save(requestDto.toEntity());
+        return getLocationDetails(save.getId());
+
+    }
+
+    /**
+     * ID 값 반환이 아니라 DTO를 반환한다면?
+     * 굳이 DTO를 또 찾을 필요가 없지 않을까.
+     * @param memberLocationSaveDto
+     * @return
+     */
+    @Override
+    public MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto) {
+        MemberLocation save = memberLocationRepository.save(memberLocationSaveDto.toEntity());
+        return save.toDto();
     }
 
     @Override

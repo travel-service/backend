@@ -6,15 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MemberLocationRepository extends JpaRepository<MemberLocation, Long> {
-
-    @Query("select m from MemberLocation m where m.member = :member")
-    Optional<MemberLocation> findByMember(@Param("member") Member member);
 
     @Query("select m from MemberLocation m where m.member = :member")
     List<MemberLocation> findAllByMember(@Param("member") Member member);

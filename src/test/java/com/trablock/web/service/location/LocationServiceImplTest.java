@@ -67,7 +67,7 @@ class LocationServiceImplTest {
                 .type(LocationType.LODGE)
                 .build();
 
-        locationService.create(requestDto);
+        locationService.createLocation(requestDto);
 
 
     }
