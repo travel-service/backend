@@ -27,5 +27,6 @@ public class Day {
     @Embedded
     private MovingData movingData;
 
+    private Integer days;
     private String copyLocationId;
 }

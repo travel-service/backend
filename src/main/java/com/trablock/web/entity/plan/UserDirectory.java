@@ -4,8 +4,6 @@ import com.trablock.web.entity.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

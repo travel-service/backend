@@ -13,4 +13,5 @@ public class DayForm {
     private List<List<Day>> travelDay;
     private MovingData movingData;
     private String copyLocationId;
+    private int days;
 }

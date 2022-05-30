@@ -15,7 +15,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     Plan findPlanById(Long id);
 
     @Query("select p from Plan p where p.id = :id")
-    List<Plan> findByIdToList(@Param("id") Plan id);
+    List<Plan> findByIdToList(@Param("id") Long id);
 
     @Query("select p from Plan p  where p.id = :id")
     Plan findPlanByIdTypePlan(@Param("id") Plan id);

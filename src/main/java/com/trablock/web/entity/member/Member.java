@@ -2,9 +2,7 @@ package com.trablock.web.entity.member;
 
 
 import com.trablock.web.entity.location.MemberLocation;
-import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.entity.plan.SelectedLocation;
 import com.trablock.web.entity.plan.UserDirectory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,13 +58,6 @@ public class Member implements UserDetails{
 
     @OneToMany(mappedBy = "member")
     private List<UserDirectory> userDirectories = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "member")
-//    private List<SelectedLocation> selectedLocations = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "member")
-//    private List<Concept> concepts = new ArrayList<>();
-
 
     /**
      * 하위 로직은 TOKEN 기반 로그인을 위해 필요

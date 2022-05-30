@@ -6,7 +6,6 @@ import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
-import com.trablock.web.service.plan.planInterface.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PlanServiceImpl implements PlanService {
+public class PlanService {
 
     private final PlanRepository planRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,11 +30,10 @@ public class PlanServiceImpl implements PlanService {
         planRepository.save(plan);
     }
 
-    public Plan findOne(Long planId) {
-        return planRepository.findPlanById(planId);
+    public List<Plan> findOne(Long planId) {
+        return planRepository.findByIdToList(planId);
     }
 
-    @Override
     public Member findMemberId(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String userName = jwtTokenProvider.getUserName(token);
@@ -47,7 +45,6 @@ public class PlanServiceImpl implements PlanService {
         }
     }
 
-    @Override
     @Transactional
     public Plan createPlan(Form form, HttpServletRequest request) {
 
@@ -64,54 +61,35 @@ public class PlanServiceImpl implements PlanService {
         return plan;
     }
 
-    @Override
     public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
         Optional<Member> memberId = Optional.ofNullable(findMemberId(request));
         return planRepository.findByMainPlanStatus(memberId);
     }
 
-    @Override
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Optional<Member> memberId = Optional.ofNullable(findMemberId(request));
         return planRepository.findByTrashPlanStatus(memberId);
     }
 
-    /**
-     * 플랜 삭제(main -> trash)
-     */
+
+     // 플랜 삭제(main -> trash)
     @Transactional
-    @Override
     public void cancelPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId);
         plan.trash();
     }
 
-    /**
-     * 플랜 완전 삭제(trash -> delete)
-     */
+    // 플랜 완전 삭제(trash -> delete)
     @Transactional
-    @Override
     public void deletePlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId);
         plan.delete();
     }
 
-    /**
-     * 플랜 완전 삭제(trash -> main)
-     */
+     // 플랜 완전 삭제(trash -> main)
     @Transactional
-    @Override
     public void revertPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId);
         plan.revert();
     }
-
-    /**
-     * 이동(user -> main)
-     */
-
-
-    /**
-     * 이동(user -> user)
-     */
 }

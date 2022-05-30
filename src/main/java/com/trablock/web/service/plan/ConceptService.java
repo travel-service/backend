@@ -4,21 +4,21 @@ import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.repository.plan.ConceptRepository;
-import com.trablock.web.service.plan.planInterface.ConceptService;
-import com.trablock.web.service.plan.planInterface.PlanService;
+import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ConceptServiceImpl implements ConceptService {
+public class ConceptService {
 
     private final ConceptRepository conceptRepository;
-    private final PlanService planService;
+    private final PlanRepository planRepository;
 
     @Transactional
     public void saveConcept(Concept concept) {
@@ -26,16 +26,23 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Transactional
-    @Override
-    public void createConcept(Form form, HttpServletRequest request, Plan plan) {
+    public void createConcept(Form form, HttpServletRequest request, Long plan) {
+        Plan planById = planRepository.findPlanById(plan);
         for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
             Concept concept = Concept.builder()
-                    .plan(plan)
-//                    .member(planService.findMemberId(request))
+                    .plan(planById)
                     .conceptName(form.getConceptForm().getConcept().get(i))
                     .build();
 
             saveConcept(concept);
         }
+    }
+
+    public List<String> findConceptIdForPlanIdToList(Plan id) {
+        return conceptRepository.findByIdToList(id);
+    }
+
+    public Plan findPlanId(Plan id) {
+        return conceptRepository.findId(id);
     }
 }

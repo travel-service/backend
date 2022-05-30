@@ -1,7 +1,6 @@
 package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.member.Member;
 import lombok.*;
 
 import javax.persistence.*;

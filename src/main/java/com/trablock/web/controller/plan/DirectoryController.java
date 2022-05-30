@@ -1,13 +1,16 @@
-package com.trablock.web.controller;
+package com.trablock.web.controller.plan;
+
 
 import com.trablock.web.controller.form.MoveDirectoryForm;
-import com.trablock.web.controller.form.UserDirectoryForm;
-import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
+import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
-import com.trablock.web.entity.plan.*;
-import com.trablock.web.service.plan.*;
+import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.UserDirectory;
+import com.trablock.web.service.plan.PlanItemService;
+import com.trablock.web.service.plan.PlanService;
+import com.trablock.web.service.plan.UserDirectoryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,29 +23,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-public class PlanController {
+public class DirectoryController {
 
-    private final PlanServiceImpl planServiceImpl;
-    private final DayServiceImpl dayServiceImpl;
-    private final SelectedLocationServiceImpl selectedLocationServiceImpl;
-    private final ConceptServiceImpl conceptServiceImpl;
-    private final UserDirectoryServiceImpl userDirectoryServiceImpl;
-    private final PlanItemServiceImpl planItemServiceImpl;
+    private final PlanService planServiceImpl;
+    private final UserDirectoryService userDirectoryServiceImpl;
+    private final PlanItemService planItemServiceImpl;
 
-    //플랜 생성
-    @PostMapping("/members/plan")
-    public String createPlan(@RequestBody Form form, HttpServletRequest request) {
-
-        Plan plan = planServiceImpl.createPlan(form, request);
-
-        conceptServiceImpl.createConcept(form, request, plan);
-
-        selectedLocationServiceImpl.createSelectedLocation(form, request, plan);
-
-        dayServiceImpl.createDay(form, plan);
-
-        return "redirect:/";
-    }
 
     //main directory get
     @GetMapping("/main-directory")
