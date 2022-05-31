@@ -92,11 +92,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<BlockLocatioDto> getBlockLocationListWithType(LocationType type) {
-        List<BlockLocatioDto> blockLocatioDtoList = new ArrayList<BlockLocatioDto>();
+    public List<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
+        List<BlockLocationDto> blockLocationDtoList = new ArrayList<BlockLocationDto>();
         List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
-        locations.forEach(location -> blockLocatioDtoList.add(toBlockLocationDto(location)));
-        return blockLocatioDtoList;
+        locations.forEach(location -> blockLocationDtoList.add(toBlockLocationDto(location)));
+        return blockLocationDtoList;
     }
 
     @Override
@@ -110,8 +110,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public BlockLocatioDto toBlockLocationDto(Location location) {
-        return BlockLocatioDto.builder()
+    public BlockLocationDto toBlockLocationDto(Location location) {
+        return BlockLocationDto.builder()
                 .id(location.getId())
                 .name(location.getName())
                 .address1(location.getAddress1())

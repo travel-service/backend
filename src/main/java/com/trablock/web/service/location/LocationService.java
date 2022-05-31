@@ -21,11 +21,11 @@ public interface LocationService {
 
     List<MarkLocationDto> getMarkLocationListWithType(LocationType type);
 
-    List<BlockLocatioDto> getBlockLocationListWithType(LocationType type);
+    List<BlockLocationDto> getBlockLocationListWithType(LocationType type);
 
     LocationDto getLocationDetails(Long locationId);
 
     MarkLocationDto toMarkLocationDto(Location location);
 
-    BlockLocatioDto toBlockLocationDto(Location location);
+    BlockLocationDto toBlockLocationDto(Location location);
 }
