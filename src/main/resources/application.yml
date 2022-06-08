@@ -21,6 +21,14 @@ spring:
     user:
       name: user
       password: 1234
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: trablock2022@gmail.com
+    password: mdoayaxlsjvbizpc
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 server:
   port: 8080

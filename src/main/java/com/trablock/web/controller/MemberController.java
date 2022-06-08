@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +30,18 @@ public class MemberController {
     @PostMapping("/api/signup")
     public String signup(@RequestBody MemberSaveDto signupForm) {
         return memberServiceImpl.MemberSignUp(signupForm);
+    }
+
+    // 비회원 - 중복 ID 체크
+    @GetMapping("/api/check-id")
+    public boolean check(@RequestParam("userName") String userName) {
+        return memberServiceImpl.checkEmail(userName);
+    }
+
+    // 비회원 - 비밀번호 찾기 (임시비밀번호 발급)
+    @PostMapping("/api/findPwd")
+    public boolean findUserPwd(@RequestBody Map<String, String> userInfo) {
+        return memberServiceImpl.getTmpPassword(userInfo);
     }
 
     // 비회원 - 로그인
@@ -78,4 +91,5 @@ public class MemberController {
     public void updateMemberPwd(HttpServletRequest request, @RequestBody MemberPwdDto memberPwdDto) {
         memberServiceImpl.updateMemberPwd(request, memberPwdDto);
     }
+
 }

@@ -4,6 +4,7 @@ package com.trablock.web.service.member;
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.config.jwt.JwtTokenService;
 import com.trablock.web.controller.exception.MemberException;
+import com.trablock.web.dto.mail.MailDto;
 import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
@@ -12,6 +13,8 @@ import com.trablock.web.entity.member.*;
 import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.TokenRepository;
 import com.trablock.web.service.file.FileService;
+import com.trablock.web.service.mail.MailService;
+import com.trablock.web.service.mail.MailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -42,6 +45,7 @@ public class MemberServiceImpl implements MemberService{
     private final TokenRepository tokenRepository;
     private final FileService fileService;
     private final JwtTokenService jwtTokenService;
+    private final MailServiceImpl mailService;
 
     /**
      * 회원가입
@@ -187,15 +191,56 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(member);
     }
 
+    /**
+     * 중복 ID 체크
+     * @param userName
+     * @return
+     */
+    public boolean checkEmail(String userName) {
+        if (MemberValidation(userName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 비밀번호 찾기 (임시 비밀번호 발급)
+     * @return
+     */
+    public boolean getTmpPassword(Map<String, String> userInfo) {
+        char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+        String Pwd = "";
+
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            Pwd += charSet[idx];
+        }
+        String userName = userInfo.get("userName");
+        String userEmail = userInfo.get("userEmail");
+
+        String tmpPwd = passwordEncoder.encode(Pwd);
+        memberRepository.updateMemberPwd(tmpPwd, userName);
+
+        MailDto mail = mailService.createMail(Pwd, userEmail);
+        mailService.sendMail(mail);
+
+        return true;
+    }
+
     public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
-        Long id = jwtTokenService.TokenToUserId(request);
-        Member member = memberRepository.findMemberId(id);
+        String userName = jwtTokenService.TokenToUserName(request);
+        Optional<Member> member = memberRepository.findByUserName(userName);
 
         String origin = memberPwdDto.getOriginPwd();
 
-        if (passwordEncoder.matches(origin, member.getPassword())) {
+        if (passwordEncoder.matches(origin, member.get().getPassword())) {
             String newPwd = passwordEncoder.encode(memberPwdDto.getNewPwd());
-            memberRepository.updateMemberPwd(newPwd, id);
+            memberRepository.updateMemberPwd(newPwd, userName);
         } else {
             throw new MemberException("잘못된 비밀번호 입력.");
         }
