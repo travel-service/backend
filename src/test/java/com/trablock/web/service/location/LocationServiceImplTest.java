@@ -48,15 +48,6 @@ class LocationServiceImplTest {
     }
 
     @Test
-    void viewSimpleLoc() {
-        List<MarkLocationDto> markLocationDtos = locationService.getMarkLocationListWithType(LocationType.LODGE);
-
-        for (MarkLocationDto markLocationDto : markLocationDtos) {
-            System.out.println("simpleLocationDto = " + markLocationDto);
-        }
-    }
-
-    @Test
     void 로케이션_생성_요청() {
         LocationSaveRequestDto requestDto = LocationSaveRequestDto.builder()
                 .name("개발새발")

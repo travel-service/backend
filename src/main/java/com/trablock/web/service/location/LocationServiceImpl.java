@@ -12,11 +12,10 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.trablock.web.domain.LocationType.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +31,6 @@ public class LocationServiceImpl implements LocationService {
     public LocationDto createLocation(LocationSaveRequestDto requestDto) {
         Location save = locationRepository.save(requestDto.toEntity());
         return getLocationDetails(save.getId());
-
     }
 
     /**
@@ -56,10 +54,31 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<MarkLocationDto> getMarkLocationList() {
-        List<Location> locations = locationRepository.findAllByIsMemberFalse();
-        return locations.stream().map(this::toMarkLocationDto)
-                .collect(Collectors.toList());
+    public HashMap<String, Object> getMarkLocationList() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        map.put("Lodge", getMarkLocationListWithType(LODGE));
+        map.put("Restaurant", getMarkLocationListWithType(RESTAURANT));
+        map.put("Attraction", getMarkLocationListWithType(ATTRACTION));
+        map.put("Culture", getMarkLocationListWithType(CULTURE));
+        map.put("Festival", getMarkLocationListWithType(FESTIVAL));
+        map.put("Leports", getMarkLocationListWithType(LEPORTS));
+
+        return map;
+    }
+
+    @Override
+    public HashMap<String, Object> getBlockLocationList() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        map.put("Lodge", getBlockLocationListWithType(LODGE));
+        map.put("Restaurant", getBlockLocationListWithType(RESTAURANT));
+        map.put("Attraction", getBlockLocationListWithType(ATTRACTION));
+        map.put("Culture", getBlockLocationListWithType(CULTURE));
+        map.put("Festival", getBlockLocationListWithType(FESTIVAL));
+        map.put("Leports", getBlockLocationListWithType(LEPORTS));
+
+        return map;
     }
 
 
@@ -73,6 +92,7 @@ public class LocationServiceImpl implements LocationService {
         return new ArrayList<LocationDto>();
     }
 
+
     @Override
     public List<LocationDto> getPublicMemberLocationList(Long memberId) {
 
@@ -84,17 +104,17 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
-        List<MarkLocationDto> markLocationDtos = new ArrayList<MarkLocationDto>();
-        List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
+    public HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
+        HashSet<MarkLocationDto> markLocationDtos = new HashSet<>();
+        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
         locations.forEach(location -> markLocationDtos.add(toMarkLocationDto(location)));
         return markLocationDtos;
     }
 
     @Override
-    public List<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
-        List<BlockLocationDto> blockLocationDtoList = new ArrayList<BlockLocationDto>();
-        List<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
+    public HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
+        HashSet<BlockLocationDto> blockLocationDtoList = new HashSet<>();
+        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
         locations.forEach(location -> blockLocationDtoList.add(toBlockLocationDto(location)));
         return blockLocationDtoList;
     }

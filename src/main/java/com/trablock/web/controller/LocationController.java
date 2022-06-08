@@ -6,6 +6,7 @@ import com.trablock.web.service.location.LocationService;
 import com.trablock.web.service.location.LocationServiceImpl;
 import com.trablock.web.service.location.TypeLocationService;
 import com.trablock.web.service.location.TypeLocationServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,21 +17,18 @@ import static com.trablock.web.domain.LocationType.*;
 
 
 @RestController
+@RequiredArgsConstructor
 public class LocationController {
 
     private final LocationService locationService;
     private final TypeLocationService typeLocationService;
 
     /**
-     * 생성자 DI
-     *
-     * @param locationService
+     * 로케이션의 details를 반환
+     * -> 지도의 markup이나 block 을 클릭할 때 response
+     * @param locationId
+     * @return
      */
-    public LocationController(LocationServiceImpl locationService, TypeLocationServiceImpl typeLocationService) {
-        this.locationService = locationService;
-        this.typeLocationService = typeLocationService;
-    }
-
     @ResponseBody
     @RequestMapping(value = "/locations/{locationId}", method = RequestMethod.GET)
     public HashMap<String, Object> viewLocationDetails(@PathVariable("locationId") Long locationId) {
@@ -45,52 +43,38 @@ public class LocationController {
         return map;
     }
 
+    /**
+     * 지도에 표시하기 위한 Location의 DTO.
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/locations/mark", method = RequestMethod.GET)
     public HashMap<String, Object> viewMarkLocationsOnMap() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("Lodge", locationService.getMarkLocationListWithType(LODGE));
-        map.put("Restaurant", locationService.getMarkLocationListWithType(RESTAURANT));
-        map.put("Attraction", locationService.getMarkLocationListWithType(ATTRACTION));
-        map.put("Culture", locationService.getMarkLocationListWithType(CULTURE));
-        map.put("Festival", locationService.getMarkLocationListWithType(FESTIVAL));
-        map.put("Leports", locationService.getMarkLocationListWithType(LEPORTS));
-        return map;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/locations/block", method = RequestMethod.GET)
-    public HashMap<String, Object> viewBlockLocationList() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("Lodge", locationService.getBlockLocationListWithType(LODGE));
-        map.put("Restaurant", locationService.getBlockLocationListWithType(RESTAURANT));
-        map.put("Attraction", locationService.getBlockLocationListWithType(ATTRACTION));
-        map.put("Culture", locationService.getBlockLocationListWithType(CULTURE));
-        map.put("Festival", locationService.getBlockLocationListWithType(FESTIVAL));
-        map.put("Leports", locationService.getBlockLocationListWithType(LEPORTS));
-        return map;
-    }
-
-
-    @ResponseBody
-    @RequestMapping(value = "/simple", method = RequestMethod.GET)
-    public List<MarkLocationDto> viewSimple() {
         return locationService.getMarkLocationList();
     }
 
-    /**
-     * 요구사항 맞추려면 dto 덩어리는 List가 아니라 HashSet으로 반환하는게 좋을 것 같다
-     * 캐스팅을 이용하자..
-     * https://stackoverflow.com/questions/1429860/easiest-way-to-convert-a-list-to-a-set-in-java
-     */
 
+    /**
+     * 블럭형태로 표시하기 위한 Location의 DTO
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/locations/block", method = RequestMethod.GET)
+    public HashMap<String, Object> viewBlockLocationList() {
+        return locationService.getBlockLocationList();
+    }
+
+    /**
+     * 멤버 로케이션 추가
+     * @param formData
+     * @return
+     */
     @RequestMapping(value = " /members/location", method = RequestMethod.POST)
     public ResponseEntity<HashMap<String, Object>> memberLocationAdd(@RequestBody HashMap<String, Object> formData) {
         LocationDto locationDto = locationService.createLocation((LocationSaveRequestDto) formData.get("location"));
         LocationType type = locationDto.getType();
         Object typeLocationDto = typeLocationService.createTypeLocation((TypeLocationSaveRequestDto) formData.get("typeLocation"), locationDto.getId(), type);
         MemberLocationDto memberLocationDto = locationService.createMemberLocation((MemberLocationSaveRequestDto) formData.get("memberLocation"));
-
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("location", locationDto);

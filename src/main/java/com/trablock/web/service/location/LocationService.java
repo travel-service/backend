@@ -3,7 +3,10 @@ package com.trablock.web.service.location;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.entity.location.Location;
+import org.springframework.validation.ObjectError;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -13,15 +16,17 @@ public interface LocationService {
 
     MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto);
 
-    List<MarkLocationDto> getMarkLocationList();
+    HashMap<String, Object> getMarkLocationList();
+
+    HashMap<String, Object> getBlockLocationList();
 
     List<LocationDto> getMemberLocationList(Long memberId);
 
     List<LocationDto> getPublicMemberLocationList(Long memberId);
 
-    List<MarkLocationDto> getMarkLocationListWithType(LocationType type);
+    HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type);
 
-    List<BlockLocationDto> getBlockLocationListWithType(LocationType type);
+    HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type);
 
     LocationDto getLocationDetails(Long locationId);
 

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     @Query("select l from Location l where l.type = :type and l.isMember = false")
-    List<Location> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType);
+    HashSet<Location> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType);
 
     @Query("select l from Location l where l.isMember = false")
     List<Location> findAllByIsMemberFalse();
