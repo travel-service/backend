@@ -1,6 +1,5 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.location.Location;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Day extends BaseTimeEntity {
+public class Day {
 
     @Id @GeneratedValue
     @Column(name = "day_id")
@@ -28,5 +27,6 @@ public class Day extends BaseTimeEntity {
     @Embedded
     private MovingData movingData;
 
+    private Integer days;
     private String copyLocationId;
 }

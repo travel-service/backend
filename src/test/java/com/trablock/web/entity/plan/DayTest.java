@@ -24,11 +24,11 @@ class DayTest {
 
     @PersistenceContext
     EntityManager em;
-    @Autowired PlanRepository planRepository;
+//    @Autowired PlanRepository planRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired DayRepository dayRepository;
-    @Autowired SelectedLocationRepository selectedLocationRepository;
-    @Autowired MainDirectoryRepository mainDirectoryRepository;
+//    @Autowired DayRepository dayRepository;
+//    @Autowired SelectedLocationRepository selectedLocationRepository;
+//    @Autowired MainDirectoryRepository mainDirectoryRepository;
     @Autowired
     LocationRepository locationRepository;
 
