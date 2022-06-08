@@ -33,11 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             // AccessToken 은 만료, RefreshToken 은 존재
             else if(!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {
+
                 //RefreshToken 유효?
                 boolean validRefreshToken = jwtTokenProvider.validateToken(refreshToken);
+
                 //RefreshToken DB에 존재?
                 boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
 
+                //RefreshToken이 유효기간 남았고 DB에 남아있다면 AccessToken 새로 발급
                 if (validRefreshToken && isRefreshToken) {
                     String userName = jwtTokenProvider.getUserName(refreshToken);
                     List<String> roles = jwtTokenProvider.getRoles(userName);

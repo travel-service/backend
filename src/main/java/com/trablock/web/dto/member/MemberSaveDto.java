@@ -1,4 +1,4 @@
-package com.trablock.web.dto;
+package com.trablock.web.dto.member;
 
 
 import lombok.AllArgsConstructor;

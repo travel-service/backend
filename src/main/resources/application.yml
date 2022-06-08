@@ -21,9 +21,22 @@ spring:
     user:
       name: user
       password: 1234
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: trablock2022@gmail.com
+    password: mdoayaxlsjvbizpc
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 server:
   port: 8080
+
+# 하위 설정값은 파일(이미지) 저장 경로
+file:
+  upload-dir: ./image
+
 
 #logging:
 #  level:
