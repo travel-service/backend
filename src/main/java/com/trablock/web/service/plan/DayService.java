@@ -48,30 +48,16 @@ public class DayService {
         }
     }
 
-    public List<List<Day>> findDayIdForPlanIdToList(Long id) {
+    /**
+     * day List 받아오기
+     * @param id
+     * @return
+     */
+    public List<Day> findDayIdForPlanIdToList(Long id) {
 
-        Plan planById = planRepository.findPlanById(id);
+        Plan plan = planRepository.findPlanById(id);
 
-        List<Integer> byIdForDaysToList = dayRepository.findByIdForDaysToList(planById);
+        return dayRepository.findByDayToList(plan);
 
-        List<Long> byDayIdToList = dayRepository.findByDayIdToList(planById);
-
-        List<List<Day>> travelDay = new ArrayList<>();
-
-        List<Day> byIdToList = new ArrayList<>();
-
-        byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(0), byIdForDaysToList.get(0)));
-
-        for (int i = 1; i < byDayIdToList.size(); i++) {
-            if (byIdForDaysToList.get(i) == byIdForDaysToList.get(i - 1)) {
-                byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(i), byIdForDaysToList.get(i)));
-            } else {
-                travelDay.add(byIdToList);
-                byIdToList.clear();
-                byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(i), byIdForDaysToList.get(i)));
-            }
-        }
-
-        return travelDay;
     }
 }
