@@ -1,8 +1,6 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.member.Member;
-import com.trablock.web.repository.MemberRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.SelectedLocationRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import org.junit.jupiter.api.Test;
@@ -13,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

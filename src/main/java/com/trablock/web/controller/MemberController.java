@@ -1,6 +1,7 @@
 package com.trablock.web.controller;
 
 import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.dto.mail.EmailAuthDto;
 import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
@@ -32,6 +33,11 @@ public class MemberController {
         return memberServiceImpl.MemberSignUp(signupForm);
     }
 
+    // 이메일 인증
+    @GetMapping("/api/sign/confirm-email")
+    public String confirmEmail(@ModelAttribute EmailAuthDto requestDto) {
+        return memberServiceImpl.confirmEmail(requestDto);
+    }
     // 비회원 - 중복 ID 체크
     @GetMapping("/api/check-id")
     public boolean check(@RequestParam("userName") String userName) {

@@ -4,10 +4,7 @@ package com.trablock.web.entity.member;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,10 +18,8 @@ import java.util.stream.Collectors;
 import static javax.persistence.FetchType.*;
 
 @Entity
-@Builder
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements UserDetails{
 
     @Id @GeneratedValue
@@ -32,32 +27,43 @@ public class Member implements UserDetails{
     private Long id; //회원 번호
 
     private String userName; //아이디
-
     private String password;
-
     private String realName; //회원 이름
 
+    private Boolean emailAuth; // 이메일 인증 여부
     @Embedded
     private MemberProfile memberProfile;
 
     @Embedded
     private MemberInfo memberInfo;
 
-    @ElementCollection(fetch = EAGER)
-    @Builder.Default
+    @ElementCollection(fetch = LAZY)
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<MemberLocation> memberLocation = new ArrayList<>();
 
-    /**
-     * 종수 추가(연관 관계)
-     */
     @OneToMany(mappedBy = "member")
     private List<Plan> plans = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<UserDirectory> userDirectories = new ArrayList<>();
+
+    @Builder
+    public Member(String userName, String password, String realName, MemberProfile memberProfile, MemberInfo memberInfo, List<String> roles, Boolean emailAuth) {
+        this.userName = userName;
+        this.password = password;
+        this.realName = realName;
+        this.memberProfile = memberProfile;
+        this.memberInfo = memberInfo;
+        this.roles = roles;
+        this.emailAuth = emailAuth;
+    }
+
+    public void emailVerifiedSuccess() {
+        this.emailAuth = true;
+    }
+
 
     /**
      * 하위 로직은 TOKEN 기반 로그인을 위해 필요

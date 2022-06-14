@@ -1,4 +1,4 @@
-package com.trablock.web.repository;
+package com.trablock.web.repository.member;
 
 import com.trablock.web.entity.auth.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;

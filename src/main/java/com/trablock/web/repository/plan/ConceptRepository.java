@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ConceptRepository extends JpaRepository<Concept, Long> {
 
-    @Query("select c from Concept as c where c.id= :id")
+    @Query("select c from Concept as c where c.id= :conceptId")
     Concept findConceptById(Long conceptId);
 
     @Query("select c.conceptName from Concept c where c.plan = :id")

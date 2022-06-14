@@ -4,7 +4,7 @@ import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.repository.MemberRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

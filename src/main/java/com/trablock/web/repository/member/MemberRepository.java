@@ -1,4 +1,4 @@
-package com.trablock.web.repository;
+package com.trablock.web.repository.member;
 
 import com.trablock.web.dto.member.MemberProfileDto;
 import com.trablock.web.entity.member.Member;
@@ -22,4 +22,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("update Member as m set m.password = :pwd where m.userName = :userName")
     void updateMemberPwd(@Param("pwd") String pwd, @Param("userName") String userName);
 
+    @Query("select m from Member m where m.memberInfo.email = :email")
+    Optional<Member> findByEmail(String email);
 }

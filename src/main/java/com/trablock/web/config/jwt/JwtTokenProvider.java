@@ -1,7 +1,7 @@
 package com.trablock.web.config.jwt;
 
-import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.TokenRepository;
+import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.repository.member.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
