@@ -2,6 +2,7 @@ package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import lombok.*;
 
@@ -44,6 +45,9 @@ public class Plan extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private PlanStatus planStatus;
+
+    @Enumerated(EnumType.STRING)
+    private PlanComplete planComplete;
 
     //==비지니스 로직==//
     /**
