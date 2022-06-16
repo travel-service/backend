@@ -52,7 +52,7 @@ class TypeLocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.RESTAURANT)
                 .build();
 
@@ -90,7 +90,7 @@ class TypeLocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.RESTAURANT)
                 .build();
 

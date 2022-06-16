@@ -53,7 +53,7 @@ class LocationServiceImplTest {
                 .name("개발새발")
                 .address1("경기도 안성시 석정동 비룡 5길 30")
                 .address2("418-2")
-                .coords(new Coords("37.1234", "128.1234"))
+                .coords(new Coords(37.1234, 128.1234))
                 .image("img/1234")
                 .type(LocationType.LODGE)
                 .build();

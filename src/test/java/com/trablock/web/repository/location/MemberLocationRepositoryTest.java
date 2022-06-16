@@ -65,7 +65,7 @@ class MemberLocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .image("url/url")
                 .type(LocationType.LODGE)
                 .build();
@@ -76,7 +76,7 @@ class MemberLocationRepositoryTest {
                 .address1("경기도 수원시 권선구")
                 .address2("권선동 1059-3")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .image("url/url")
                 .type(LocationType.LODGE)
                 .build();
@@ -87,7 +87,7 @@ class MemberLocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("인계동")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .image("url/url")
                 .type(LocationType.LODGE)
                 .build();

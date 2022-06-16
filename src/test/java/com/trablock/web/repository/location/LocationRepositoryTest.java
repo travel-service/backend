@@ -36,7 +36,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .build();
 
 
@@ -60,7 +60,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.RESTAURANT)
                 .build();
 
@@ -92,7 +92,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .build();
 
 
@@ -115,7 +115,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.RESTAURANT)
                 .build();
         Location loc2 = Location.builder()
@@ -123,7 +123,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 권선구")
                 .address2("권선로 694번길 25")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.LODGE)
                 .build();
         Location loc3 = Location.builder()
@@ -131,7 +131,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 권선구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .type(LocationType.RESTAURANT)
                 .build();
 
@@ -161,7 +161,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .build();
 
         Location savedL = locationRepository.save(loc);
@@ -185,7 +185,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .build();
 
         Location loc2 = Location.builder()
@@ -193,7 +193,7 @@ class LocationRepositoryTest {
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
-                        .latitude("37.123").longitude("127.123").build())
+                        .latitude(37.123).longitude(127.123).build())
                 .build();
 
         Location save1 = locationRepository.save(loc1);
