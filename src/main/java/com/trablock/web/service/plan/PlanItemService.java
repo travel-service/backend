@@ -4,7 +4,7 @@ import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.PlanItem;
-import com.trablock.web.entity.plan.Status;
+import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;

@@ -3,7 +3,6 @@ package com.trablock.web.entity.plan;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.SelectedLocationRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ class SelectedLocationTest {
     @Autowired MemberRepository memberRepository;
     @Autowired
     LocationRepository locationRepository;
-    @Autowired SelectedLocationRepository selectedLocationRepository;
 
     @Test
     public void selectedLocationEntityTest() throws Exception {

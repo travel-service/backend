@@ -1,5 +1,6 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.entity.plan.enumtype.Status;
 import lombok.*;
 
 import javax.persistence.*;

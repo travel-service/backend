@@ -1,6 +1,7 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.dto.plan.UserPlanConceptUpdateDto;
 import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.repository.plan.ConceptRepository;
@@ -44,5 +45,34 @@ public class ConceptService {
 
     public Plan findPlanId(Plan id) {
         return conceptRepository.findId(id);
+    }
+
+    /**
+     * Concept Update
+     * @param id
+     * @param request
+     * @param form
+     */
+    @Transactional
+    public void updateConcept(Long id, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(id);
+
+        removeConcept(plan);
+
+        createConcept(form, request, plan.getId());
+
+    }
+
+    /**
+     * Concept delete
+     * @param plan
+     */
+    @Transactional
+    public void removeConcept(Plan plan) {
+        List<Concept> conceptList = conceptRepository.findConceptByPlanId(plan);
+
+        for (Concept concept : conceptList) {
+            conceptRepository.delete(concept);
+        }
     }
 }
