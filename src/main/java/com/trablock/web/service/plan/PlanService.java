@@ -100,4 +100,16 @@ public class PlanService {
         Plan plan = planRepository.findPlanById(planId);
         plan.finished();
     }
+
+
+//    public String isFinishedPlan(Long id) {
+//        Plan plan = planRepository.findPlanById(id);
+//
+//        if (plan.getPlanComplete() == PlanComplete.FINISHED) {
+//            return "완료된 플랜입니다.";
+//        } else {
+//            return "redirect:/main-directory";
+//        }
+//
+//    }
 }
