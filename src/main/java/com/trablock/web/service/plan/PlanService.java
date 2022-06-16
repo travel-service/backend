@@ -94,4 +94,10 @@ public class PlanService {
         Plan plan = planRepository.findPlanById(planId);
         plan.revert();
     }
+
+    // 플랜 완성
+    public void finishedPlan(Long planId) {
+        Plan plan = planRepository.findPlanById(planId);
+        plan.finished();
+    }
 }

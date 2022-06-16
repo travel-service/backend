@@ -20,6 +20,7 @@ public class DayService {
 
     private final DayRepository dayRepository;
     private final PlanRepository planRepository;
+    private final PlanService planService;
 //    private final LocationRepository locationRepository;
 
     @Transactional
@@ -30,6 +31,8 @@ public class DayService {
     @Transactional
     public void createDay(Form form, HttpServletRequest request, Long plan) {
         Plan planById = planRepository.findPlanById(plan);
+
+        planService.finishedPlan(planById.getId());
 
         for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
             for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {

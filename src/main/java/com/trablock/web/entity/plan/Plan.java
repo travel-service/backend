@@ -86,4 +86,12 @@ public class Plan extends BaseTimeEntity {
     public void setPlanStatus(PlanStatus planStatus) {
         this.planStatus = planStatus;
     }
+
+    /**
+     * 플랜 완성
+     */
+    public void finished() {
+        PlanComplete planComplete = PlanComplete.FINISHED;
+        this.planComplete = planComplete;
+    }
 }
