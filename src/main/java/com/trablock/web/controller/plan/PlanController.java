@@ -120,7 +120,6 @@ public class PlanController {
         conceptService.updateConcept(id, request, form);
     }
 
-
     // selectedLocation 수정
 
     // day 수정

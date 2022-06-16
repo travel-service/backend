@@ -47,6 +47,12 @@ public class ConceptService {
         return conceptRepository.findId(id);
     }
 
+    /**
+     * Concept Update
+     * @param id
+     * @param request
+     * @param form
+     */
     @Transactional
     public void updateConcept(Long id, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(id);
@@ -57,6 +63,10 @@ public class ConceptService {
 
     }
 
+    /**
+     * Concept delete
+     * @param plan
+     */
     @Transactional
     public void removeConcept(Plan plan) {
         List<Concept> conceptList = conceptRepository.findConceptByPlanId(plan);
