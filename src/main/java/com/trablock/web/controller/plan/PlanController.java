@@ -127,4 +127,8 @@ public class PlanController {
     }
 
     // day 수정
+    @PostMapping("/user/plan-day/update/{planId}")
+    public void updateUserPlanDay(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
+        dayService.updateDay(id, request, form);
+    }
 }

@@ -63,4 +63,32 @@ public class DayService {
         return dayRepository.findByDayToList(plan);
 
     }
+
+    /**
+     * Day Update
+     * @param id
+     * @param request
+     * @param form
+     */
+    @Transactional
+    public void updateDay(Long id, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(id);
+
+        removeDay(plan);
+
+        createDay(form, request, plan.getId());
+    }
+
+    /**
+     * Day Delete
+     * @param plan
+     */
+    @Transactional
+    public void removeDay(Plan plan) {
+        List<Day> dayList = dayRepository.findByDayToList(plan);
+
+        for (Day day : dayList) {
+            dayRepository.delete(day);
+        }
+    }
 }
