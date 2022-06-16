@@ -2,6 +2,7 @@ package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
+import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import lombok.*;
 
 import javax.persistence.*;

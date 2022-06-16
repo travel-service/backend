@@ -2,6 +2,7 @@ package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.member.Member;
 //import com.trablock.web.repository.MainDirectoryRepository;
+import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.repository.MemberRepository;
 //import com.trablock.web.repository.PlanRepository;
 import org.junit.jupiter.api.Test;

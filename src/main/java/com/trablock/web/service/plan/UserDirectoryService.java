@@ -2,7 +2,7 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.entity.plan.Status;
+import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
 import lombok.RequiredArgsConstructor;
