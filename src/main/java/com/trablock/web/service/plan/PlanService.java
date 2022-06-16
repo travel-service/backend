@@ -4,6 +4,7 @@ import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,7 @@ public class PlanService {
                 .periods(form.getPlanForm().getPeriods())
                 .planStatus(form.getPlanForm().getPlanStatus())
                 .thumbnail(form.getPlanForm().getThumbnail())
+                .planComplete(PlanComplete.UNFINISHED)
                 .build();
 
         savePlan(plan);
