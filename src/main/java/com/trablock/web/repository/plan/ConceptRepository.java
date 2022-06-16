@@ -15,4 +15,9 @@ public interface ConceptRepository extends JpaRepository<Concept, Long> {
 
     @Query("select c.plan from Concept c where c.plan = :id")
     Plan findId(@Param("id")Plan id);
+
+    @Query("select c from Concept c where c.plan = :id")
+    List<Concept> findConceptByPlanId(@Param("id") Plan id);
+
+
 }

@@ -115,6 +115,11 @@ public class PlanController {
     }
 
     // concept 수정
+    @PutMapping("/user/plan-concept/update/{planId}")
+    public void updateUserPlanConcept(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
+        conceptService.updateConcept(id, request, form);
+    }
+
 
     // selectedLocation 수정
 
