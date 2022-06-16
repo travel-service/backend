@@ -115,12 +115,16 @@ public class PlanController {
     }
 
     // concept 수정
-    @PutMapping("/user/plan-concept/update/{planId}")
+    @PostMapping("/user/plan-concept/update/{planId}")
     public void updateUserPlanConcept(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         conceptService.updateConcept(id, request, form);
     }
 
     // selectedLocation 수정
+    @PostMapping("/user/plan-selectedLocation/update/{planId}")
+    public void updateUserPlanSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
+        selectedLocationService.updateSelectedLocation(id, request, form);
+    }
 
     // day 수정
 }
