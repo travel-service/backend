@@ -1,6 +1,7 @@
 package com.trablock.web.controller.plan;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.controller.form.PlanForm;
 import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.plan.*;
 import com.trablock.web.service.plan.*;
@@ -53,7 +54,7 @@ public class PlanController {
     //Day 생성
     @PostMapping("/members/plan-day/{planId}")
     public String createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
-        dayService.createDay(form, request,planId);
+        dayService.createDay(form, request, planId);
 
         return "redirect:/";
     }
@@ -106,4 +107,16 @@ public class PlanController {
 
         private T dayForm;
     }
+
+    // plan update
+    @PutMapping("/user/plan/update/{planId}")
+    public void updateUserPlan(@PathVariable("planId") Long id, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
+        planService.updateUserPlanContent(id, userPlanUpdateDto);
+    }
+
+    // concept 수정
+
+    // selectedLocation 수정
+
+    // day 수정
 }

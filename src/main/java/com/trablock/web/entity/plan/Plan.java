@@ -1,5 +1,6 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
@@ -93,5 +94,16 @@ public class Plan extends BaseTimeEntity {
     public void finished() {
         PlanComplete planComplete = PlanComplete.FINISHED;
         this.planComplete = planComplete;
+    }
+
+    /**
+     * Plan Update
+     * @param userPlanUpdateDto
+     */
+    public void updatePlan(UserPlanUpdateDto userPlanUpdateDto) {
+        this.depart = userPlanUpdateDto.getDepart();
+        this.name = userPlanUpdateDto.getName();
+        this.periods = userPlanUpdateDto.getPeriods();
+        this.thumbnail = userPlanUpdateDto.getThumbnail();
     }
 }

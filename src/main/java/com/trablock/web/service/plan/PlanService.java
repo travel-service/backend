@@ -2,6 +2,7 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
@@ -99,6 +100,17 @@ public class PlanService {
     public void finishedPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId);
         plan.finished();
+    }
+
+    /**
+     * User Plan Update
+     * @param id
+     * @param userPlanUpdateDto
+     */
+    @Transactional
+    public void updateUserPlanContent(Long id, UserPlanUpdateDto userPlanUpdateDto) {
+        Plan plan = planRepository.findPlanById(id);
+        plan.updatePlan(userPlanUpdateDto);
     }
 
 
