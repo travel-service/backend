@@ -112,7 +112,7 @@ public class JwtTokenProvider {
 
     //AccessToken response
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("accessToken", "bearer " + accessToken);
+        response.setHeader("Authorization", "bearer " + accessToken);
     }
 
     //RefreshToken response

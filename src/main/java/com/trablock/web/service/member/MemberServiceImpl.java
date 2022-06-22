@@ -70,11 +70,10 @@ public class MemberServiceImpl implements MemberService{
             Member member =  memberRepository.save(Member.builder()
                             .userName(memberSaveDto.getUserName())
                             .password(passwordEncoder.encode(memberSaveDto.getPassword()))
-                            .realName(memberSaveDto.getRealName())
                             .emailAuth(false)
                             .memberProfile(new MemberProfile(memberSaveDto.getNickName(), null))
                             .memberInfo(new MemberInfo(memberSaveDto.getBirthday(), Gender.valueOf(memberSaveDto.getGender()),
-                                    memberSaveDto.getPhoneNum(), memberSaveDto.getEmail()))
+                                     memberSaveDto.getEmail()))
                             .roles(Collections.singletonList("ROLE_USER")) // 일반 유저
                             .build());
 
@@ -214,7 +213,6 @@ public class MemberServiceImpl implements MemberService{
         member.getMemberInfo().setBirthday(memberUpdateDto.getBirthday());
         member.getMemberInfo().setEmail(memberUpdateDto.getEmail());
         member.getMemberInfo().setGender(memberUpdateDto.getGender());
-        member.getMemberInfo().setPhoneNum(memberUpdateDto.getPhoneNum());
 
         memberRepository.save(member);
     }

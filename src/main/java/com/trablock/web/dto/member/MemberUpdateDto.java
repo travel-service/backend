@@ -12,6 +12,5 @@ public class MemberUpdateDto {
     private String bio;
     private String birthday;
     private Gender gender;
-    private String phoneNum;
     private String email;
 }
