@@ -4,6 +4,7 @@ package com.trablock.web.controller.plan;
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.plan.Plan;
@@ -156,6 +157,12 @@ public class DirectoryController {
 //    public String showFinishedPlan(@PathVariable("planId") Long id) {
 //        return planService.isFinishedPlan(id);
 //    }
+
+    // user directory 이름 변경
+    @PostMapping("/update/user-directory-name/{userDirectoryId}")
+    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id, @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto) {
+        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto);
+    }
 
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()

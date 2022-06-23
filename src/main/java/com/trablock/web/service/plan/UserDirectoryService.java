@@ -1,6 +1,7 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
@@ -61,4 +62,15 @@ public class UserDirectoryService {
         }
     }
 
+    // user directory 이름 변경
+    @Transactional
+    public void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto) {
+        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id);
+        System.out.println("userDirectory.getId() = " + userDirectory.getId());
+        System.out.println("userDirectory.getDirectoryName() = " + userDirectory.getDirectoryName());
+        userDirectory.updateName(directoryNameUpdateDto);
+
+        System.out.println("userDirectory.getDirectoryName() = " + userDirectory.getDirectoryName());
+
+    }
 }
