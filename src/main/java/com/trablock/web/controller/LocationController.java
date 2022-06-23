@@ -79,7 +79,7 @@ public class LocationController {
     @ResponseBody
     @RequestMapping(value = "/locations/health-check", method = RequestMethod.GET)
     public Object health() {
-        return locationRepository.findAllByTypeAndIsMemberFalse(ATTRACTION, MarkLocationDto.class);
+        return locationRepository.findAllByTypeAndIsMemberFalse(ATTRACTION, MarkLocationView.class);
     }
 
     @ResponseBody

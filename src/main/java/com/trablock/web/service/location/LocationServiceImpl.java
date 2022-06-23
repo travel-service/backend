@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.trablock.web.domain.LocationType.*;
 
@@ -123,13 +121,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
-        return locationRepository.findAllByTypeAndIsMemberFalse(type, MarkLocationDto.class);
+    public HashSet<MarkLocationView> getMarkLocationListWithType(LocationType type) {
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, MarkLocationView.class);
     }
 
     @Override
-    public HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
-        return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationDto.class);
+    public HashSet<BlockLocationView> getBlockLocationListWithType(LocationType type) {
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationView.class);
     }
 
 }

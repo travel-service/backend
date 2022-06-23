@@ -10,7 +10,7 @@ import lombok.Getter;
 /**
  * Spring Data JPA - Projection
  */
-public interface MarkLocationDto {
+public interface MarkLocationView {
 
     Long getId();
 

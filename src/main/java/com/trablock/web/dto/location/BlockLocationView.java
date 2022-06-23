@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
  * https://knoc-story.tistory.com/114
  * 프로젝션
  */
-public interface BlockLocationDto {
+public interface BlockLocationView {
     Long getId();
 
     String getName();
