@@ -4,6 +4,7 @@ package com.trablock.web.controller.plan;
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.plan.Plan;
@@ -36,13 +37,14 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new MainDirectory(collect);
+        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+        return new MainDirectory(planCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class MainDirectory<T> {
-
+        private int planCount;
         private T mainDirectory;
     }
 
@@ -54,14 +56,16 @@ public class DirectoryController {
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(Collectors.toList());
 
-        return new MainUserDirectory(collect);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
+        List<Integer> planCount = planItemService.countPlan(userDirectories);
+        return new MainUserDirectory(planCount, collect);
     }
 
 
     @Data
     @AllArgsConstructor
     static class MainUserDirectory<T> {
-
+        private List<Integer> planCount;
         private T mainUserDirectory;
     }
 
@@ -71,19 +75,20 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new TrashDirectory(collect);
+        int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+        return new TrashDirectory(trashPlanCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class TrashDirectory<T> {
-
+        private int trashPlanCount;
         private T trashDirectory;
     }
 
     // user directory get
     @GetMapping("/user-directory/{userDirectoryId}")
-    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id) {
+    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
         List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
         List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
@@ -95,7 +100,6 @@ public class DirectoryController {
     @Data
     @AllArgsConstructor
     static class ShowUserDirectory<T> {
-
         private T userDirectory;
     }
 
@@ -156,6 +160,12 @@ public class DirectoryController {
 //    public String showFinishedPlan(@PathVariable("planId") Long id) {
 //        return planService.isFinishedPlan(id);
 //    }
+
+    // user directory 이름 변경
+    @PostMapping("/update/user-directory-name/{userDirectoryId}")
+    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id, @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto) {
+        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto);
+    }
 
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()

@@ -1,6 +1,7 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class UserDirectoryService {
 
     private final UserDirectoryRepository userDirectoryRepository;
-    private final PlanService planServiceImpl;
+    private final PlanService planService;
 
     @Transactional
     public void saveUserDirectory(UserDirectory userDirectory) {
@@ -36,7 +37,7 @@ public class UserDirectoryService {
 
     //user directory GET 요청
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
-        Member memberId = planServiceImpl.findMemberId(request);
+        Member memberId = planService.findMemberId(request);
         return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
     }
 
@@ -44,7 +45,7 @@ public class UserDirectoryService {
     @Transactional
     public void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
-        Member memberId = planServiceImpl.findMemberId(request);
+        Member memberId = planService.findMemberId(request);
 
         int memberIdForCount = userDirectoryRepository.findMemberIdForCount(memberId);
 
@@ -61,4 +62,23 @@ public class UserDirectoryService {
         }
     }
 
+    // user directory 이름 변경
+    @Transactional
+    public void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto) {
+        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id);
+        userDirectory.updateName(directoryNameUpdateDto);
+    }
+
+    /**
+     * user가 생성한 디렉터리 불러오기
+     * @param request
+     * @return
+     */
+    public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
+
+        Member member = planService.findMemberId(request);
+
+        return userDirectoryRepository.findUserDirectoryById(member);
+
+    }
 }

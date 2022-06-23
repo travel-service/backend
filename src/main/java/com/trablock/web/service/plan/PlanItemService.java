@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -62,5 +63,22 @@ public class PlanItemService {
 
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
         return planItemRepository.findPlanItemByPI(id);
+    }
+
+    /**
+     * user directory에 담겨 있는 플랜 갯수 반환
+     * @param userDirectories
+     * @return
+     */
+    public List<Integer> countPlan(List<UserDirectory> userDirectories) {
+        List<Integer> countPlanList = new ArrayList<>();
+
+        for (UserDirectory userDirectory : userDirectories) {
+            Integer integer = planItemRepository.countPlan(userDirectory);
+
+            countPlanList.add(integer);
+        }
+
+        return countPlanList;
     }
 }

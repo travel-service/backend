@@ -113,6 +113,30 @@ public class PlanService {
         plan.updatePlan(userPlanUpdateDto);
     }
 
+    /**
+     * 플랜 갯수 반환
+     * @param request
+     * @return
+     */
+    public int countPlan(HttpServletRequest request) {
+
+        Member member = findMemberId(request);
+
+        return planRepository.planCount(member);
+    }
+
+    /**
+     * 휴지통 플랜 갯수 반환
+     * @param request
+     * @return
+     */
+    public int countTrashPlan(HttpServletRequest request) {
+
+        Member member = findMemberId(request);
+
+        return planRepository.trashPlanCount(member);
+    }
+
 
 //    public String isFinishedPlan(Long id) {
 //        Plan plan = planRepository.findPlanById(id);
