@@ -28,6 +28,6 @@ public interface LocationService {
 
     HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type);
 
-    LocationDto getLocationDetails(Long locationId);
+    LocationDto getLocationDetails(Long locationId, LocationType locationType);
 
 }

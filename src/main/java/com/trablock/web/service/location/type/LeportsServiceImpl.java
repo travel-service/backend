@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.LeportsDto;
 import com.trablock.web.entity.location.type.Leports;
-import com.trablock.web.repository.location.CustomTypeRepositoryImpl;
+import com.trablock.web.repository.location.TypeRepositoryCustomImpl;
 import com.trablock.web.service.location.mapper.LeportsMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LeportsServiceImpl implements LeportsService {
 
-    private final CustomTypeRepositoryImpl repository;
+    private final TypeRepositoryCustomImpl repository;
     private final LeportsMapper mapper = Mappers.getMapper(LeportsMapper.class);
 
     @Override

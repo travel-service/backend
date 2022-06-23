@@ -16,6 +16,7 @@ public class FestivalDto {
 
     private Long locationId;
     private String name;
+    private Integer areaCode;
     private String address1;
     private String address2;
     private String image;
@@ -24,11 +25,11 @@ public class FestivalDto {
     private String report;
     private LocationType type;
 
-    private String endDate;
     private String homepage;
     private String place;
-    private String startDate;
     private String placeInfo;
+    private String startDate;
+    private String endDate;
     private String playTime;
     private String program;
     private String fee;

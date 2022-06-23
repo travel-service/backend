@@ -16,6 +16,7 @@ public class LeportsDto {
 
     private Long locationId;
     private String name;
+    private Integer areaCode;
     private String address1;
     private String address2;
     private String image;

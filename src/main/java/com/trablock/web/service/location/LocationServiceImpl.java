@@ -30,7 +30,7 @@ public class LocationServiceImpl implements LocationService {
     @Transactional
     public LocationDto createLocation(LocationSaveRequestDto requestDto) {
         Location save = locationRepository.save(requestDto.toEntity());
-        return getLocationDetails(save.getId());
+        return getLocationDetails(save.getId(), requestDto.getType());
     }
 
     /**
@@ -47,7 +47,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationDetails(Long locationId) {
+    public LocationDto getLocationDetails(Long locationId, LocationType locationType) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Optional<Location> locationById = locationRepository.findLocationById(locationId);
         return locationById.map(locationMapper::toDto).orElse(null);

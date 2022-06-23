@@ -1,6 +1,7 @@
 package com.trablock.web.dto.location;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.entity.location.Coords;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class AttractionDto {
 
     private Long locationId;
     private String name;
+    private Integer areaCode;
     private String address1;
     private String address2;
     private String image;

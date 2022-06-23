@@ -1,4 +1,4 @@
 package com.trablock.web.repository.location;
 
-public interface CustomTypeRepository {
+public interface TypeRepositoryCustom {
 }

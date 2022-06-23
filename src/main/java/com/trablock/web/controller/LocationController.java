@@ -2,18 +2,13 @@ package com.trablock.web.controller;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
-import com.trablock.web.entity.location.Location;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.location.LocationService;
-import com.trablock.web.service.location.LocationServiceImpl;
-import com.trablock.web.service.location.TypeLocationService;
-import com.trablock.web.service.location.TypeLocationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static com.trablock.web.domain.LocationType.*;
 
@@ -23,8 +18,7 @@ import static com.trablock.web.domain.LocationType.*;
 public class LocationController {
 
     private final LocationService locationService;
-    private final TypeLocationService typeLocationService;
-    private final LocationRepository locationRepository;
+    private final LocationRepository locationRepository; // health-check용. 지울 것.
 
     /**
      * 로케이션의 details를 반환
@@ -35,16 +29,9 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/{locationId}", method = RequestMethod.GET)
-    public HashMap<String, Object> viewLocationDetails(@PathVariable("locationId") Long locationId) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<Object> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationType locationType) {
 
-        LocationDto locationDto = locationService.getLocationDetails(locationId);
-        LocationType type = locationDto.getType();
-        Object details = typeLocationService.getLocationDetails(locationId, type);
-        map.put("location", locationDto);
-        map.put(String.valueOf(type), details);
-
-        return map;
+        return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationType));
     }
 
     /**
@@ -54,8 +41,8 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/mark", method = RequestMethod.GET)
-    public HashMap<String, Object> viewMarkLocationsOnMap() {
-        return locationService.getMarkLocationList();
+    public ResponseEntity<HashMap<String, Object>> viewMarkLocationsOnMap() {
+        return ResponseEntity.ok().body(locationService.getMarkLocationList());
     }
 
 
@@ -66,8 +53,8 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/block", method = RequestMethod.GET)
-    public HashMap<String, Object> viewBlockLocationList() {
-        return locationService.getBlockLocationList();
+    public ResponseEntity<HashMap<String, Object>> viewBlockLocationList() {
+        return ResponseEntity.ok().body(locationService.getBlockLocationList());
     }
 
     /**
@@ -80,12 +67,12 @@ public class LocationController {
     public ResponseEntity<HashMap<String, Object>> memberLocationAdd(@RequestBody HashMap<String, Object> formData) {
         LocationDto locationDto = locationService.createLocation((LocationSaveRequestDto) formData.get("location"));
         LocationType type = locationDto.getType();
-        Object typeLocationDto = typeLocationService.createTypeLocation((TypeLocationSaveRequestDto) formData.get("typeLocation"), locationDto.getId(), type);
+        //Object typeLocationDto = typeLocationService.createTypeLocation((TypeLocationSaveRequestDto) formData.get("typeLocation"), locationDto.getId(), type);
         MemberLocationDto memberLocationDto = locationService.createMemberLocation((MemberLocationSaveRequestDto) formData.get("memberLocation"));
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("location", locationDto);
-        map.put(String.valueOf(type), typeLocationDto);
+        //map.put(String.valueOf(type), typeLocationDto);
         map.put("member-location", memberLocationDto);
 
         // 타입 로케이션도 만들어야 함
@@ -103,6 +90,13 @@ public class LocationController {
     @RequestMapping(value = "/locations/health-check2", method = RequestMethod.GET)
     public Object health2() {
         return locationRepository.findById(1L);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/locations/repo-test", method = RequestMethod.GET)
+    public Object repotest() {
+        return locationRepository.findAttractionByLocationId(1L);
     }
 
 
