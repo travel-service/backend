@@ -48,13 +48,7 @@ public class UserDirectory {
      * @param directoryNameUpdateDto
      */
     public void updateName(DirectoryNameUpdateDto directoryNameUpdateDto) {
-        System.out.println("directoryNameUpdateDto.getDirectoryName() = " + directoryNameUpdateDto.getDirectoryName());
-        System.out.println("this.directoryName = " + this.directoryName);
         this.directoryName = directoryNameUpdateDto.getDirectoryName();
-
-        System.out.println("directoryNameUpdateDto.getDirectoryName() = " + directoryNameUpdateDto.getDirectoryName());
-        System.out.println("this.directoryName = " + this.directoryName);
-
     }
 }
 

@@ -66,12 +66,7 @@ public class UserDirectoryService {
     @Transactional
     public void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto) {
         UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id);
-        System.out.println("userDirectory.getId() = " + userDirectory.getId());
-        System.out.println("userDirectory.getDirectoryName() = " + userDirectory.getDirectoryName());
         userDirectory.updateName(directoryNameUpdateDto);
-
-        System.out.println("userDirectory.getDirectoryName() = " + userDirectory.getDirectoryName());
-
     }
 
     /**
