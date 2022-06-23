@@ -17,6 +17,4 @@ public class MemberInfo {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
     private String email;
-
-    //private boolean termsOfUse; 이게 뭔지 까먹었습니다.
 }

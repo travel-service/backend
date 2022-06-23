@@ -41,11 +41,11 @@ public class MemberController {
     // 비회원 - 중복 ID 체크
     @GetMapping("/api/check-id")
     public boolean check(@RequestParam("userName") String userName) {
-        return memberServiceImpl.checkEmail(userName);
+        return memberServiceImpl.checkValidUserName(userName);
     }
 
     // 비회원 - 비밀번호 찾기 (임시비밀번호 발급)
-    @PostMapping("/api/findPwd")
+    @PostMapping("/api/find-pwd")
     public boolean findUserPwd(@RequestBody Map<String, String> userInfo) {
         return memberServiceImpl.getTmpPassword(userInfo);
     }
@@ -56,9 +56,15 @@ public class MemberController {
         return memberServiceImpl.MemberLogin(loginForm, response);
     }
 
+    // 회원 - 로그아웃
+    @DeleteMapping("/api/user/logout")
+    public String logout(HttpServletRequest request) {
+        return memberServiceImpl.MemberLogout(request);
+    }
+
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)
     @GetMapping("/api/user/my-page")
-    public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
+    public ResponseEntity<?> getMemberPage(HttpServletRequest request, HttpServletResponse response) {
         return memberServiceImpl.getMemberPage(request);
     }
 

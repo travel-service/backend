@@ -119,6 +119,17 @@ public class MemberServiceImpl implements MemberService{
         return member.getMemberProfile().getNickName();
     }
 
+    public String MemberLogout(HttpServletRequest request) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+        boolean result = tokenRepository.deleteRefreshToken(refreshToken);
+
+        if (result) {
+            return "success";
+        } else {
+            return "Can't find RefreshToken";
+        }
+    }
+
     /**
      * 회원 마이페이지 DATA return
      * @param request
@@ -147,8 +158,8 @@ public class MemberServiceImpl implements MemberService{
      * @throws FileNotFoundException
      */
     public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
-        String fileName = jwtTokenService.TokenToUserName(request) + ".png";
-
+//        String fileName = jwtTokenService.TokenToUserName(request) + ".png"; # 현재 이미지 처리 규칙이 없기에 잠궈놓겠습니다 (22-06-23)
+        String fileName = "default_profile.png";
         Resource fileResource = fileService.loadFile(fileName);
         String contentType = null;
 
@@ -222,7 +233,7 @@ public class MemberServiceImpl implements MemberService{
      * @param userName
      * @return
      */
-    public boolean checkEmail(String userName) {
+    public boolean checkValidUserName(String userName) {
         if (MemberValidation(userName)) {
             return true;
         } else {
@@ -258,6 +269,7 @@ public class MemberServiceImpl implements MemberService{
         return true;
     }
 
+    // 회원 비밀번호 수정
     public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
         String userName = jwtTokenService.TokenToUserName(request);
         Optional<Member> member = memberRepository.findByUserName(userName);

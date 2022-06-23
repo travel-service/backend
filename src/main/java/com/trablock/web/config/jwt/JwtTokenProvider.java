@@ -79,8 +79,8 @@ public class JwtTokenProvider {
 
     //Request Header 에서 AccessToken 값 추출
     public String resolveAccessToken(HttpServletRequest request) {
-        if(request.getHeader("accessToken") != null)
-            return request.getHeader("accessToken").substring(7);
+        if(request.getHeader("Authorization") != null)
+            return request.getHeader("Authorization").substring(7);
         return null;
     }
 

@@ -37,7 +37,7 @@ public class Member implements UserDetails{
     @Embedded
     private MemberInfo memberInfo;
 
-    @ElementCollection(fetch = LAZY)
+    @ElementCollection(fetch = EAGER)
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
