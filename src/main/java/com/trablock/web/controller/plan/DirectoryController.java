@@ -73,13 +73,14 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new TrashDirectory(collect);
+        int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+        return new TrashDirectory(trashPlanCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class TrashDirectory<T> {
-
+        private int trashPlanCount;
         private T trashDirectory;
     }
 
