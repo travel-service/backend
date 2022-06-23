@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.FestivalDto;
 import com.trablock.web.entity.location.type.Festival;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.TypeRepositoryCustomImpl;
 import com.trablock.web.service.location.mapper.FestivalMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FestivalServiceImpl implements FestivalService {
 
-    private final TypeLocationRepository repository;
+    private final TypeRepositoryCustomImpl repository;
     private final FestivalMapper mapper = Mappers.getMapper(FestivalMapper.class);
 
     @Override

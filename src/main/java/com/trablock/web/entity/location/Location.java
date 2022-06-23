@@ -1,5 +1,6 @@
 package com.trablock.web.entity.location;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.trablock.web.domain.LocationType;
 import lombok.*;
 
@@ -39,6 +40,7 @@ public class Location {
     private String image;
 
     @Column
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private LocationType type;
 
     @Column

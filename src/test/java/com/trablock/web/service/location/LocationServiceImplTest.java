@@ -2,7 +2,6 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.LocationSaveRequestDto;
-import com.trablock.web.dto.location.MarkLocationDto;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.member.Gender;
 import com.trablock.web.entity.member.Member;
@@ -16,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional
 @SpringBootTest

@@ -9,6 +9,4 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface LodgeRepository extends JpaRepository<Lodge, Long> {
-    @Query("select l from Lodge l where l.locationId =: locationId")
-    Lodge findByLocationId(@Param("locationId") Long locationId);
 }

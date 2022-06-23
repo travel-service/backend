@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 @Repository
-public class TypeLocationRepository {
+public class TypeRepositoryCustomImpl implements TypeRepositoryCustom {
 
     @PersistenceContext
     private EntityManager em;

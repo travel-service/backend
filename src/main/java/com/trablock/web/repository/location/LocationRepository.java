@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public interface LocationRepository extends JpaRepository<Location, Long> {
+public interface LocationRepository extends JpaRepository<Location, Long>, LocationRepositoryCustom {
 
     @Query("select l from Location l where l.type = :type and l.isMember = false")
-    HashSet<Location> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType);
+    <T> HashSet<T> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType, Class<T> tClass);
 
     @Query("select l from Location l where l.isMember = false")
     List<Location> findAllByIsMemberFalse();
