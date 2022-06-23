@@ -56,14 +56,16 @@ public class DirectoryController {
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(Collectors.toList());
 
-        return new MainUserDirectory(collect);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
+        List<Integer> planCount = planItemService.countPlan(userDirectories);
+        return new MainUserDirectory(planCount, collect);
     }
 
 
     @Data
     @AllArgsConstructor
     static class MainUserDirectory<T> {
-
+        private List<Integer> planCount;
         private T mainUserDirectory;
     }
 
@@ -86,7 +88,7 @@ public class DirectoryController {
 
     // user directory get
     @GetMapping("/user-directory/{userDirectoryId}")
-    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id) {
+    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
         List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
         List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
@@ -98,7 +100,6 @@ public class DirectoryController {
     @Data
     @AllArgsConstructor
     static class ShowUserDirectory<T> {
-
         private T userDirectory;
     }
 

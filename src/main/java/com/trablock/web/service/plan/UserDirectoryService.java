@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserDirectoryService {
 
     private final UserDirectoryRepository userDirectoryRepository;
-    private final PlanService planServiceImpl;
+    private final PlanService planService;
 
     @Transactional
     public void saveUserDirectory(UserDirectory userDirectory) {
@@ -37,7 +37,7 @@ public class UserDirectoryService {
 
     //user directory GET 요청
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
-        Member memberId = planServiceImpl.findMemberId(request);
+        Member memberId = planService.findMemberId(request);
         return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
     }
 
@@ -45,7 +45,7 @@ public class UserDirectoryService {
     @Transactional
     public void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
-        Member memberId = planServiceImpl.findMemberId(request);
+        Member memberId = planService.findMemberId(request);
 
         int memberIdForCount = userDirectoryRepository.findMemberIdForCount(memberId);
 
@@ -71,6 +71,19 @@ public class UserDirectoryService {
         userDirectory.updateName(directoryNameUpdateDto);
 
         System.out.println("userDirectory.getDirectoryName() = " + userDirectory.getDirectoryName());
+
+    }
+
+    /**
+     * user가 생성한 디렉터리 불러오기
+     * @param request
+     * @return
+     */
+    public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
+
+        Member member = planService.findMemberId(request);
+
+        return userDirectoryRepository.findUserDirectoryById(member);
 
     }
 }
