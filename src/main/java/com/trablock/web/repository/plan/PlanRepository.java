@@ -26,4 +26,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query("select p from Plan p where p.member = :id and p.planStatus = 'TRASH'")
     List<Plan> findByTrashPlanStatus(@Param("id") Optional<Member> id);
 
+    @Query("select count(p) from Plan p where p.member = :id")
+    int planCount (@Param("id") Member id);
+
 }

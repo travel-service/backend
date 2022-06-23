@@ -37,13 +37,14 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new MainDirectory(collect);
+        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+        return new MainDirectory(planCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class MainDirectory<T> {
-
+        private int planCount;
         private T mainDirectory;
     }
 
