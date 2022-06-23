@@ -12,9 +12,11 @@ import java.util.List;
 
 public interface LocationService {
 
-    LocationDto createLocation(LocationSaveRequestDto locationDto);
+    Object createLocation(LocationSaveRequestDto locationDto);
 
     MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto);
+
+    Object getLocationDetails(Long locationId, LocationType locationType);
 
     HashMap<String, Object> getMarkLocationList();
 
@@ -27,7 +29,5 @@ public interface LocationService {
     HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type);
 
     HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type);
-
-    LocationDto getLocationDetails(Long locationId, LocationType locationType);
 
 }

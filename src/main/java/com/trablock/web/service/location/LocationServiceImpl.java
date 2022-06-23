@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional
-    public LocationDto createLocation(LocationSaveRequestDto requestDto) {
+    public Object createLocation(LocationSaveRequestDto requestDto) {
         Location save = locationRepository.save(requestDto.toEntity());
         return getLocationDetails(save.getId(), requestDto.getType());
     }
@@ -47,10 +48,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationDetails(Long locationId, LocationType locationType) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Optional<Location> locationById = locationRepository.findLocationById(locationId);
-        return locationById.map(locationMapper::toDto).orElse(null);
+    public Object getLocationDetails(Long locationId, LocationType locationType) {
+        switch (locationType) {
+            case ATTRACTION:
+                return locationRepository.findAttractionByLocationId(locationId);
+            case CULTURE:
+                return locationRepository.findCultureByLocationId(locationId);
+            case FESTIVAL:
+                return locationRepository.findFestivalByLocationId(locationId);
+            case LEPORTS:
+                return locationRepository.findLeportByLocationId(locationId);
+            case LODGE:
+                return locationRepository.findLodgeByLocationId(locationId);
+            case RESTAURANT:
+                return locationRepository.findRestaurantByLocationId(locationId);
+            default:
+                try {
+                    throw new InvalidPropertiesFormatException("잘못된 요청입니다.");
+                } catch (InvalidPropertiesFormatException e) {
+                    e.printStackTrace();
+                }
+        }
+        return null; // 예외처리 조금 더 고민해보자
     }
 
     @Override
