@@ -1,0 +1,4 @@
+INSERT INTO LOCATION (`name`,`type`,`address1`,`address2`,`area_code`,`image`,`latitude`,`longitude`, `is_member` ) VALUES ('휴애리자연생활공원',0,'제주특별자치도 서귀포시 남원읍 신례동로 256','null',39,'null',33.3085,126.634, false);
+INSERT INTO `LOCATION` (`name`,`type`,`address1`,`address2`,`area_code`,`image`,`latitude`,`longitude`, `is_member`) VALUES ('섭지코지',0,'제주특별자치도 서귀포시 성산읍 섭지코지로 107','null',39,'null',33.4302,126.928,false);
+INSERT INTO `LOCATION` (`name`,`type`,`address1`,`address2`,`area_code`,`image`,`latitude`,`longitude`,`is_member`) VALUES ('천지연폭포 (제주도 국가지질공원)',0,'제주특별자치도 서귀포시 천지동','null',39,'null',33.2445,126.559,false);
+INSERT INTO `LOCATION` (`name`,`type`,`address1`,`address2`,`area_code`,`image`,`latitude`,`longitude`,`is_member`) VALUES ('성산일출봉 [유네스코 세계자연유산]',0,'제주특별자치도 서귀포시 성산읍 일출로 284-12','null',39,'null',33.4581,126.942,false);

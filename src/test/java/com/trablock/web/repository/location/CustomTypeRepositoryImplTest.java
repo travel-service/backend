@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class TypeLocationRepositoryTest {
+class CustomTypeRepositoryImplTest {
 
     @PersistenceContext
     EntityManager em;
@@ -28,7 +28,7 @@ class TypeLocationRepositoryTest {
     LocationRepository locationRepository;
 
     @Autowired
-    TypeLocationRepository typeLocationRepository;
+    CustomTypeRepositoryImpl typeRepositoryImpl;
 
     @Autowired
     AttractionRepository attractionRepository;
@@ -71,7 +71,7 @@ class TypeLocationRepositoryTest {
 
         //when
         Restaurant savedRest = restaurantRepository.save(restaurant);
-        Restaurant findRest = typeLocationRepository.findRestaurantByLocationId(locId).get();
+        Restaurant findRest = typeRepositoryImpl.findRestaurantByLocationId(locId).get();
 
         //then
         assertThat(findRest).isEqualTo(savedRest);
@@ -108,17 +108,17 @@ class TypeLocationRepositoryTest {
                 .menu("음료")
                 .build();
 
-        Long savedId = typeLocationRepository.saveRestaurant(restaurant);
-        Optional<Restaurant> findRest = typeLocationRepository.findRestaurantByLocationId(locId);
+        Long savedId = typeRepositoryImpl.saveRestaurant(restaurant);
+        Optional<Restaurant> findRest = typeRepositoryImpl.findRestaurantByLocationId(locId);
         assertThat(findRest).isPresent();
 
         //when
         findRest.ifPresent(selectRest -> {
-            typeLocationRepository.deleteRestaurant(findRest.get());
+            typeRepositoryImpl.deleteRestaurant(findRest.get());
         });
 
         //then
-        assertThat(typeLocationRepository.findRestaurantByLocationId(locId)).isEmpty();
+        assertThat(typeRepositoryImpl.findRestaurantByLocationId(locId)).isEmpty();
         System.out.println("findRest = " + findRest);
 
     }

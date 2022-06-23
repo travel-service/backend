@@ -2,6 +2,8 @@ package com.trablock.web.controller;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.entity.location.Location;
+import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.location.LocationService;
 import com.trablock.web.service.location.LocationServiceImpl;
 import com.trablock.web.service.location.TypeLocationService;
@@ -22,10 +24,12 @@ public class LocationController {
 
     private final LocationService locationService;
     private final TypeLocationService typeLocationService;
+    private final LocationRepository locationRepository;
 
     /**
      * 로케이션의 details를 반환
      * -> 지도의 markup이나 block 을 클릭할 때 response
+     *
      * @param locationId
      * @return
      */
@@ -45,6 +49,7 @@ public class LocationController {
 
     /**
      * 지도에 표시하기 위한 Location의 DTO.
+     *
      * @return
      */
     @ResponseBody
@@ -56,6 +61,7 @@ public class LocationController {
 
     /**
      * 블럭형태로 표시하기 위한 Location의 DTO
+     *
      * @return
      */
     @ResponseBody
@@ -66,6 +72,7 @@ public class LocationController {
 
     /**
      * 멤버 로케이션 추가
+     *
      * @param formData
      * @return
      */
@@ -84,6 +91,20 @@ public class LocationController {
         // 타입 로케이션도 만들어야 함
         return ResponseEntity.ok().body(map); // 반환값을 MarkLoc, BlockLoc, memberLoc 셋 다 주자
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/locations/health-check", method = RequestMethod.GET)
+    public Object health() {
+        return locationRepository.findAllByTypeAndIsMemberFalse(ATTRACTION, MarkLocationDto.class);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/locations/health-check2", method = RequestMethod.GET)
+    public Object health2() {
+        return locationRepository.findById(1L);
+    }
+
 
     /**
      * MemberLocation과 관련된 문제?

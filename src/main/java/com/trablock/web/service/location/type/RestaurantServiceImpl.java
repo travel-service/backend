@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.RestaurantDto;
 import com.trablock.web.entity.location.type.Restaurant;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.CustomTypeRepositoryImpl;
 import com.trablock.web.service.location.mapper.RestaurantMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
 
-    private final TypeLocationRepository repository;
+    private final CustomTypeRepositoryImpl repository;
     private final RestaurantMapper mapper = Mappers.getMapper(RestaurantMapper.class);
 
     @Override

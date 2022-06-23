@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.LodgeDto;
 import com.trablock.web.entity.location.type.Lodge;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.CustomTypeRepositoryImpl;
 import com.trablock.web.service.location.mapper.LodgeMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LodgeServiceImpl implements LodgeService {
 
-    private final TypeLocationRepository repository;
+    private final CustomTypeRepositoryImpl repository;
     private final LodgeMapper mapper = Mappers.getMapper(LodgeMapper.class);
 
     @Override

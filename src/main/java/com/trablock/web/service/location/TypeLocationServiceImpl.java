@@ -3,7 +3,7 @@ package com.trablock.web.service.location;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.TypeLocationSaveRequestDto;
 import com.trablock.web.entity.location.type.*;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.CustomTypeRepositoryImpl;
 import com.trablock.web.repository.location.type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TypeLocationServiceImpl implements TypeLocationService {
 
-    private final TypeLocationRepository typeLocationRepository;
+    private final CustomTypeRepositoryImpl typeRepositoryImpl;
     private final AttractionRepository attractionRepository;
     private final CultureRepository cultureRepository;
     private final FestivalRepository festivalRepository;
@@ -27,17 +27,17 @@ public class TypeLocationServiceImpl implements TypeLocationService {
     public Object getLocationDetails(Long locationId, LocationType type) {
         switch (type) {
             case ATTRACTION:
-                return typeLocationRepository.findAttractionByLocationId(locationId);
+                return typeRepositoryImpl.findAttractionByLocationId(locationId);
             case CULTURE:
-                return typeLocationRepository.findCultureByLocationId(locationId);
+                return typeRepositoryImpl.findCultureByLocationId(locationId);
             case FESTIVAL:
-                return typeLocationRepository.findFestivalByLocationId(locationId);
+                return typeRepositoryImpl.findFestivalByLocationId(locationId);
             case LEPORTS:
-                return typeLocationRepository.findLeportsByLocationId(locationId);
+                return typeRepositoryImpl.findLeportsByLocationId(locationId);
             case LODGE:
-                return typeLocationRepository.findLodgeByLocationId(locationId);
+                return typeRepositoryImpl.findLodgeByLocationId(locationId);
             case RESTAURANT:
-                return typeLocationRepository.findRestaurantByLocationId(locationId);
+                return typeRepositoryImpl.findRestaurantByLocationId(locationId);
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
@@ -52,7 +52,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .parking(typeLocationSaveRequestDto.getParking())
                         .restDate(typeLocationSaveRequestDto.getRestDate())
                         .build();
-                typeLocationRepository.saveAttraction(attraction);
+                typeRepositoryImpl.saveAttraction(attraction);
             case CULTURE:
                 Culture culture = Culture.builder()
                         .locationId(locationId)
@@ -62,7 +62,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .useTime(typeLocationSaveRequestDto.getUseTime())
                         .spendTime(typeLocationSaveRequestDto.getSpendTime())
                         .build();
-                typeLocationRepository.saveCulture(culture);
+                typeRepositoryImpl.saveCulture(culture);
             case FESTIVAL:
                 Festival festival = Festival.builder()
                         .locationId(locationId)
@@ -74,7 +74,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .program(typeLocationSaveRequestDto.getProgram())
                         .fee(typeLocationSaveRequestDto.getFee())
                         .build();
-                typeLocationRepository.saveFestival(festival);
+                typeRepositoryImpl.saveFestival(festival);
             case LEPORTS:
                 Leports leports = Leports.builder()
                         .locationId(locationId)
@@ -85,7 +85,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .fee(typeLocationSaveRequestDto.getFee())
                         .useTime(typeLocationSaveRequestDto.getUseTime())
                         .build();
-                typeLocationRepository.saveLeports(leports);
+                typeRepositoryImpl.saveLeports(leports);
             case LODGE:
                 Lodge lodge = Lodge.builder()
                         .locationId(locationId)
@@ -97,7 +97,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .reservationUrl(typeLocationSaveRequestDto.getReservationUrl())
                         .subFacility(typeLocationSaveRequestDto.getSubFacility())
                         .build();
-                typeLocationRepository.saveLodge(lodge);
+                typeRepositoryImpl.saveLodge(lodge);
             case RESTAURANT:
                 Restaurant restaurant = Restaurant.builder()
                         .locationId(locationId)
@@ -108,7 +108,7 @@ public class TypeLocationServiceImpl implements TypeLocationService {
                         .restDate(typeLocationSaveRequestDto.getRestDate())
                         .menu(typeLocationSaveRequestDto.getMenu())
                         .build();
-                typeLocationRepository.saveRestaurant(restaurant);
+                typeRepositoryImpl.saveRestaurant(restaurant);
             default:
                 new IllegalStateException("Unexpected value: " + type);
         }

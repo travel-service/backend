@@ -8,15 +8,20 @@ import lombok.NoArgsConstructor;
 
 import static lombok.AccessLevel.PROTECTED;
 
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = PROTECTED)
-public class BlockLocationDto {
-    private Long id;
-    private String name;
-    private String address1;
-    private String address2;
-    private String image;
-    private LocationType type;
+/**
+ * https://knoc-story.tistory.com/114
+ * 프로젝션
+ */
+public interface BlockLocationDto {
+    Long getId();
+
+    String getName();
+
+    String getAddress1();
+
+    String getAddress2();
+
+    String getImage();
+
+    LocationType getType();
 }

@@ -1,5 +1,6 @@
 package com.trablock.web.repository.location.type;
 
+import com.trablock.web.dto.location.AttractionDto;
 import com.trablock.web.entity.location.type.Attraction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

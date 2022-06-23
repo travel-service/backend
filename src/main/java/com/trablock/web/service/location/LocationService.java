@@ -30,7 +30,4 @@ public interface LocationService {
 
     LocationDto getLocationDetails(Long locationId);
 
-    MarkLocationDto toMarkLocationDto(Location location);
-
-    BlockLocationDto toBlockLocationDto(Location location);
 }

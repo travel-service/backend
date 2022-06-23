@@ -1,6 +1,8 @@
 package com.trablock.web.repository.location;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.dto.location.BlockLocationDto;
+import com.trablock.web.dto.location.MarkLocationDto;
 import com.trablock.web.entity.location.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     @Query("select l from Location l where l.type = :type and l.isMember = false")
-    HashSet<Location> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType);
+    <T> HashSet<T> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType, Class<T> tClass);
 
     @Query("select l from Location l where l.isMember = false")
     List<Location> findAllByIsMemberFalse();

@@ -105,40 +105,12 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
-        HashSet<MarkLocationDto> markLocationDtos = new HashSet<>();
-        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
-        locations.forEach(location -> markLocationDtos.add(toMarkLocationDto(location)));
-        return markLocationDtos;
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, MarkLocationDto.class);
     }
 
     @Override
     public HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
-        HashSet<BlockLocationDto> blockLocationDtoList = new HashSet<>();
-        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
-        locations.forEach(location -> blockLocationDtoList.add(toBlockLocationDto(location)));
-        return blockLocationDtoList;
-    }
-
-    @Override
-    public MarkLocationDto toMarkLocationDto(Location location) {
-        return MarkLocationDto.builder()
-                .id(location.getId())
-                .name(location.getName())
-                .type(location.getType())
-                .coords(location.getCoords())
-                .build();
-    }
-
-    @Override
-    public BlockLocationDto toBlockLocationDto(Location location) {
-        return BlockLocationDto.builder()
-                .id(location.getId())
-                .name(location.getName())
-                .address1(location.getAddress1())
-                .address2(location.getAddress2())
-                .image(location.getImage())
-                .type(location.getType())
-                .build();
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationDto.class);
     }
 
 }
