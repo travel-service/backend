@@ -2,6 +2,7 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.save.MemberLocationRequestDto;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,11 +11,11 @@ import java.util.List;
 
 public interface LocationService {
 
-    Object createLocation(LocationSaveRequestDto locationDto);
-
-    MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto);
+    Object createLocationByMember(LocationSaveWrapperDto wrapperDto);
 
     Object getLocationDetails(Long locationId, LocationType locationType);
+
+    void saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
 
     HashMap<String, Object> getMarkLocationList();
 

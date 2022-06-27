@@ -1,6 +1,5 @@
 package com.trablock.web.controller;
 
-import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.location.LocationService;
@@ -59,20 +58,14 @@ public class LocationController {
 
     /**
      * 멤버 로케이션 추가
+     * 멤버 로케이션 생성 시, Location이 먼저 생성되고
+     * 그 이후 TypeLocation, Information, MemberLocation이 순차적으로 생성되어야 한다.
      */
     @RequestMapping(value = " /members/location", method = RequestMethod.POST)
-    public ResponseEntity<HashMap<String, Object>> memberLocationAdd(@RequestBody HashMap<String, Object> formData) {
-//        Object location = locationService.createLocation((LocationSaveRequestDto) formData.get("location"));
-//        LocationType type = locationDto.getType();
-//        //Object typeLocationDto = typeLocationService.createTypeLocation((TypeLocationSaveRequestDto) formData.get("typeLocation"), locationDto.getId(), type);
-//        MemberLocationDto memberLocationDto = locationService.createMemberLocation((MemberLocationSaveRequestDto) formData.get("memberLocation"));
-//
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//        map.put("location", locationDto);
-//        //map.put(String.valueOf(type), typeLocationDto);
-//        map.put("member-location", memberLocationDto);
+    public ResponseEntity<HashMap<String, Object>> memberLocationAdd(@RequestBody LocationSaveWrapperDto locationSaveWrapperDto) {
 
-        // 타입 로케이션도 만들어야 함
+        locationService.createLocationByMember(locationSaveWrapperDto);
+
 //        return ResponseEntity.ok().body(); // 반환값을 MarkLoc, BlockLoc, memberLoc 셋 다 주자
         return null;
     }

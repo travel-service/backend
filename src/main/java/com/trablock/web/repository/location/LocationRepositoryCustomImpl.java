@@ -8,13 +8,23 @@ import com.trablock.web.entity.location.QLocation;
 import com.trablock.web.entity.location.type.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
+
+    @PersistenceContext
+    private EntityManager em;
 
     private final JPAQueryFactory queryFactory;
 
     public LocationRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public Long saveAttraction(Attraction attraction) {
+        em.persist(attraction);
+        return attraction.getId();
     }
 
     @Override
@@ -41,6 +51,17 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                 .leftJoin(information).on(location.id.eq(information.locationId))
                 .where(location.id.eq(locationId))
                 .fetchOne();
+    }
+
+    @Override
+    public void deleteAttraction(Attraction attraction) {
+        em.remove(attraction);
+    }
+
+    @Override
+    public Long saveCulture(Culture culture) {
+        em.persist(culture);
+        return culture.getId();
     }
 
     @Override
@@ -71,6 +92,17 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                 .leftJoin(information).on(location.id.eq(information.locationId))
                 .where(location.id.eq(locationId))
                 .fetchOne();
+    }
+
+    @Override
+    public void deleteCulture(Culture culture) {
+        em.remove(culture);
+    }
+
+    @Override
+    public Long saveFestival(Festival festival) {
+        em.persist(festival);
+        return festival.getId();
     }
 
     @Override
@@ -108,6 +140,17 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
     }
 
     @Override
+    public void deleteFestival(Festival festival) {
+        em.remove(festival);
+    }
+
+    @Override
+    public Long saveLeports(Leports leports) {
+        em.persist(leports);
+        return leports.getId();
+    }
+
+    @Override
     public LeportsDto findLeportByLocationId(Long locationId) {
         QLocation location = QLocation.location;
         QInformation information = new QInformation("information");
@@ -135,6 +178,17 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                 .leftJoin(information).on(location.id.eq(information.locationId))
                 .where(location.id.eq(locationId))
                 .fetchOne();
+    }
+
+    @Override
+    public void deleteLeports(Leports leports) {
+        em.remove(leports);
+    }
+
+    @Override
+    public Long saveLodge(Lodge lodge) {
+        em.persist(lodge);
+        return lodge.getId();
     }
 
     @Override
@@ -169,6 +223,18 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
     }
 
     @Override
+    public void deleteLodge(Lodge lodge) {
+        em.remove(lodge);
+    }
+
+    @Override
+    public Long saveRestaurant(Restaurant restaurant) {
+        em.persist(restaurant);
+        return restaurant.getId();
+    }
+
+
+    @Override
     public RestaurantDto findRestaurantByLocationId(Long locationId) {
         QLocation location = QLocation.location;
         QInformation information = new QInformation("information");
@@ -197,4 +263,10 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                 .where(location.id.eq(locationId))
                 .fetchOne();
     }
+
+    @Override
+    public void deleteRestaurant(Restaurant restaurant) {
+        em.remove(restaurant);
+    }
+
 }

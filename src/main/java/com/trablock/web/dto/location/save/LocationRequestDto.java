@@ -1,4 +1,4 @@
-package com.trablock.web.dto.location;
+package com.trablock.web.dto.location.save;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Coords;
@@ -7,18 +7,19 @@ import lombok.*;
 
 import static lombok.AccessLevel.*;
 
-@Getter
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class LocationSaveRequestDto {
+public class LocationRequestDto {
+
     private String name;
     private String address1;
     private String address2;
     private Coords coords;
     private String image;
     private LocationType type;
-    
+
     public Location toEntity() {
         return Location.builder()
                 .name(name)
