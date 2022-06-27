@@ -1,5 +1,6 @@
 package com.trablock.web.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -72,6 +73,24 @@ public enum LocationType {
         return false;
     }
 
+    @JsonCreator
+    public static LocationType fromValue(String value) {
+        switch (value) {
+            case "ATTRACTION":
+                return ATTRACTION;
+            case "CULTURE":
+                return CULTURE;
+            case "FESTIVAL":
+                return FESTIVAL;
+            case "LEPORTS":
+                return LEPORTS;
+            case "LODGE":
+                return LODGE;
+            case "RESTAURANT":
+                return RESTAURANT;
+        }
+        return null;
+    }
 
     @JsonProperty("type")
     private int getType() {

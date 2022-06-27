@@ -29,8 +29,9 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/{locationId}", method = RequestMethod.GET)
-    public ResponseEntity<Object> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationType locationType) {
-        return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationType));
+    public ResponseEntity<Object> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
+        System.out.println("type = " + locationTypeDto);
+        return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationTypeDto.getType()));
     }
 
     /**
@@ -47,6 +48,7 @@ public class LocationController {
 
     /**
      * 블록 형태로 표시
+     *
      * @return
      */
     @ResponseBody
