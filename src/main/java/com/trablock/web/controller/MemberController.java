@@ -56,6 +56,18 @@ public class MemberController {
         return memberServiceImpl.MemberLogin(loginForm, response);
     }
 
+    // 비회원 - 사용자 정보 가져오기
+    @GetMapping("/api/info")
+    public ResponseEntity<?> getInfo(HttpServletRequest request) {
+        return memberServiceImpl.getMemberInfo(request);
+    }
+
+    // 비회원 - Refresh To Access
+    @GetMapping("api/refresh")
+    public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return memberServiceImpl.getMemberAccessToken(request, response);
+    }
+
     // 회원 - 로그아웃
     @DeleteMapping("/api/user/logout")
     public String logout(HttpServletRequest request) {
@@ -64,7 +76,7 @@ public class MemberController {
 
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)
     @GetMapping("/api/user/my-page")
-    public ResponseEntity<?> getMemberPage(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
         return memberServiceImpl.getMemberPage(request);
     }
 

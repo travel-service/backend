@@ -21,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -269,7 +272,48 @@ public class MemberServiceImpl implements MemberService{
         return true;
     }
 
-    // 회원 비밀번호 수정
+    public ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+
+        if (accessToken != null) {
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                String nickName = jwtTokenService.TokenToNickName(request);
+                Map<String, Object> res = new HashMap<>();
+
+                res.put("nickName", nickName);
+
+                return ResponseEntity.ok().body(res);
+            } else {
+                throw new MemberException("Token-Error");
+            }
+        }
+        throw new MemberException("AccessToken 이 없습니다.");
+    }
+
+    public ResponseEntity<?> getMemberAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+        if (refreshToken != null) {
+            if (jwtTokenProvider.validateToken(refreshToken)) {
+                String userName = jwtTokenProvider.getUserName(refreshToken);
+                List<String> roles = jwtTokenProvider.getRoles(refreshToken);
+
+                String newAccessToken = jwtTokenProvider.createAccessToken(userName, roles);
+                jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+
+                return ResponseEntity.ok().body("OK");
+            }
+        }
+        throw new MemberException("Token-Error");
+    }
+
+    public void setAuthentication(String token) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+    /**
+     * 회원 비밀번호 수정
+      */
     public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
         String userName = jwtTokenService.TokenToUserName(request);
         Optional<Member> member = memberRepository.findByUserName(userName);
@@ -284,7 +328,11 @@ public class MemberServiceImpl implements MemberService{
         }
     }
 
-    // 회원가입한 사용자인지 검증
+    /**
+     * 중복 아이디 검증
+     * @param userName
+     * @return
+     */
     public boolean MemberValidation(String userName) {
         Optional<Member> member = memberRepository.findByUserName(userName);
 

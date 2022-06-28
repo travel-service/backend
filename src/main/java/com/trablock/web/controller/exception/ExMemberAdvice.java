@@ -24,7 +24,12 @@ public class ExMemberAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResult> MemberExHandle(MemberException e) {
+        String message = e.getMessage();
         ErrorResult errorResult = new ErrorResult("MEMBER-EX", e.getMessage());
+
+        if (message.equals("Token-Error")) {
+                return new ResponseEntity<>(errorResult, HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
@@ -33,6 +38,7 @@ public class ExMemberAdvice {
     public ErrorResult fileExHandle(FileNotFoundException e) {
         return new ErrorResult("IMAGE EX", "일치하는 사진을 찾지 못했습니다.");
     }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
