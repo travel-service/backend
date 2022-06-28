@@ -63,7 +63,7 @@ public class MemberController {
     }
 
     // 비회원 - Refresh To Access
-    @GetMapping("api/refresh")
+    @GetMapping("/api/refresh")
     public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
         return memberServiceImpl.getMemberAccessToken(request, response);
     }
