@@ -57,13 +57,13 @@ public class MemberController {
     }
 
     // 비회원 - 사용자 정보 가져오기
-    @GetMapping("/api/info")
+    @GetMapping("/auth/info")
     public ResponseEntity<?> getInfo(HttpServletRequest request) {
         return memberServiceImpl.getMemberInfo(request);
     }
 
     // 비회원 - Refresh To Access
-    @GetMapping("/api/refresh")
+    @GetMapping("/auth/refresh")
     public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
         return memberServiceImpl.memberRefreshToAccess(request, response);
     }

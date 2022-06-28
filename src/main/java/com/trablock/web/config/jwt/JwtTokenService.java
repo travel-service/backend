@@ -27,7 +27,7 @@ public class JwtTokenService {
 
     // AccessToken 으로 nickName 흭득
     public String TokenToNickName(HttpServletRequest request) {
-        String accessToken = jwtTokenProvider.resolveRefreshToken(request);
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
         Member member = memberRepository.findByUserName(jwtTokenProvider.getUserName(accessToken)).get();
         return member.getMemberProfile().getNickName();
     }
