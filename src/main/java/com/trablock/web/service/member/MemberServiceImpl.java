@@ -290,21 +290,23 @@ public class MemberServiceImpl implements MemberService{
         throw new MemberException("AccessToken 이 없습니다.");
     }
 
-    public ResponseEntity<?> getMemberAccessToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
         if (refreshToken != null) {
             if (jwtTokenProvider.validateToken(refreshToken)) {
                 String userName = jwtTokenProvider.getUserName(refreshToken);
-                List<String> roles = jwtTokenProvider.getRoles(refreshToken);
+                List<String> roles = jwtTokenProvider.getRoles(userName);
 
                 String newAccessToken = jwtTokenProvider.createAccessToken(userName, roles);
+                System.out.println("newAccessToken = " + newAccessToken);
                 jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+                this.setAuthentication(newAccessToken);
 
                 return ResponseEntity.ok().body("OK");
             }
         }
-        throw new MemberException("Token-Error");
+        return ResponseEntity.status(401).body("TOKEN - ERROR");
     }
 
     public void setAuthentication(String token) {

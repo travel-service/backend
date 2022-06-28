@@ -65,7 +65,7 @@ public class MemberController {
     // 비회원 - Refresh To Access
     @GetMapping("/api/refresh")
     public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        return memberServiceImpl.getMemberAccessToken(request, response);
+        return memberServiceImpl.memberRefreshToAccess(request, response);
     }
 
     // 회원 - 로그아웃

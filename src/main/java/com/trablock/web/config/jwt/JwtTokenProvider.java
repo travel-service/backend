@@ -91,7 +91,6 @@ public class JwtTokenProvider {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refreshToken")) {
-                    System.out.println("cookie.getValue() = " + cookie.getValue());
                     return cookie.getValue();
                 }
             }
@@ -121,7 +120,7 @@ public class JwtTokenProvider {
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/"); //쿠키의 유효범위 추후 서비스 발전시 쿠키의 범위 설정 필요
-        cookie.setMaxAge(24 * 7 * 60 * 60 * 1000);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
 
         response.addCookie(cookie);
     }
