@@ -32,10 +32,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional
-    public synchronized Object createLocationByMember(LocationSaveWrapperDto wrapperDto) {
+    public synchronized Long createLocationByMember(LocationWrapperDto wrapperDto, LocationType type) {
         Location savedLocation = locationRepository.save(wrapperDto.getLocation().toEntity());
         Long locationId = savedLocation.getId();
-        LocationType type = savedLocation.getType();
 
         informationRepository.save(wrapperDto.getInformation().toEntity(locationId));
         memberLocationRepository.save(wrapperDto.getMemberLocation().toEntity(locationId));
@@ -45,7 +44,19 @@ public class LocationServiceImpl implements LocationService {
 
         saveTypeLocation(typeLocationRequestDto, type);
 
-        return null;
+        return locationId;
+    }
+
+    @Override
+    public boolean deleteLocationByMember(Long locationId) {
+        memberLocationRepository.deleteMemberLocationByLocationId(locationId);
+        return memberLocationRepository.existsMemberLocationByLocationId(locationId);
+    }
+
+    @Override
+    public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId) {
+
+        return false;
     }
 
     @Override
@@ -92,7 +103,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public HashMap<String, Object> getMarkLocationList() {
+    public HashMap<String, Object> getMarkLocationList() { // 반환 타입이 Object인 것이 맘에 들지 않는다.
+        // 부모 클래스 만들어서 묶어버릴까.. 생각중.
         HashMap<String, Object> map = new HashMap<String, Object>();
 
         map.put("Lodge", getMarkLocationListWithType(LODGE));

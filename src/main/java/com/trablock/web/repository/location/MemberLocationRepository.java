@@ -27,6 +27,9 @@ public interface MemberLocationRepository extends JpaRepository<MemberLocation, 
     @Query("select m from MemberLocation m where m.member = :member and m.isPublic = true")
     List<MemberLocation> findAllByMemberAndIsPublicTrue(@Param("member") Member member);
 
+    @Query("select (count(m) > 0) from MemberLocation m where m.locationId = :locationId")
+    boolean existsMemberLocationByLocationId(@Param("locationId") Long locationId);
+
     /**
      * https://www.baeldung.com/spring-data-partial-update
      *
@@ -34,7 +37,7 @@ public interface MemberLocationRepository extends JpaRepository<MemberLocation, 
      */
     @Modifying
     @Query("update MemberLocation m set m.isPublic = false where m.locationId = :locationId ")
-    void updateMemberLocationBeingPrivate(@Param("locationId") Long locationId);
+    boolean updateMemberLocationBeingPrivate(@Param("locationId") Long locationId);
 
     @Modifying
     @Query("update MemberLocation m set m.isPublic = true where m.locationId = :locationId ")

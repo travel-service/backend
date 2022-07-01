@@ -1,7 +1,6 @@
 package com.trablock.web.dto.location;
 
 
-import com.trablock.web.entity.location.type.Attraction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

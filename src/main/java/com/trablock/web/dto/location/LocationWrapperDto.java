@@ -1,5 +1,6 @@
 package com.trablock.web.dto.location;
 
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.LocationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
@@ -11,7 +12,7 @@ import static lombok.AccessLevel.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class LocationSaveWrapperDto {
+public class LocationWrapperDto {
 
     private LocationRequestDto location;
 
@@ -20,4 +21,6 @@ public class LocationSaveWrapperDto {
     private MemberLocationRequestDto memberLocation;
 
     private TypeLocationRequestDto typeLocation;
+
+    private LocationType type;
 }
