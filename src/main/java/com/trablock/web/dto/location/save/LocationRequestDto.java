@@ -1,5 +1,6 @@
 package com.trablock.web.dto.location.save;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
@@ -7,8 +8,8 @@ import lombok.*;
 
 import static lombok.AccessLevel.*;
 
+@Data
 @Builder
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class LocationRequestDto {
@@ -18,7 +19,19 @@ public class LocationRequestDto {
     private String address2;
     private Coords coords;
     private String image;
+
+    @JsonProperty("areaCode")
+    private Integer areaCode;
+
+    @JsonProperty("isMember")
+    private Boolean isMember;
+
     private LocationType type;
+
+
+    public void setMember(Boolean isMember) {
+        this.isMember = isMember;
+    }
 
     public Location toEntity() {
         return Location.builder()
@@ -27,6 +40,7 @@ public class LocationRequestDto {
                 .address2(address2)
                 .coords(coords)
                 .image(image)
+                .areaCode(areaCode)
                 .type(type)
                 .build();
     }

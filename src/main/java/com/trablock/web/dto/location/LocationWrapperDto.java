@@ -1,5 +1,6 @@
 package com.trablock.web.dto.location;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.LocationRequestDto;
@@ -8,19 +9,22 @@ import lombok.*;
 
 import static lombok.AccessLevel.*;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class LocationWrapperDto {
 
+    @JsonProperty("location")
     private LocationRequestDto location;
 
+    @JsonProperty("information")
     private InformationRequestDto information;
 
+    @JsonProperty("memberLocation")
     private MemberLocationRequestDto memberLocation;
 
+    @JsonProperty("typeLocation")
     private TypeLocationRequestDto typeLocation;
 
-    private LocationType type;
 }

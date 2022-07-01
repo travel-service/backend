@@ -32,9 +32,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional
-    public synchronized Long createLocationByMember(LocationWrapperDto wrapperDto, LocationType type) {
+    public Long createLocationByMember(LocationWrapperDto wrapperDto) {
         Location savedLocation = locationRepository.save(wrapperDto.getLocation().toEntity());
         Long locationId = savedLocation.getId();
+        LocationType type = savedLocation.getType();
 
         informationRepository.save(wrapperDto.getInformation().toEntity(locationId));
         memberLocationRepository.save(wrapperDto.getMemberLocation().toEntity(locationId));
@@ -43,7 +44,6 @@ public class LocationServiceImpl implements LocationService {
         typeLocationRequestDto.setLocationId(locationId);
 
         saveTypeLocation(typeLocationRequestDto, type);
-
         return locationId;
     }
 

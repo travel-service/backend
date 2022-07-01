@@ -1,17 +1,14 @@
 package com.trablock.web.controller;
 
-import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
-import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
-
-import static com.trablock.web.domain.LocationType.*;
 
 
 @RestController
@@ -53,10 +50,9 @@ public class LocationController {
      * 멤버 로케이션 생성 시, Location이 먼저 생성되고
      * 그 이후 TypeLocation, Information, MemberLocation이 순차적으로 생성되어야 한다.
      */
-    @RequestMapping(value = "/members/location", method = RequestMethod.POST)
-    public ResponseEntity<Long> memberLocationAdd(@PathVariable("type") String type, @RequestBody LocationWrapperDto locationWrapperDto) {
-        return new ResponseEntity<Long>(locationService.createLocationByMember(locationWrapperDto, LocationType.fromValue(type.toUpperCase())
-        ), HttpStatus.CREATED);
+    @RequestMapping(value = "/locations/member", method = RequestMethod.POST)
+    public ResponseEntity<Long> memberLocationAdd(@RequestBody LocationWrapperDto wrapperDto) {
+        return new ResponseEntity<Long>(locationService.createLocationByMember(wrapperDto), HttpStatus.CREATED);
     }
 
 
@@ -64,7 +60,7 @@ public class LocationController {
      * 멤버 로케이션 삭제.
      * 로케이션 정보는 남겨두고 MemberLocation만 삭제하도록 하였다.
      */
-    @RequestMapping(value = "/members/location", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/locations/member", method = RequestMethod.DELETE)
     public ResponseEntity<String> memberLocationRemove(Long locationId) {
         return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }

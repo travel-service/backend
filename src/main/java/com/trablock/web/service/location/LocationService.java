@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LocationService {
 
-    Long createLocationByMember(LocationWrapperDto wrapperDto, LocationType type);
+    Long createLocationByMember(LocationWrapperDto wrapperDto);
 
     Object getLocationDetails(Long locationId, LocationType locationType);
 

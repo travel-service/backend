@@ -1,14 +1,11 @@
 package com.trablock.web.dto.location;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
@@ -39,7 +36,4 @@ public class TypeLocationRequestDto {
     private Boolean packing;
     private String menu;
 
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
-    }
 }
