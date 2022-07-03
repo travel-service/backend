@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DayDto {
 
-    private Location locationId;
     private String copyLocationId;
     private MovingData movingData;
     private int days;

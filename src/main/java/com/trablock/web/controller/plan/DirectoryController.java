@@ -15,6 +15,7 @@ import com.trablock.web.service.plan.UserDirectoryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class DirectoryController {
 
 
     //main directory get
-    @GetMapping("/main-directory")
+    @GetMapping("/members/plan")
     public MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -49,7 +50,7 @@ public class DirectoryController {
     }
 
     //main-user directory get
-    @GetMapping("/main-user-directory")
+    @GetMapping("/members/directory")
     public MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
@@ -104,6 +105,7 @@ public class DirectoryController {
     }
 
     //플랜 삭제(main -> trash)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/main-directory/cancel")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
@@ -113,6 +115,7 @@ public class DirectoryController {
     }
 
     //플랜 복구(trash -> main)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/trash-directory/revert")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
@@ -122,6 +125,7 @@ public class DirectoryController {
     }
 
     //플랜 영구 삭제(trash -> delete)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/trash-directory/delete")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
@@ -131,6 +135,7 @@ public class DirectoryController {
     }
 
     //user directory 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create/user-directory")
     public String createUserDirectory(HttpServletRequest request, @RequestBody UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
         userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
@@ -138,6 +143,7 @@ public class DirectoryController {
     }
 
     //user directory 삭제(undelete -> delete)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/delete/user-directory")
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
@@ -149,6 +155,7 @@ public class DirectoryController {
     }
 
     //plan 이동(main 디렉터리 -> user 디렉터리)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/move/user-directory")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm) {
         planItemService.moveUserPlan(moveDirectoryForm);
@@ -162,6 +169,7 @@ public class DirectoryController {
 //    }
 
     // user directory 이름 변경
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/update/user-directory-name/{userDirectoryId}")
     public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id, @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto) {
         userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto);
