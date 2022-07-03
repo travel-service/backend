@@ -132,6 +132,7 @@ public class DirectoryController {
     }
 
     //user directory 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create/user-directory")
     public String createUserDirectory(HttpServletRequest request, @RequestBody UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
         userDirectoryService.createUserDirectory(request, userDirectoryForm, response);

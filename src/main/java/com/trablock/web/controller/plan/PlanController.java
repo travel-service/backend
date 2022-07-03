@@ -7,6 +7,7 @@ import com.trablock.web.service.plan.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class PlanController {
     private final ConceptService conceptService;
 
     //Plan 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
     public String createPlan(@RequestBody Form form, HttpServletRequest request) {
         Plan plan = planService.createPlan(form, request);
@@ -34,6 +36,7 @@ public class PlanController {
     }
 
     //Concept 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/concept")
     public String createConcept(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         conceptService.createConcept(form, request, planId);
@@ -42,6 +45,7 @@ public class PlanController {
     }
 
     //SelectedLocation 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/selected-location")
     public String createSelectedLocation(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         selectedLocationService.createSelectedLocation(form, request, planId);
@@ -51,6 +55,7 @@ public class PlanController {
     }
 
     //Day 생성
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/day")
     public String createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         dayService.createDay(form, request, planId);
