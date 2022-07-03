@@ -60,8 +60,8 @@ public class LocationController {
      * 멤버 로케이션 삭제.
      * 로케이션 정보는 남겨두고 MemberLocation만 삭제하도록 하였다.
      */
-    @RequestMapping(value = "/locations/member", method = RequestMethod.DELETE)
-    public ResponseEntity<String> memberLocationRemove(Long locationId) {
+    @RequestMapping(value = "/locations/member/{locationId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId) {
         return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }
 
