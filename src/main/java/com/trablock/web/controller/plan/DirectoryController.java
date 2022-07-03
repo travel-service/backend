@@ -4,6 +4,7 @@ package com.trablock.web.controller.plan;
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.plan.Plan;
@@ -25,68 +26,72 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DirectoryController {
 
-    private final PlanService planServiceImpl;
-    private final UserDirectoryService userDirectoryServiceImpl;
-    private final PlanItemService planItemServiceImpl;
+    private final PlanService planService;
+    private final UserDirectoryService userDirectoryService;
+    private final PlanItemService planItemService;
 
 
     //main directory get
     @GetMapping("/main-directory")
     public MainDirectory mainPlans(HttpServletRequest request) {
-        List<Plan> planDirectoryMain = planServiceImpl.findMainPlanDirectoryMain(request);
+        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new MainDirectory(collect);
+        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+        return new MainDirectory(planCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class MainDirectory<T> {
-
+        private int planCount;
         private T mainDirectory;
     }
 
     //main-user directory get
     @GetMapping("/main-user-directory")
     public MainUserDirectory usersPlans(HttpServletRequest request) {
-        List<UserDirectory> mainUserDirectoryMain = userDirectoryServiceImpl.findMainUserDirectoryMain(request);
+        List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(Collectors.toList());
 
-        return new MainUserDirectory(collect);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
+        List<Integer> planCount = planItemService.countPlan(userDirectories);
+        return new MainUserDirectory(planCount, collect);
     }
 
 
     @Data
     @AllArgsConstructor
     static class MainUserDirectory<T> {
-
+        private List<Integer> planCount;
         private T mainUserDirectory;
     }
 
     //trash directory get
     @GetMapping("/trash-directory")
     public TrashDirectory trashPlans(HttpServletRequest request) {
-        List<Plan> planDirectoryMain = planServiceImpl.findTrashPlanDirectoryMain(request);
+        List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        return new TrashDirectory(collect);
+        int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+        return new TrashDirectory(trashPlanCount, collect);
     }
 
     @Data
     @AllArgsConstructor
     static class TrashDirectory<T> {
-
+        private int trashPlanCount;
         private T trashDirectory;
     }
 
-    //user directory get
+    // user directory get
     @GetMapping("/user-directory/{userDirectoryId}")
-    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id) {
-        List<Plan> userPlanDirectoryUser = planItemServiceImpl.findUserPlanDirectoryUser(id);
+    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
+        List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
         List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate()))
+                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
                 .collect(Collectors.toList());
 
         return new ShowUserDirectory(collect);
@@ -95,7 +100,6 @@ public class DirectoryController {
     @Data
     @AllArgsConstructor
     static class ShowUserDirectory<T> {
-
         private T userDirectory;
     }
 
@@ -103,7 +107,7 @@ public class DirectoryController {
     @PostMapping("/main-directory/cancel")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planServiceImpl.cancelPlan(stateChangeForm.getPlanId().get(i));
+            planService.cancelPlan(stateChangeForm.getPlanId().get(i));
         }
         return "redirect:/main-directory";
     }
@@ -112,7 +116,7 @@ public class DirectoryController {
     @PostMapping("/trash-directory/revert")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planServiceImpl.revertPlan(stateChangeForm.getPlanId().get(i));
+            planService.revertPlan(stateChangeForm.getPlanId().get(i));
         }
         return "redirect:/main-directory";
     }
@@ -121,7 +125,7 @@ public class DirectoryController {
     @PostMapping("/trash-directory/delete")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planServiceImpl.deletePlan(stateChangeForm.getPlanId().get(i));
+            planService.deletePlan(stateChangeForm.getPlanId().get(i));
         }
         return "redirect:/trash-directory";
     }
@@ -129,7 +133,7 @@ public class DirectoryController {
     //user directory 생성
     @PostMapping("/create/user-directory")
     public String createUserDirectory(HttpServletRequest request, @RequestBody UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
-        userDirectoryServiceImpl.createUserDirectory(request, userDirectoryForm, response);
+        userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
         return "redirect:/main-directory";
     }
 
@@ -137,9 +141,9 @@ public class DirectoryController {
     @PostMapping("/delete/user-directory")
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
-            userDirectoryServiceImpl.deleteUserDirectory(userDirectoryForm.getUserDirectoryId().get(i));
+            userDirectoryService.deleteUserDirectory(userDirectoryForm.getUserDirectoryId().get(i));
         }
-        planItemServiceImpl.deleteMapping(userDirectoryForm);
+        planItemService.deleteMapping(userDirectoryForm);
 
         return "redirect:/main-directory";
     }
@@ -147,13 +151,25 @@ public class DirectoryController {
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @PostMapping("/move/user-directory")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm) {
-        planItemServiceImpl.moveUserPlan(moveDirectoryForm);
+        planItemService.moveUserPlan(moveDirectoryForm);
         return "redirect:/main-directory";
+    }
+
+//    // 완료된 플랜 불러오기
+//    @PostMapping("/show/finished/{planId}")
+//    public String showFinishedPlan(@PathVariable("planId") Long id) {
+//        return planService.isFinishedPlan(id);
+//    }
+
+    // user directory 이름 변경
+    @PostMapping("/update/user-directory-name/{userDirectoryId}")
+    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id, @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto) {
+        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto);
     }
 
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate()))
+                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
                 .collect(Collectors.toList());
     }
 }

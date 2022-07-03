@@ -1,7 +1,10 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
+import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -44,6 +47,9 @@ public class Plan extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PlanStatus planStatus;
 
+    @Enumerated(EnumType.STRING)
+    private PlanComplete planComplete;
+
     //==비지니스 로직==//
     /**
      * 플랜 삭제
@@ -80,5 +86,24 @@ public class Plan extends BaseTimeEntity {
 
     public void setPlanStatus(PlanStatus planStatus) {
         this.planStatus = planStatus;
+    }
+
+    /**
+     * 플랜 완성
+     */
+    public void finished() {
+        PlanComplete planComplete = PlanComplete.FINISHED;
+        this.planComplete = planComplete;
+    }
+
+    /**
+     * Plan Update
+     * @param userPlanUpdateDto
+     */
+    public void updatePlan(UserPlanUpdateDto userPlanUpdateDto) {
+        this.depart = userPlanUpdateDto.getDepart();
+        this.name = userPlanUpdateDto.getName();
+        this.periods = userPlanUpdateDto.getPeriods();
+        this.thumbnail = userPlanUpdateDto.getThumbnail();
     }
 }

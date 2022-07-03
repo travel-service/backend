@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.CultureDto;
 import com.trablock.web.entity.location.type.Culture;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.TypeRepositoryCustomImpl;
 import com.trablock.web.service.location.mapper.CultureMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CultureServiceImpl implements CultureService {
 
-    private final TypeLocationRepository repository;
+    private final TypeRepositoryCustomImpl repository;
     private final CultureMapper mapper = Mappers.getMapper(CultureMapper.class);
 
     @Override

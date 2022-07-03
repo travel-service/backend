@@ -2,7 +2,7 @@ package com.trablock.web.service.location.type;
 
 import com.trablock.web.dto.location.AttractionDto;
 import com.trablock.web.entity.location.type.Attraction;
-import com.trablock.web.repository.location.TypeLocationRepository;
+import com.trablock.web.repository.location.TypeRepositoryCustomImpl;
 import com.trablock.web.service.location.mapper.AttractionMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AttractionServiceImpl implements AttractionService {
 
-    private final TypeLocationRepository repository;
+    private final TypeRepositoryCustomImpl repository;
     private final AttractionMapper mapper = Mappers.getMapper(AttractionMapper.class);
 
     @Override

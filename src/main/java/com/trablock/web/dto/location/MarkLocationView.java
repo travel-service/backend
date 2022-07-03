@@ -7,14 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
-@AllArgsConstructor
-public class MarkLocationDto {
+/**
+ * Spring Data JPA - Projection
+ */
+public interface MarkLocationView {
 
-    private final Long id;
-    private final String name;
-    private final Coords coords;
-    private final LocationType type;
+    Long getId();
+
+    String getName();
+
+    Coords getCoords();
+
+    LocationType getType();
 
 }

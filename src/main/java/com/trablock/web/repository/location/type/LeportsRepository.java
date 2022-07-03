@@ -10,7 +10,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface LeportsRepository extends JpaRepository<Leports, Long> {
-    @Query("select l from Leports l where l.locationId =: locationId")
-    Leports findByLocationId(@Param("locationId") Long locationId);
 
 }

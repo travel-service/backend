@@ -1,14 +1,11 @@
 package com.trablock.web.dto.plan;
 
-import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-import static lombok.AccessLevel.PROTECTED;
-
 @Data
-@Getter
 @AllArgsConstructor
 public class PlanDirectoryDto {
 
@@ -16,5 +13,6 @@ public class PlanDirectoryDto {
     private String name;
     private int periods;
     private LocalDateTime createdDate;
+    private PlanComplete planComplete;
 
 }

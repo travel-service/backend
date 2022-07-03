@@ -1,6 +1,8 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.entity.member.Member;
+import com.trablock.web.entity.plan.enumtype.Status;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,6 +41,14 @@ public class UserDirectory {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    /**
+     * user 디렉터리 이름 변경
+     * @param directoryNameUpdateDto
+     */
+    public void updateName(DirectoryNameUpdateDto directoryNameUpdateDto) {
+        this.directoryName = directoryNameUpdateDto.getDirectoryName();
     }
 }
 

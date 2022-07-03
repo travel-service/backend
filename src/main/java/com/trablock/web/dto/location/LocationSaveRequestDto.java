@@ -18,8 +18,7 @@ public class LocationSaveRequestDto {
     private Coords coords;
     private String image;
     private LocationType type;
-
-
+    
     public Location toEntity() {
         return Location.builder()
                 .name(name)

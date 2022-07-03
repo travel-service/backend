@@ -1,5 +1,6 @@
 package com.trablock.web.dto.location;
 
+import com.trablock.web.domain.LocationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,22 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class FestivalDto {
 
-    private String endDate;
+    private Long locationId;
+    private String name;
+    private Integer areaCode;
+    private String address1;
+    private String address2;
+    private String image;
+    private String tel;
+    private String summary;
+    private String report;
+    private LocationType type;
+
     private String homepage;
     private String place;
-    private String startDate;
     private String placeInfo;
+    private String startDate;
+    private String endDate;
     private String playTime;
     private String program;
     private String fee;

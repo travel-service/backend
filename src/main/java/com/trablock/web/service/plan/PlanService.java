@@ -2,9 +2,11 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
+import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,7 @@ public class PlanService {
                 .periods(form.getPlanForm().getPeriods())
                 .planStatus(form.getPlanForm().getPlanStatus())
                 .thumbnail(form.getPlanForm().getThumbnail())
+                .planComplete(PlanComplete.UNFINISHED)
                 .build();
 
         savePlan(plan);
@@ -92,4 +95,57 @@ public class PlanService {
         Plan plan = planRepository.findPlanById(planId);
         plan.revert();
     }
+
+    // 플랜 완성
+    public void finishedPlan(Long planId) {
+        Plan plan = planRepository.findPlanById(planId);
+        plan.finished();
+    }
+
+    /**
+     * User Plan Update
+     * @param id
+     * @param userPlanUpdateDto
+     */
+    @Transactional
+    public void updateUserPlanContent(Long id, UserPlanUpdateDto userPlanUpdateDto) {
+        Plan plan = planRepository.findPlanById(id);
+        plan.updatePlan(userPlanUpdateDto);
+    }
+
+    /**
+     * 플랜 갯수 반환
+     * @param request
+     * @return
+     */
+    public int countPlan(HttpServletRequest request) {
+
+        Member member = findMemberId(request);
+
+        return planRepository.planCount(member);
+    }
+
+    /**
+     * 휴지통 플랜 갯수 반환
+     * @param request
+     * @return
+     */
+    public int countTrashPlan(HttpServletRequest request) {
+
+        Member member = findMemberId(request);
+
+        return planRepository.trashPlanCount(member);
+    }
+
+
+//    public String isFinishedPlan(Long id) {
+//        Plan plan = planRepository.findPlanById(id);
+//
+//        if (plan.getPlanComplete() == PlanComplete.FINISHED) {
+//            return "완료된 플랜입니다.";
+//        } else {
+//            return "redirect:/main-directory";
+//        }
+//
+//    }
 }

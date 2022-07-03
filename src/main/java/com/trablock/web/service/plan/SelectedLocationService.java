@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,5 +40,31 @@ public class SelectedLocationService {
         }
     }
 
+    /**
+     * SelectedLocation Update
+     * @param id
+     * @param request
+     * @param form
+     */
+    @Transactional
+    public void updateSelectedLocation(Long id, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(id);
 
+        removeSelectedLocation(plan);
+
+        createSelectedLocation(form, request, plan.getId());
+    }
+
+    /**
+     * SelectedLocation Delete
+     * @param plan
+     */
+    @Transactional
+    public void removeSelectedLocation(Plan plan) {
+        List<SelectedLocation> selectedLocationByPlanId = selectedLocationRepository.findSelectedLocationByPlanId(plan);
+
+        for (SelectedLocation selectedLocation : selectedLocationByPlanId) {
+            selectedLocationRepository.delete(selectedLocation);
+        }
+    }
 }

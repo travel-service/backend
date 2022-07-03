@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.trablock.web.domain.LocationType.*;
 
@@ -28,9 +27,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional
-    public LocationDto createLocation(LocationSaveRequestDto requestDto) {
+    public Object createLocation(LocationSaveRequestDto requestDto) {
         Location save = locationRepository.save(requestDto.toEntity());
-        return getLocationDetails(save.getId());
+        return getLocationDetails(save.getId(), requestDto.getType());
     }
 
     /**
@@ -47,10 +46,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationDetails(Long locationId) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Optional<Location> locationById = locationRepository.findLocationById(locationId);
-        return locationById.map(locationMapper::toDto).orElse(null);
+    public Object getLocationDetails(Long locationId, LocationType locationType) {
+        switch (locationType) {
+            case ATTRACTION:
+                return locationRepository.findAttractionByLocationId(locationId);
+            case CULTURE:
+                return locationRepository.findCultureByLocationId(locationId);
+            case FESTIVAL:
+                return locationRepository.findFestivalByLocationId(locationId);
+            case LEPORTS:
+                return locationRepository.findLeportByLocationId(locationId);
+            case LODGE:
+                return locationRepository.findLodgeByLocationId(locationId);
+            case RESTAURANT:
+                return locationRepository.findRestaurantByLocationId(locationId);
+            default:
+                try {
+                    throw new InvalidPropertiesFormatException("잘못된 요청입니다.");
+                } catch (InvalidPropertiesFormatException e) {
+                    e.printStackTrace();
+                }
+        }
+        return null; // 예외처리 조금 더 고민해보자
     }
 
     @Override
@@ -104,41 +121,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public HashSet<MarkLocationDto> getMarkLocationListWithType(LocationType type) {
-        HashSet<MarkLocationDto> markLocationDtos = new HashSet<>();
-        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
-        locations.forEach(location -> markLocationDtos.add(toMarkLocationDto(location)));
-        return markLocationDtos;
+    public HashSet<MarkLocationView> getMarkLocationListWithType(LocationType type) {
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, MarkLocationView.class);
     }
 
     @Override
-    public HashSet<BlockLocationDto> getBlockLocationListWithType(LocationType type) {
-        HashSet<BlockLocationDto> blockLocationDtoList = new HashSet<>();
-        HashSet<Location> locations = locationRepository.findAllByTypeAndIsMemberFalse(type);
-        locations.forEach(location -> blockLocationDtoList.add(toBlockLocationDto(location)));
-        return blockLocationDtoList;
-    }
-
-    @Override
-    public MarkLocationDto toMarkLocationDto(Location location) {
-        return MarkLocationDto.builder()
-                .id(location.getId())
-                .name(location.getName())
-                .type(location.getType())
-                .coords(location.getCoords())
-                .build();
-    }
-
-    @Override
-    public BlockLocationDto toBlockLocationDto(Location location) {
-        return BlockLocationDto.builder()
-                .id(location.getId())
-                .name(location.getName())
-                .address1(location.getAddress1())
-                .address2(location.getAddress2())
-                .image(location.getImage())
-                .type(location.getType())
-                .build();
+    public HashSet<BlockLocationView> getBlockLocationListWithType(LocationType type) {
+        return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationView.class);
     }
 
 }

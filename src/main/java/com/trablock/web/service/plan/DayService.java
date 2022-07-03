@@ -20,6 +20,7 @@ public class DayService {
 
     private final DayRepository dayRepository;
     private final PlanRepository planRepository;
+    private final PlanService planService;
 //    private final LocationRepository locationRepository;
 
     @Transactional
@@ -30,6 +31,8 @@ public class DayService {
     @Transactional
     public void createDay(Form form, HttpServletRequest request, Long plan) {
         Plan planById = planRepository.findPlanById(plan);
+
+        planService.finishedPlan(planById.getId());
 
         for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
             for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
@@ -48,30 +51,44 @@ public class DayService {
         }
     }
 
-    public List<List<Day>> findDayIdForPlanIdToList(Long id) {
+    /**
+     * day List 받아오기
+     * @param id
+     * @return
+     */
+    public List<Day> findDayIdForPlanIdToList(Long id) {
 
-        Plan planById = planRepository.findPlanById(id);
+        Plan plan = planRepository.findPlanById(id);
 
-        List<Integer> byIdForDaysToList = dayRepository.findByIdForDaysToList(planById);
+        return dayRepository.findByDayToList(plan);
 
-        List<Long> byDayIdToList = dayRepository.findByDayIdToList(planById);
+    }
 
-        List<List<Day>> travelDay = new ArrayList<>();
+    /**
+     * Day Update
+     * @param id
+     * @param request
+     * @param form
+     */
+    @Transactional
+    public void updateDay(Long id, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(id);
 
-        List<Day> byIdToList = new ArrayList<>();
+        removeDay(plan);
 
-        byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(0), byIdForDaysToList.get(0)));
+        createDay(form, request, plan.getId());
+    }
 
-        for (int i = 1; i < byDayIdToList.size(); i++) {
-            if (byIdForDaysToList.get(i) == byIdForDaysToList.get(i - 1)) {
-                byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(i), byIdForDaysToList.get(i)));
-            } else {
-                travelDay.add(byIdToList);
-                byIdToList.clear();
-                byIdToList.add(dayRepository.findByIdToList(byDayIdToList.get(i), byIdForDaysToList.get(i)));
-            }
+    /**
+     * Day Delete
+     * @param plan
+     */
+    @Transactional
+    public void removeDay(Plan plan) {
+        List<Day> dayList = dayRepository.findByDayToList(plan);
+
+        for (Day day : dayList) {
+            dayRepository.delete(day);
         }
-
-        return travelDay;
     }
 }

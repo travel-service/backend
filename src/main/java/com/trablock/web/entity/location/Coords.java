@@ -13,10 +13,10 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class Coords {
 
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
-    public Coords(String latitude, String longitude) {
+    public Coords(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
