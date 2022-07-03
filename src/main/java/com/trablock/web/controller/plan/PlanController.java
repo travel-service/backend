@@ -113,24 +113,28 @@ public class PlanController {
     }
 
     // plan update
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId})")
     public void updateUserPlan(@PathVariable("planId") Long id, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
         planService.updateUserPlanContent(id, userPlanUpdateDto);
     }
 
     // concept 수정
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/concept")
     public void updateUserPlanConcept(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         conceptService.updateConcept(id, request, form);
     }
 
     // selectedLocation 수정
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/selected-location")
     public void updateUserPlanSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(id, request, form);
     }
 
     // day 수정
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/day")
     public void updateUserPlanDay(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         dayService.updateDay(id, request, form);
