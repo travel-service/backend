@@ -15,6 +15,7 @@ import com.trablock.web.service.plan.UserDirectoryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class DirectoryController {
 
 
     //main directory get
-    @GetMapping("/main-directory")
+    @GetMapping("/members/plan")
     public MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -49,7 +50,7 @@ public class DirectoryController {
     }
 
     //main-user directory get
-    @GetMapping("/main-user-directory")
+    @GetMapping("/members/directory")
     public MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()

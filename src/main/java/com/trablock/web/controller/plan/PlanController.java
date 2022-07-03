@@ -1,7 +1,6 @@
 package com.trablock.web.controller.plan;
 
 import com.trablock.web.controller.form.Form;
-import com.trablock.web.controller.form.PlanForm;
 import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.plan.*;
 import com.trablock.web.service.plan.*;
@@ -35,7 +34,7 @@ public class PlanController {
     }
 
     //Concept 생성
-    @PostMapping("/members/plan-concept/{planId}")
+    @PostMapping("/members/plan/{planId}/concept")
     public String createConcept(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         conceptService.createConcept(form, request, planId);
 
@@ -43,7 +42,7 @@ public class PlanController {
     }
 
     //SelectedLocation 생성
-    @PostMapping("/members/plan-selected-location/{planId}")
+    @PostMapping("/members/plan/{planId}/selected-location")
     public String createSelectedLocation(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         selectedLocationService.createSelectedLocation(form, request, planId);
 
@@ -52,7 +51,7 @@ public class PlanController {
     }
 
     //Day 생성
-    @PostMapping("/members/plan-day/{planId}")
+    @PostMapping("/members/plan/{planId}/day")
     public String createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         dayService.createDay(form, request, planId);
 
@@ -60,7 +59,7 @@ public class PlanController {
     }
 
     //plan 정보 불러오기 - PlanForm
-    @GetMapping("/user-plan/{planId}")
+    @GetMapping("/members/plan/{planId}")
     public UserPlan usersPlans(@PathVariable("planId") Long id) {
         List<Plan> planList = planService.findOne(id);
         List<PlanDto> collect = planList.stream()
@@ -77,7 +76,7 @@ public class PlanController {
     }
 
     //concept 정보 불러오기 - ConceptForm
-    @GetMapping("/user-concept/{planId}")
+    @GetMapping("/members/plan/{planId}/concept")
     public ResponseEntity<?> usersConcepts(@PathVariable("planId") Plan id) {
         List<String> conceptIdForPlanIdToList = conceptService.findConceptIdForPlanIdToList(id);
         Map<String, Object> conceptResult = new HashMap<>();
@@ -90,7 +89,7 @@ public class PlanController {
     }
 
     //Day 정보 불러오기 - dayForm
-    @GetMapping("/user-day/{planId}")
+    @GetMapping("/members/plan/{planId}/day")
     public UserDay userDays(@PathVariable("planId") Long id) {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(id);
 
@@ -109,25 +108,25 @@ public class PlanController {
     }
 
     // plan update
-    @PutMapping("/user/plan/update/{planId}")
+    @PutMapping("/members/plan/{planId})")
     public void updateUserPlan(@PathVariable("planId") Long id, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
         planService.updateUserPlanContent(id, userPlanUpdateDto);
     }
 
     // concept 수정
-    @PostMapping("/user/plan-concept/update/{planId}")
+    @PutMapping("/members/plan/{planId}/concept")
     public void updateUserPlanConcept(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         conceptService.updateConcept(id, request, form);
     }
 
     // selectedLocation 수정
-    @PostMapping("/user/plan-selectedLocation/update/{planId}")
+    @PutMapping("/members/plan/{planId}/selected-location")
     public void updateUserPlanSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(id, request, form);
     }
 
     // day 수정
-    @PostMapping("/user/plan-day/update/{planId}")
+    @PutMapping("/members/plan/{planId}/day")
     public void updateUserPlanDay(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody Form form) {
         dayService.updateDay(id, request, form);
     }
