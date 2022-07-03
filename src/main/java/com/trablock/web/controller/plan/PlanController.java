@@ -95,7 +95,7 @@ public class PlanController {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(id);
 
         List<DayDto> collect = dayList.stream()
-                .map(d -> new DayDto(d.getLocations(), d.getCopyLocationId(), d.getMovingData(), d.getDays()))
+                .map(d -> new DayDto(d.getCopyLocationId(), d.getMovingData(), d.getDays()))
                 .collect(Collectors.toList());
 
         return new UserDay(collect);
