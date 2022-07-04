@@ -38,29 +38,22 @@ public class PlanController {
     //Concept 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/concept")
-    public String createConcept(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
+    public void createConcept(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         conceptService.createConcept(form, request, planId);
-
-        return "redirect:/";
     }
 
     //SelectedLocation 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/selected-location")
-    public String createSelectedLocation(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
+    public void createSelectedLocation(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         selectedLocationService.createSelectedLocation(form, request, planId);
-
-        return "redirect:/";
-
     }
 
     //Day 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/day")
-    public String createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
+    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
         dayService.createDay(form, request, planId);
-
-        return "redirect:/";
     }
 
     //plan 정보 불러오기 - PlanForm
