@@ -29,10 +29,10 @@ public class PlanController {
     //Plan 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
-    public String createPlan(@RequestBody Form form, HttpServletRequest request) {
+    public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
         Plan plan = planService.createPlan(form, request);
 
-        return "redirect:/";
+        return plan.getId();
     }
 
     //Concept 생성
