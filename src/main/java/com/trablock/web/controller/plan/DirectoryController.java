@@ -4,6 +4,7 @@ package com.trablock.web.controller.plan;
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
@@ -12,8 +13,6 @@ import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.service.plan.PlanItemService;
 import com.trablock.web.service.plan.PlanService;
 import com.trablock.web.service.plan.UserDirectoryService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,24 +33,17 @@ public class DirectoryController {
 
     //main directory get
     @GetMapping("/members/plan")
-    public MainDirectory mainPlans(HttpServletRequest request) {
+    public Converter.MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int planCount = planService.countPlan(request); // 플랜 갯수 반환
-        return new MainDirectory(planCount, collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MainDirectory<T> {
-        private int planCount;
-        private T mainDirectory;
+        return new Converter.MainDirectory(planCount, collect);
     }
 
     //main-user directory get
     @GetMapping("/members/directory")
-    public MainUserDirectory usersPlans(HttpServletRequest request) {
+    public Converter.MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
@@ -59,49 +51,28 @@ public class DirectoryController {
 
         List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
         List<Integer> planCount = planItemService.countPlan(userDirectories);
-        return new MainUserDirectory(planCount, collect);
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    static class MainUserDirectory<T> {
-        private List<Integer> planCount;
-        private T mainUserDirectory;
+        return new Converter.MainUserDirectory(planCount, collect);
     }
 
     //trash directory get
     @GetMapping("/trash-directory")
-    public TrashDirectory trashPlans(HttpServletRequest request) {
+    public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
-        return new TrashDirectory(trashPlanCount, collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class TrashDirectory<T> {
-        private int trashPlanCount;
-        private T trashDirectory;
+        return new Converter.TrashDirectory(trashPlanCount, collect);
     }
 
     // user directory get
     @GetMapping("/user-directory/{userDirectoryId}")
-    public ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
+    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
         List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
         List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
                 .collect(Collectors.toList());
 
-        return new ShowUserDirectory(collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class ShowUserDirectory<T> {
-        private T userDirectory;
+        return new Converter.ShowUserDirectory(collect);
     }
 
     //플랜 삭제(main -> trash)
