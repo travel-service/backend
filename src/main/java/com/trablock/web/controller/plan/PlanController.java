@@ -1,11 +1,10 @@
 package com.trablock.web.controller.plan;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.plan.*;
 import com.trablock.web.service.plan.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,19 +57,13 @@ public class PlanController {
 
     //plan 정보 불러오기 - PlanForm
     @GetMapping("/members/plan/{planId}")
-    public UserPlan usersPlans(@PathVariable("planId") Long id) {
+    public Converter.UserPlan usersPlans(@PathVariable("planId") Long id) {
         List<Plan> planList = planService.findOne(id);
         List<PlanDto> collect = planList.stream()
                 .map(p -> new PlanDto(p.getId(), p.getDepart(), p.getName(), p.getPeriods()))
                 .collect(Collectors.toList());
 
-        return new UserPlan(collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class UserPlan<T> {
-        private T planForm;
+        return new Converter.UserPlan(collect);
     }
 
     //concept 정보 불러오기 - ConceptForm
@@ -88,21 +81,14 @@ public class PlanController {
 
     //Day 정보 불러오기 - dayForm
     @GetMapping("/members/plan/{planId}/day")
-    public UserDay userDays(@PathVariable("planId") Long id) {
+    public Converter.UserDay userDays(@PathVariable("planId") Long id) {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(id);
 
         List<DayDto> collect = dayList.stream()
                 .map(d -> new DayDto(d.getCopyLocationId(), d.getMovingData(), d.getDays()))
                 .collect(Collectors.toList());
 
-        return new UserDay(collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class UserDay<T> {
-
-        private T dayForm;
+        return new Converter.UserDay(collect);
     }
 
     // plan update
