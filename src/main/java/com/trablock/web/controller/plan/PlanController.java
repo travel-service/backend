@@ -3,6 +3,7 @@ package com.trablock.web.controller.plan;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.*;
+import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.*;
 import com.trablock.web.service.plan.*;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,9 @@ public class PlanController {
 
     //plan 정보 불러오기 - PlanForm
     @GetMapping("/members/plan/{planId}")
-    public Converter.UserPlan usersPlans(@PathVariable("planId") Long id) {
-        List<Plan> planList = planService.findOne(id);
+    public Converter.UserPlan usersPlans(@PathVariable("planId") Long id, HttpServletRequest request) {
+        Member memberId = planService.findMemberId(request);
+        List<Plan> planList = planService.findOne(id, memberId);
         List<PlanDto> collect = planList.stream()
                 .map(p -> new PlanDto(p.getId(), p.getDepart(), p.getName(), p.getPeriods()))
                 .collect(Collectors.toList());

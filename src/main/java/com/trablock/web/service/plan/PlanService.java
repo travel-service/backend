@@ -32,8 +32,8 @@ public class PlanService {
         planRepository.save(plan);
     }
 
-    public List<Plan> findOne(Long planId) {
-        return planRepository.findByIdToList(planId);
+    public List<Plan> findOne(Long planId, Member member) {
+        return planRepository.findByIdToList(planId, member);
     }
 
     public Member findMemberId(HttpServletRequest request) {
