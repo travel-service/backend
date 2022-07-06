@@ -77,8 +77,9 @@ public class PlanService {
 
      // 플랜 삭제(main -> trash)
     @Transactional
-    public void cancelPlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void cancelPlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.trash();
     }
 
