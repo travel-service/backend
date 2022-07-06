@@ -91,10 +91,11 @@ public class PlanService {
         plan.delete();
     }
 
-     // 플랜 완전 삭제(trash -> main)
+    // 플랜 복구(trash -> main)
     @Transactional
-    public void revertPlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void revertPlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.revert();
     }
 
