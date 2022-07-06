@@ -108,8 +108,9 @@ public class PlanService {
      * @param userPlanUpdateDto
      */
     @Transactional
-    public void updateUserPlanContent(Long id, UserPlanUpdateDto userPlanUpdateDto) {
-        Plan plan = planRepository.findPlanById(id);
+    public void updateUserPlanContent(Long id, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(id, memberId);
         plan.updatePlan(userPlanUpdateDto);
     }
 

@@ -96,8 +96,8 @@ public class PlanController {
     // plan update
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId})")
-    public void updateUserPlan(@PathVariable("planId") Long id, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
-        planService.updateUserPlanContent(id, userPlanUpdateDto);
+    public void updateUserPlan(@PathVariable("planId") Long id, HttpServletRequest request, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
+        planService.updateUserPlanContent(id, request, userPlanUpdateDto);
     }
 
     // concept 수정
