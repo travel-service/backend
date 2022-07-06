@@ -64,6 +64,7 @@ public class DirectoryController {
         return new Converter.TrashDirectory(trashPlanCount, collect);
     }
 
+    // TODO 토큰 검증 방법 구현
     // user directory get
     @GetMapping("/user-directory/{userDirectoryId}")
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
@@ -113,6 +114,7 @@ public class DirectoryController {
         return "redirect:/main-directory";
     }
 
+    // TODO 토큰 검증 방법 구현
     //user directory 삭제(undelete -> delete)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/delete/user-directory")
@@ -125,6 +127,7 @@ public class DirectoryController {
         return "redirect:/main-directory";
     }
 
+    // TODO 토큰 검증 방법 구현
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/move/user-directory")
@@ -139,6 +142,7 @@ public class DirectoryController {
 //        return planService.isFinishedPlan(id);
 //    }
 
+    // TODO 토큰 검증 방법 구현
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/update/user-directory-name/{userDirectoryId}")

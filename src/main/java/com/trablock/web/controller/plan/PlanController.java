@@ -1,5 +1,6 @@
 package com.trablock.web.controller.plan;
 
+import com.sun.xml.bind.v2.TODO;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.*;
@@ -68,6 +69,7 @@ public class PlanController {
         return new Converter.UserPlan(collect);
     }
 
+    // TODO 토큰 검증 방법 구현
     // concept 정보 불러오기 - ConceptForm
     @GetMapping("/members/plan/{planId}/concept")
     public ResponseEntity<?> usersConcepts(@PathVariable("planId") Plan id) {
@@ -89,6 +91,7 @@ public class PlanController {
 
     }
 
+    // TODO 토큰 검증 방법 구현
     //Day 정보 불러오기 - dayForm
     @GetMapping("/members/plan/{planId}/day")
     public Converter.UserDay userDays(@PathVariable("planId") Long id) {
