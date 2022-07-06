@@ -68,7 +68,7 @@ public class PlanController {
         return new Converter.UserPlan(collect);
     }
 
-    //concept 정보 불러오기 - ConceptForm
+    // concept 정보 불러오기 - ConceptForm
     @GetMapping("/members/plan/{planId}/concept")
     public ResponseEntity<?> usersConcepts(@PathVariable("planId") Plan id) {
         List<String> conceptIdForPlanIdToList = conceptService.findConceptIdForPlanIdToList(id);
@@ -78,6 +78,14 @@ public class PlanController {
         conceptResult.put("planId", id.getId());
 
         return ResponseEntity.ok().body(conceptResult);
+    }
+
+    // selectedLocation 정보 불러오기
+    @GetMapping("/members/plan/{planId}/selectedLocation")
+    public void usersSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request) {
+        Plan plan = planService.returnPlan(id, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
+
+        List<Long> locationIds =  selectedLocationService.findLocationId(plan); // LocationId 리스트 형태로 반환
 
     }
 

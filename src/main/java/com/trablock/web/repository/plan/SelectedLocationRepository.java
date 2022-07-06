@@ -16,4 +16,7 @@ public interface SelectedLocationRepository extends JpaRepository<SelectedLocati
 
     @Query("select s from SelectedLocation s where s.plan = :id")
     List<SelectedLocation> findSelectedLocationByPlanId(@Param("id") Plan id);
+
+    @Query("select s.location from SelectedLocation s where s.plan = :id")
+    List<Long> findLocationIdByPlanId(@Param("id") Plan id);
 }

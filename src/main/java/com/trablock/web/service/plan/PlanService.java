@@ -91,7 +91,7 @@ public class PlanService {
         plan.delete();
     }
 
-    // 플랜 복구(trash -> main)
+    // 플랜 복(trash -> main)
     @Transactional
     public void revertPlan(Long planId, HttpServletRequest request) {
         Member memberId = findMemberId(request);
@@ -152,4 +152,15 @@ public class PlanService {
 //        }
 //
 //    }
+
+    /**
+     * SelectedLocatio기 n의 locationId 를 불러오기 위한 Plan 객체 가져오
+     * @param id
+     * @param request
+     * @return
+     */
+    public Plan returnPlan(Long id, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        return planRepository.findPlanByMemberId(id, memberId);
+    }
 }

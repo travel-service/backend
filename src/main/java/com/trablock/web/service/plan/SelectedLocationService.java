@@ -67,4 +67,13 @@ public class SelectedLocationService {
             selectedLocationRepository.delete(selectedLocation);
         }
     }
+
+    /**
+     * Location ID 반환
+     * @param plan
+     * @return
+     */
+    public List<Long> findLocationId(Plan plan) {
+        return selectedLocationRepository.findLocationIdByPlanId(plan);
+    }
 }
