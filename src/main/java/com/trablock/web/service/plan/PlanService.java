@@ -85,8 +85,9 @@ public class PlanService {
 
     // 플랜 완전 삭제(trash -> delete)
     @Transactional
-    public void deletePlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void deletePlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.delete();
     }
 

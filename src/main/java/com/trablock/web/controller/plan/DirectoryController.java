@@ -98,9 +98,9 @@ public class DirectoryController {
     //플랜 영구 삭제(trash -> delete)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/trash-directory/delete")
-    public String deletePlan(@RequestBody StateChangeForm stateChangeForm) {
+    public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.deletePlan(stateChangeForm.getPlanId().get(i));
+            planService.deletePlan(stateChangeForm.getPlanId().get(i), request);
         }
         return "redirect:/trash-directory";
     }
