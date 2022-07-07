@@ -59,7 +59,7 @@ public class Plan extends BaseTimeEntity {
             throw new IllegalStateException("이미 휴지통으로 이동된 플랜입니다.");
         }
 
-        this.setPlanStatus(PlanStatus.TRASH);
+        this.planStatus = PlanStatus.TRASH;
     }
 
     /**
@@ -70,7 +70,7 @@ public class Plan extends BaseTimeEntity {
             throw new IllegalStateException("휴지통으로 먼저 이동하시오");
         }
 
-        this.setPlanStatus(PlanStatus.DELETE);
+        this.planStatus = PlanStatus.DELETE;
     }
 
     /**
@@ -81,12 +81,9 @@ public class Plan extends BaseTimeEntity {
             throw new IllegalStateException("이미 복구된 플랜입니다.");
         }
 
-        this.setPlanStatus(PlanStatus.MAIN);
+        this.planStatus = PlanStatus.MAIN;
     }
 
-    public void setPlanStatus(PlanStatus planStatus) {
-        this.planStatus = planStatus;
-    }
 
     /**
      * 플랜 완성

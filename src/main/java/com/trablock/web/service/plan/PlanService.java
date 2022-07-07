@@ -32,8 +32,8 @@ public class PlanService {
         planRepository.save(plan);
     }
 
-    public List<Plan> findOne(Long planId) {
-        return planRepository.findByIdToList(planId);
+    public List<Plan> findOne(Long planId, Member member) {
+        return planRepository.findByIdToList(planId, member);
     }
 
     public Member findMemberId(HttpServletRequest request) {
@@ -77,22 +77,25 @@ public class PlanService {
 
      // 플랜 삭제(main -> trash)
     @Transactional
-    public void cancelPlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void cancelPlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.trash();
     }
 
     // 플랜 완전 삭제(trash -> delete)
     @Transactional
-    public void deletePlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void deletePlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.delete();
     }
 
-     // 플랜 완전 삭제(trash -> main)
+    // 플랜 복(trash -> main)
     @Transactional
-    public void revertPlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+    public void revertPlan(Long planId, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.revert();
     }
 
@@ -108,8 +111,9 @@ public class PlanService {
      * @param userPlanUpdateDto
      */
     @Transactional
-    public void updateUserPlanContent(Long id, UserPlanUpdateDto userPlanUpdateDto) {
-        Plan plan = planRepository.findPlanById(id);
+    public void updateUserPlanContent(Long id, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
+        Member memberId = findMemberId(request);
+        Plan plan = planRepository.findPlanByMemberId(id, memberId);
         plan.updatePlan(userPlanUpdateDto);
     }
 
@@ -148,4 +152,15 @@ public class PlanService {
 //        }
 //
 //    }
+
+    /**
+     * SelectedLocatio기 n의 locationId 를 불러오기 위한 Plan 객체 가져오
+     * @param id
+     * @param request
+     * @return
+     */
+    public Plan returnPlan(Long id, HttpServletRequest request) {
+        Member memberId = findMemberId(request);
+        return planRepository.findPlanByMemberId(id, memberId);
+    }
 }

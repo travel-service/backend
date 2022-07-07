@@ -35,11 +35,7 @@ public class PlanItem {
             throw new IllegalStateException("이미 삭제된 디렉터리입니다.");
         }
 
-        this.setStatus(Status.DELETE);
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        this.status = Status.DELETE;
     }
 }
 
