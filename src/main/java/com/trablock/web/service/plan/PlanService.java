@@ -6,7 +6,7 @@ import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
-import com.trablock.web.repository.MemberRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
