@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface ConceptRepository extends JpaRepository<Concept, Long> {
 
-    @Query("select c.conceptName from Concept c where c.plan = :id")
-    List<String> findByIdToList(@Param("id") Plan id);
+    @Query("select c.conceptName from Concept c where c.plan = :planId")
+    List<String> findByIdToList(@Param("planId") Plan id);
 
-    @Query("select c.plan from Concept c where c.plan = :id")
-    Plan findId(@Param("id")Plan id);
+    @Query("select c.plan from Concept c where c.plan = :planId")
+    Plan findId(@Param("planId")Plan id);
 
-    @Query("select c from Concept c where c.plan = :id")
-    List<Concept> findConceptByPlanId(@Param("id") Plan id);
+    @Query("select c from Concept c where c.plan = :planId")
+    List<Concept> findConceptByPlanId(@Param("planId") Plan id);
 
 
 }
