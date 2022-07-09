@@ -34,10 +34,10 @@ public class SelectedLocationService {
         Plan planById = planRepository.findPlanById(plan);
 
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
-            Optional<Location> locationById = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
+            Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .plan(planById)
-                    .location(locationById.get())
+                    .location(OptionalLocation.get())
                     .build();
 
             saveSelectedLocation(selectedLocation);
