@@ -16,8 +16,8 @@ public interface DayRepository extends JpaRepository<Day, Long> {
 //    @Query("select d.id from Day d where d.plan = :id")
 //    List<Long> findByDayIdToList(@Param("id") Plan id);
 
-    @Query("select d from Day d where d.plan = :id")
-    List<Day> findByDayToList(@Param("id") Plan id);
+    @Query("select d from Day d where d.plan = :planId")
+    List<Day> findByDayToList(@Param("planId") Plan id);
 
 //    @Query("select d.days from Day d where d.plan = :id")
 //    List<Integer> findByIdForDaysToList(@Param("id") Plan id);
