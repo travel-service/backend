@@ -4,9 +4,12 @@ import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.MemberLocation;
+import com.trablock.web.entity.location.type.*;
+import com.trablock.web.repository.location.InformationRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
 import com.trablock.web.service.location.mapper.LocationMapper;
+import com.trablock.web.service.location.mapper.TypeLocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -23,26 +26,74 @@ public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
+    private final InformationRepository informationRepository;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
+    private final TypeLocationMapper typeLocationMapper;
 
     @Override
     @Transactional
-    public Object createLocation(LocationSaveRequestDto requestDto) {
-        Location save = locationRepository.save(requestDto.toEntity());
-        return getLocationDetails(save.getId(), requestDto.getType());
+    public Long createLocationByMember(LocationWrapperDto wrapperDto) {
+        Location savedLocation = locationRepository.save(wrapperDto.getLocation().toEntity());
+        Long locationId = savedLocation.getId();
+        LocationType type = savedLocation.getType();
+
+        informationRepository.save(wrapperDto.getInformation().toEntity(locationId));
+        memberLocationRepository.save(wrapperDto.getMemberLocation().toEntity(locationId));
+
+        TypeLocationRequestDto typeLocationRequestDto = wrapperDto.getTypeLocation();
+        typeLocationRequestDto.setLocationId(locationId);
+
+        saveTypeLocation(typeLocationRequestDto, type);
+        return locationId;
     }
 
-    /**
-     * ID 값 반환이 아니라 DTO를 반환한다면?
-     * 굳이 DTO를 또 찾을 필요가 없지 않을까.
-     *
-     * @param memberLocationSaveDto
-     * @return
-     */
     @Override
-    public MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto) {
-        MemberLocation save = memberLocationRepository.save(memberLocationSaveDto.toEntity());
-        return save.toDto();
+    public boolean deleteLocationByMember(Long locationId) {
+        memberLocationRepository.deleteMemberLocationByLocationId(locationId);
+        return memberLocationRepository.existsMemberLocationByLocationId(locationId);
+    }
+
+    @Override
+    public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId) {
+
+        return false;
+    }
+
+    @Override
+    public HashMap<String, Object> getSelectedLocationList(Long planId) {
+
+        return null;
+    }
+
+    @Override
+    public boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) {
+        switch (locationType) {
+            case ATTRACTION:
+                Attraction attraction = typeLocationMapper.getAttractionMapper().toEntity(requestDto);
+                locationRepository.saveAttraction(attraction);
+                return true;
+            case CULTURE:
+                Culture culture = typeLocationMapper.getCultureMapper().toEntity(requestDto);
+                locationRepository.saveCulture(culture);
+                return true;
+            case FESTIVAL:
+                Festival festival = typeLocationMapper.getFestivalMapper().toEntity(requestDto);
+                locationRepository.saveFestival(festival);
+                return true;
+            case LEPORTS:
+                Leports leports = typeLocationMapper.getLeportsMapper().toEntity(requestDto);
+                locationRepository.saveLeports(leports);
+                return true;
+            case LODGE:
+                Lodge lodge = typeLocationMapper.getLodgeMapper().toEntity(requestDto);
+                locationRepository.saveLodge(lodge);
+                return true;
+            case RESTAURANT:
+                Restaurant restaurant = typeLocationMapper.getRestaurantMapper().toEntity(requestDto);
+                locationRepository.saveRestaurant(restaurant);
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -60,18 +111,13 @@ public class LocationServiceImpl implements LocationService {
                 return locationRepository.findLodgeByLocationId(locationId);
             case RESTAURANT:
                 return locationRepository.findRestaurantByLocationId(locationId);
-            default:
-                try {
-                    throw new InvalidPropertiesFormatException("잘못된 요청입니다.");
-                } catch (InvalidPropertiesFormatException e) {
-                    e.printStackTrace();
-                }
         }
         return null; // 예외처리 조금 더 고민해보자
     }
 
     @Override
-    public HashMap<String, Object> getMarkLocationList() {
+    public HashMap<String, Object> getMarkLocationList() { // 반환 타입이 Object인 것이 맘에 들지 않는다.
+        // 부모 클래스 만들어서 묶어버릴까.. 생각중.
         HashMap<String, Object> map = new HashMap<String, Object>();
 
         map.put("Lodge", getMarkLocationListWithType(LODGE));

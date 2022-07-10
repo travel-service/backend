@@ -1,18 +1,16 @@
 package com.trablock.web.dto.location;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class TypeLocationSaveRequestDto {
+public class TypeLocationRequestDto {
+    private Long locationId;
     private Boolean parking;
     private String restDate;
     private String fee;
@@ -37,4 +35,5 @@ public class TypeLocationSaveRequestDto {
     private String openTime;
     private Boolean packing;
     private String menu;
+
 }
