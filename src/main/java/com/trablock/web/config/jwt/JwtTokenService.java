@@ -1,7 +1,7 @@
 package com.trablock.web.config.jwt;
 
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.repository.MemberRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class JwtTokenService {
 
     // AccessToken 으로 nickName 흭득
     public String TokenToNickName(HttpServletRequest request) {
-        String accessToken = jwtTokenProvider.resolveRefreshToken(request);
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
         Member member = memberRepository.findByUserName(jwtTokenProvider.getUserName(accessToken)).get();
         return member.getMemberProfile().getNickName();
     }

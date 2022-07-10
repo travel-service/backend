@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // AccessToken 이 유효하면?
             if (jwtTokenProvider.validateToken(accessToken)) {
                 this.setAuthentication(accessToken);
+                jwtTokenProvider.setHeaderAccessToken(response, accessToken);
             }
             // AccessToken 은 만료, RefreshToken 은 존재
             else if(!jwtTokenProvider.validateToken(accessToken) && refreshToken != null) {

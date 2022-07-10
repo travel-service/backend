@@ -1,9 +1,7 @@
 package com.trablock.web.entity.plan;
 
-import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.member.Member;
-import com.trablock.web.repository.*;
 import com.trablock.web.repository.location.LocationRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional(readOnly = true)
 @Rollback(value = false)
@@ -25,7 +19,8 @@ class DayTest {
     @PersistenceContext
     EntityManager em;
 //    @Autowired PlanRepository planRepository;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+MemberRepository memberRepository;
 //    @Autowired DayRepository dayRepository;
 //    @Autowired SelectedLocationRepository selectedLocationRepository;
 //    @Autowired MainDirectoryRepository mainDirectoryRepository;

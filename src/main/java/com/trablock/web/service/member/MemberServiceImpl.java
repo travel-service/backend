@@ -4,16 +4,18 @@ package com.trablock.web.service.member;
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.config.jwt.JwtTokenService;
 import com.trablock.web.controller.exception.MemberException;
+import com.trablock.web.dto.mail.EmailAuthDto;
 import com.trablock.web.dto.mail.MailDto;
 import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.auth.RefreshToken;
 import com.trablock.web.entity.member.*;
-import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.TokenRepository;
+import com.trablock.web.repository.member.EmailAuthRepository;
+import com.trablock.web.repository.member.EmailAuthRepositoryImpl;
+import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.repository.member.TokenRepository;
 import com.trablock.web.service.file.FileService;
-import com.trablock.web.service.mail.MailService;
 import com.trablock.web.service.mail.MailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.springframework.http.MediaType.parseMediaType;
@@ -40,9 +45,11 @@ import static org.springframework.http.MediaType.parseMediaType;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final TokenRepository tokenRepository;
+    private final EmailAuthRepository emailAuthRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final TokenRepository tokenRepository;
     private final FileService fileService;
     private final JwtTokenService jwtTokenService;
     private final MailServiceImpl mailService;
@@ -56,16 +63,39 @@ public class MemberServiceImpl implements MemberService{
         boolean CanSignUp = MemberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
 
         if (CanSignUp) {
-            return memberRepository.save(Member.builder()
+            EmailAuth emailAuth = emailAuthRepository.save(
+                    EmailAuth.builder()
+                            .email(memberSaveDto.getEmail())
+                            .uuid(UUID.randomUUID().toString())
+                            .expired(false)
+                            .build());
+
+            Member member =  memberRepository.save(Member.builder()
                             .userName(memberSaveDto.getUserName())
                             .password(passwordEncoder.encode(memberSaveDto.getPassword()))
-                            .realName(memberSaveDto.getRealName())
+                            .emailAuth(false)
                             .memberProfile(new MemberProfile(memberSaveDto.getNickName(), null))
                             .memberInfo(new MemberInfo(memberSaveDto.getBirthday(), Gender.valueOf(memberSaveDto.getGender()),
-                                    memberSaveDto.getPhoneNum(), memberSaveDto.getEmail()))
+                                     memberSaveDto.getEmail()))
                             .roles(Collections.singletonList("ROLE_USER")) // 일반 유저
-                            .build()).getMemberProfile().getNickName();
+                            .build());
+
+            MailDto mailDto = mailService.emailAuthMail(emailAuth.getEmail(), emailAuth.getUuid());
+            mailService.sendMail(mailDto);
+
+            return member.getMemberProfile().getNickName();
+
         } else throw new IllegalArgumentException("중복 되는 아이디 존재");
+    }
+
+    public String confirmEmail(EmailAuthDto requestDto) {
+        EmailAuth emailAuth = emailAuthRepository.findValidAuthByEmail(requestDto.getEmail(), requestDto.getUuid(), LocalDateTime.now())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 UUID"));
+        Member member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(MemberException::new);
+        emailAuth.useToken();
+        member.emailVerifiedSuccess();
+
+        return "인증이 완료되었습니다.";
     }
 
     /**
@@ -90,6 +120,17 @@ public class MemberServiceImpl implements MemberService{
         tokenRepository.save(new RefreshToken(refreshToken));
 
         return member.getMemberProfile().getNickName();
+    }
+
+    public String MemberLogout(HttpServletRequest request) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+        boolean result = tokenRepository.deleteRefreshToken(refreshToken);
+
+        if (result) {
+            return "success";
+        } else {
+            return "Can't find RefreshToken";
+        }
     }
 
     /**
@@ -120,8 +161,8 @@ public class MemberServiceImpl implements MemberService{
      * @throws FileNotFoundException
      */
     public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
-        String fileName = jwtTokenService.TokenToUserName(request) + ".png";
-
+//        String fileName = jwtTokenService.TokenToUserName(request) + ".png"; # 현재 이미지 처리 규칙이 없기에 잠궈놓겠습니다 (22-06-23)
+        String fileName = "default_profile.png";
         Resource fileResource = fileService.loadFile(fileName);
         String contentType = null;
 
@@ -186,7 +227,6 @@ public class MemberServiceImpl implements MemberService{
         member.getMemberInfo().setBirthday(memberUpdateDto.getBirthday());
         member.getMemberInfo().setEmail(memberUpdateDto.getEmail());
         member.getMemberInfo().setGender(memberUpdateDto.getGender());
-        member.getMemberInfo().setPhoneNum(memberUpdateDto.getPhoneNum());
 
         memberRepository.save(member);
     }
@@ -196,7 +236,7 @@ public class MemberServiceImpl implements MemberService{
      * @param userName
      * @return
      */
-    public boolean checkEmail(String userName) {
+    public boolean checkValidUserName(String userName) {
         if (MemberValidation(userName)) {
             return true;
         } else {
@@ -226,12 +266,56 @@ public class MemberServiceImpl implements MemberService{
         String tmpPwd = passwordEncoder.encode(Pwd);
         memberRepository.updateMemberPwd(tmpPwd, userName);
 
-        MailDto mail = mailService.createMail(Pwd, userEmail);
+        MailDto mail = mailService.findPwdMail(Pwd, userEmail);
         mailService.sendMail(mail);
 
         return true;
     }
 
+    public ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+
+        if (accessToken != null) {
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                String nickName = jwtTokenService.TokenToNickName(request);
+                Map<String, Object> res = new HashMap<>();
+
+                res.put("nickName", nickName);
+
+                return ResponseEntity.ok().body(res);
+            } else {
+                throw new MemberException("Token-Error");
+            }
+        }
+        throw new MemberException("AccessToken 이 없습니다.");
+    }
+
+    public ResponseEntity<?> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+        if (refreshToken != null) {
+            if (jwtTokenProvider.validateToken(refreshToken)) {
+                String userName = jwtTokenProvider.getUserName(refreshToken);
+                List<String> roles = jwtTokenProvider.getRoles(userName);
+
+                String newAccessToken = jwtTokenProvider.createAccessToken(userName, roles);
+                System.out.println("newAccessToken = " + newAccessToken);
+                jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+                this.setAuthentication(newAccessToken);
+
+                return ResponseEntity.ok().body("OK");
+            }
+        }
+        return ResponseEntity.status(401).body("TOKEN - ERROR");
+    }
+
+    public void setAuthentication(String token) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+    /**
+     * 회원 비밀번호 수정
+      */
     public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
         String userName = jwtTokenService.TokenToUserName(request);
         Optional<Member> member = memberRepository.findByUserName(userName);
@@ -246,7 +330,11 @@ public class MemberServiceImpl implements MemberService{
         }
     }
 
-    // 회원가입한 사용자인지 검증
+    /**
+     * 중복 아이디 검증
+     * @param userName
+     * @return
+     */
     public boolean MemberValidation(String userName) {
         Optional<Member> member = memberRepository.findByUserName(userName);
 

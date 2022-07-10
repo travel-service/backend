@@ -14,14 +14,14 @@ public interface UserDirectoryRepository extends JpaRepository<UserDirectory, Lo
 
     UserDirectory findUserDirectoryById(Long id);
 
-    @Query("select u from UserDirectory u where u.member= :id")
-    List<UserDirectory> findMemberIdForList(@Param("id") Optional<Member> id);
+    @Query("select u from UserDirectory u where u.member= :memberId")
+    List<UserDirectory> findMemberIdForList(@Param("memberId") Optional<Member> id);
 
-    @Query("select u from UserDirectory u where u.member= :id")
-    List<UserDirectory> findUserDirectoryById(@Param("id") Member id);
+    @Query("select u from UserDirectory u where u.member= :memberId")
+    List<UserDirectory> findUserDirectoryById(@Param("memberId") Member id);
 
-    @Query("select count(u) from UserDirectory as u where u.member = :id")
-    int findMemberIdForCount(@Param("id") Member id);
+    @Query("select count(u) from UserDirectory as u where u.member = :memberId")
+    int findMemberIdForCount(@Param("memberId") Member id);
 
     @Query("select u from UserDirectory u where u.id = :id")
     UserDirectory findByIdForUserDirectory(@Param("id") Long id);

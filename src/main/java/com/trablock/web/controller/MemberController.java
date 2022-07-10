@@ -1,6 +1,7 @@
 package com.trablock.web.controller;
 
 import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.dto.mail.EmailAuthDto;
 import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
@@ -32,14 +33,19 @@ public class MemberController {
         return memberServiceImpl.MemberSignUp(signupForm);
     }
 
+    // 이메일 인증
+    @GetMapping("/api/sign/confirm-email")
+    public String confirmEmail(@ModelAttribute EmailAuthDto requestDto) {
+        return memberServiceImpl.confirmEmail(requestDto);
+    }
     // 비회원 - 중복 ID 체크
     @GetMapping("/api/check-id")
     public boolean check(@RequestParam("userName") String userName) {
-        return memberServiceImpl.checkEmail(userName);
+        return memberServiceImpl.checkValidUserName(userName);
     }
 
     // 비회원 - 비밀번호 찾기 (임시비밀번호 발급)
-    @PostMapping("/api/findPwd")
+    @PostMapping("/api/find-pwd")
     public boolean findUserPwd(@RequestBody Map<String, String> userInfo) {
         return memberServiceImpl.getTmpPassword(userInfo);
     }
@@ -48,6 +54,24 @@ public class MemberController {
     @PostMapping("/api/login")
     public String login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
         return memberServiceImpl.MemberLogin(loginForm, response);
+    }
+
+    // 비회원 - 사용자 정보 가져오기
+    @GetMapping("/auth/info")
+    public ResponseEntity<?> getInfo(HttpServletRequest request) {
+        return memberServiceImpl.getMemberInfo(request);
+    }
+
+    // 비회원 - Refresh To Access
+    @GetMapping("/auth/refresh")
+    public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return memberServiceImpl.memberRefreshToAccess(request, response);
+    }
+
+    // 회원 - 로그아웃
+    @DeleteMapping("/api/user/logout")
+    public String logout(HttpServletRequest request) {
+        return memberServiceImpl.MemberLogout(request);
     }
 
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)

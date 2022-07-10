@@ -1,8 +1,10 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.plan.DayRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +24,7 @@ public class DayService {
     private final DayRepository dayRepository;
     private final PlanRepository planRepository;
     private final PlanService planService;
-//    private final LocationRepository locationRepository;
+    private final LocationRepository locationRepository;
 
     @Transactional
     public void saveDay(Day day) {
@@ -36,10 +39,10 @@ public class DayService {
 
         for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
             for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
-//                Location locationId = locationRepository.findLocationId(form.getDayForm().getLocationId());
+                Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getDayForm().getLocationId());
 
                 Day day = Day.builder()
-//                        .locations(locationId)
+                        .locations(OptionalLocation.get())
                         .copyLocationId(form.getDayForm().getTravelDay().get(i).get(j).getCopyLocationId())
                         .plan(planById)
                         .days(form.getDayForm().getTravelDay().get(i).get(j).getDays())

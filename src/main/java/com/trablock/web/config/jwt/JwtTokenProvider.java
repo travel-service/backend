@@ -1,7 +1,7 @@
 package com.trablock.web.config.jwt;
 
-import com.trablock.web.repository.MemberRepository;
-import com.trablock.web.repository.TokenRepository;
+import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.repository.member.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -79,8 +79,8 @@ public class JwtTokenProvider {
 
     //Request Header 에서 AccessToken 값 추출
     public String resolveAccessToken(HttpServletRequest request) {
-        if(request.getHeader("accessToken") != null)
-            return request.getHeader("accessToken").substring(7);
+        if(request.getHeader("Authorization") != null)
+            return request.getHeader("Authorization").substring(7);
         return null;
     }
 
@@ -91,7 +91,6 @@ public class JwtTokenProvider {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refreshToken")) {
-                    System.out.println("cookie.getValue() = " + cookie.getValue());
                     return cookie.getValue();
                 }
             }
@@ -112,7 +111,7 @@ public class JwtTokenProvider {
 
     //AccessToken response
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("accessToken", "bearer " + accessToken);
+        response.setHeader("Authorization", "bearer " + accessToken);
     }
 
     //RefreshToken response
@@ -121,7 +120,7 @@ public class JwtTokenProvider {
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/"); //쿠키의 유효범위 추후 서비스 발전시 쿠키의 범위 설정 필요
-        cookie.setMaxAge(24 * 7 * 60 * 60 * 1000);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
 
         response.addCookie(cookie);
     }

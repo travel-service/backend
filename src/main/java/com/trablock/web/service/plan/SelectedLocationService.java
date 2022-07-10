@@ -1,8 +1,10 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.SelectedLocation;
+import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.repository.plan.SelectedLocationRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,6 +22,7 @@ public class SelectedLocationService {
 
     private final SelectedLocationRepository selectedLocationRepository;
     private final PlanRepository planRepository;
+    private final LocationRepository locationRepository;
 
     @Transactional
     public void saveSelectedLocation(SelectedLocation selectedLocation) {
@@ -30,10 +34,10 @@ public class SelectedLocationService {
         Plan planById = planRepository.findPlanById(plan);
 
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
-            //Location locationId = locationRepository.findLocationId(form.getSelectedLocationForm().getSelectedLocation().get(i));
+            Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .plan(planById)
-                    //.location(locationId)
+                    .location(OptionalLocation.get())
                     .build();
 
             saveSelectedLocation(selectedLocation);
@@ -66,5 +70,14 @@ public class SelectedLocationService {
         for (SelectedLocation selectedLocation : selectedLocationByPlanId) {
             selectedLocationRepository.delete(selectedLocation);
         }
+    }
+
+    /**
+     * Location ID 반환
+     * @param plan
+     * @return
+     */
+    public List<Long> findLocationId(Plan plan) {
+        return selectedLocationRepository.findLocationIdByPlanId(plan);
     }
 }
