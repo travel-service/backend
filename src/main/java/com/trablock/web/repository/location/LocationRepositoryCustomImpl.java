@@ -3,12 +3,17 @@ package com.trablock.web.repository.location;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.QInformation;
 import com.trablock.web.entity.location.QLocation;
 import com.trablock.web.entity.location.type.*;
+import com.trablock.web.entity.plan.QPlan;
+import com.trablock.web.entity.plan.QSelectedLocation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
+import java.util.List;
 
 public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
 
@@ -19,6 +24,24 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
 
     public LocationRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public List<BlockLocationView> findSelectedLocationByPlanId(Long planId) {
+        QLocation location = QLocation.location;
+        QSelectedLocation selectedLocation = QSelectedLocation.selectedLocation;
+
+        return queryFactory.select(Projections.constructor(BlockLocationView.class,
+                        location.id,
+                        location.name,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        location.type)
+                )
+                .from(location)
+                .join(selectedLocation.location, location)
+                .on(selectedLocation.plan.id.eq(planId)).fetch();
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface LocationService {
 
     Object getLocationDetails(Long locationId, LocationType locationType);
 
-    void saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
+    boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
 
     boolean deleteLocationByMember(Long locationId);
 
@@ -23,6 +23,8 @@ public interface LocationService {
     HashMap<String, Object> getMarkLocationList();
 
     HashMap<String, Object> getBlockLocationList();
+
+    HashMap<String, Object> getSelectedLocationList(Long plnaId);
 
     List<LocationDto> getMemberLocationList(Long memberId);
 

@@ -60,27 +60,40 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) {
+    public HashMap<String, Object> getSelectedLocationList(Long planId) {
+
+        return null;
+    }
+
+    @Override
+    public boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) {
         switch (locationType) {
             case ATTRACTION:
                 Attraction attraction = typeLocationMapper.getAttractionMapper().toEntity(requestDto);
                 locationRepository.saveAttraction(attraction);
+                return true;
             case CULTURE:
                 Culture culture = typeLocationMapper.getCultureMapper().toEntity(requestDto);
                 locationRepository.saveCulture(culture);
+                return true;
             case FESTIVAL:
                 Festival festival = typeLocationMapper.getFestivalMapper().toEntity(requestDto);
                 locationRepository.saveFestival(festival);
+                return true;
             case LEPORTS:
                 Leports leports = typeLocationMapper.getLeportsMapper().toEntity(requestDto);
                 locationRepository.saveLeports(leports);
+                return true;
             case LODGE:
                 Lodge lodge = typeLocationMapper.getLodgeMapper().toEntity(requestDto);
                 locationRepository.saveLodge(lodge);
+                return true;
             case RESTAURANT:
                 Restaurant restaurant = typeLocationMapper.getRestaurantMapper().toEntity(requestDto);
                 locationRepository.saveRestaurant(restaurant);
+                return true;
         }
+        return false;
     }
 
     @Override
