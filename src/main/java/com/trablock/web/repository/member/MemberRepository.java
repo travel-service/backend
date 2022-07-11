@@ -17,6 +17,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member as m where m.id= :id")
     Member findMemberId(@Param("id") Long id);
 
+    // 쿼리가 왜이래요? => 다른 정보들은 보안적인 측면에서 위험할거 같아요
+    @Query("select m.memberProfile.nickName from Member as m where m.memberProfile.nickName= :nickName")
+    String findByNickName(@Param("nickName") String nickName);
+
     @Modifying
     @Transactional
     @Query("update Member as m set m.password = :pwd where m.userName = :userName")

@@ -3,8 +3,8 @@ package com.trablock.web.entity.plan;
 import com.trablock.web.entity.member.Member;
 //import com.trablock.web.repository.MainDirectoryRepository;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
-import com.trablock.web.repository.MemberRepository;
 //import com.trablock.web.repository.PlanRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +26,8 @@ class PlanTest {
     @PersistenceContext
     EntityManager em;
 //    @Autowired PlanRepository planRepository;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 //    @Autowired MainDirectoryRepository mainDirectoryRepository;
 
     @Test

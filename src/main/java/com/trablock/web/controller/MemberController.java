@@ -40,8 +40,8 @@ public class MemberController {
     }
     // 비회원 - 중복 ID 체크
     @GetMapping("/api/check-id")
-    public boolean check(@RequestParam("userName") String userName) {
-        return memberServiceImpl.checkValidUserName(userName);
+    public boolean checkId(@RequestParam("userName") String userName) {
+        return memberServiceImpl.MemberValidation(userName);
     }
 
     // 비회원 - 비밀번호 찾기 (임시비밀번호 발급)
@@ -66,6 +66,12 @@ public class MemberController {
     @GetMapping("/auth/refresh")
     public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
         return memberServiceImpl.memberRefreshToAccess(request, response);
+    }
+
+    // 공통 - 닉네임 중복 검사 (회원가입 시, 닉네임 변경 시)
+    @GetMapping("/api/check-nickname/{nickname}")
+    public boolean checkNickName(@PathVariable("nickname") String nickname) {
+        return memberServiceImpl.checkValidNickName(nickname);
     }
 
     // 회원 - 로그아웃
