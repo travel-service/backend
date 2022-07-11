@@ -117,20 +117,25 @@ public class MemberServiceImpl implements MemberService{
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
-        tokenRepository.save(new RefreshToken(refreshToken));
+        tokenRepository.save(RefreshToken.builder().refreshToken(refreshToken).build());
 
         return member.getMemberProfile().getNickName();
     }
 
-    public String MemberLogout(HttpServletRequest request) {
+    /**
+     * 회원 로그아웃
+     * @param request
+     * @return
+     */
+    public ResponseEntity<?> MemberLogout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
-        boolean result = tokenRepository.deleteRefreshToken(refreshToken);
+        Long id = tokenRepository.findByRefreshToken(refreshToken);
+        System.out.println("id = " + id);
 
-        if (result) {
-            return "success";
-        } else {
-            return "Can't find RefreshToken";
-        }
+        tokenRepository.deleteById(id);
+        jwtTokenProvider.setHeaderLogoutRefreshToken(response, "");
+
+        return ResponseEntity.ok().body("Logout Success");
     }
 
     /**

@@ -75,9 +75,9 @@ public class MemberController {
     }
 
     // 회원 - 로그아웃
-    @DeleteMapping("/api/user/logout")
-    public String logout(HttpServletRequest request) {
-        return memberServiceImpl.MemberLogout(request);
+    @RequestMapping("/api/user/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        return memberServiceImpl.MemberLogout(request, response);
     }
 
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)
