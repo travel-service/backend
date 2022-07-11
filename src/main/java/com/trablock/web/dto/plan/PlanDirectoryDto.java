@@ -12,7 +12,7 @@ public class PlanDirectoryDto {
     private Long planId;
     private String name;
     private int periods;
-    private LocalDateTime createdDate;
+    private String createdDate;
     private PlanComplete planComplete;
 
 }

@@ -70,7 +70,7 @@ public class DirectoryController {
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
         List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
         List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
+                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
                 .collect(Collectors.toList());
 
         return new Converter.ShowUserDirectory(collect);
@@ -152,7 +152,7 @@ public class DirectoryController {
 
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate(), m.getPlanComplete()))
+                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
                 .collect(Collectors.toList());
     }
 }

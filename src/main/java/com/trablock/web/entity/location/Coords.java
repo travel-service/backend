@@ -7,9 +7,10 @@ import javax.persistence.Embeddable;
 
 import static lombok.AccessLevel.*;
 
-@Embeddable
+
+@Data
 @Builder
-@Getter
+@Embeddable
 @NoArgsConstructor(access = PROTECTED)
 public class Coords {
 
