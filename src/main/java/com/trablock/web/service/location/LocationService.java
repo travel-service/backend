@@ -10,15 +10,21 @@ import java.util.List;
 
 public interface LocationService {
 
-    Object createLocation(LocationSaveRequestDto locationDto);
-
-    MemberLocationDto createMemberLocation(MemberLocationSaveRequestDto memberLocationSaveDto);
+    Long createLocationByMember(LocationWrapperDto wrapperDto);
 
     Object getLocationDetails(Long locationId, LocationType locationType);
+
+    boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
+
+    boolean deleteLocationByMember(Long locationId);
+
+    boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId);
 
     HashMap<String, Object> getMarkLocationList();
 
     HashMap<String, Object> getBlockLocationList();
+
+    HashMap<String, Object> getSelectedLocationList(Long plnaId);
 
     List<LocationDto> getMemberLocationList(Long memberId);
 

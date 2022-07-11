@@ -17,20 +17,18 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query("select p from Plan p where p.id = :id and p.member = :memberId")
     List<Plan> findByIdToList(@Param("id") Long id, @Param("memberId") Member member);
 
-    @Query("select p from Plan p where p.id = :id and p.member = :memberId")
-    Plan findPlanByMemberId(@Param("id") Long id, @Param("memberId") Member member);
+    @Query("select p from Plan p where p.id = :planId and p.member = :memberId")
+    Plan findPlanByMemberId(@Param("planId") Long id, @Param("memberId") Member member);
 
-    @Query("select p from Plan p where p.member = :id and p.planStatus = 'MAIN'")
-    List<Plan> findByMainPlanStatus(@Param("id") Optional<Member> id);
+    @Query("select p from Plan p where p.member = :memberId and p.planStatus = 'MAIN'")
+    List<Plan> findByMainPlanStatus(@Param("memberId") Optional<Member> id);
 
-    @Query("select p from Plan p where p.member = :id and p.planStatus = 'TRASH'")
-    List<Plan> findByTrashPlanStatus(@Param("id") Optional<Member> id);
+    @Query("select p from Plan p where p.member = :memberId and p.planStatus = 'TRASH'")
+    List<Plan> findByTrashPlanStatus(@Param("memberId") Optional<Member> id);
 
-    @Query("select count(p) from Plan p where p.member = :id")
-    int planCount (@Param("id") Member id);
+    @Query("select count(p) from Plan p where p.member = :memberId")
+    int planCount (@Param("memberId") Member id);
 
-    @Query("select count(p) from Plan p where p.member = :id and p.planStatus = 'TRASH'")
-    int trashPlanCount (@Param("id") Member id);
-
-
+    @Query("select count(p) from Plan p where p.member = :memberId and p.planStatus = 'TRASH'")
+    int trashPlanCount (@Param("memberId") Member id);
 }

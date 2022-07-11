@@ -39,10 +39,10 @@ public class DayService {
 
         for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
             for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
-                Optional<Location> locationId = locationRepository.findLocationById(form.getDayForm().getLocationId());
+                Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getDayForm().getLocationId());
 
                 Day day = Day.builder()
-                        .locations(locationId.get())
+                        .locations(OptionalLocation.get())
                         .copyLocationId(form.getDayForm().getTravelDay().get(i).get(j).getCopyLocationId())
                         .plan(planById)
                         .days(form.getDayForm().getTravelDay().get(i).get(j).getDays())

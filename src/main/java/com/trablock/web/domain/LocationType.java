@@ -1,85 +1,37 @@
 package com.trablock.web.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum LocationType {
-    ATTRACTION(0) {
-        @Override
-        public boolean isAttraction() {
-            return true;
+    ATTRACTION("ATTRACTION"),
+    CULTURE("CULTURE"),
+    FESTIVAL("FESTIVAL"),
+    LEPORTS("LEPORTS"),
+    LODGE("LODGE"),
+    RESTAURANT("RESTAURANT");
+
+    private String type;
+
+    @JsonCreator
+    public static LocationType fromValue(String value) {
+        for (LocationType type : LocationType.values()) {
+            if (type.getType().equals(value)) {
+                return type;
+            }
         }
-    },
-    CULTURE(1) {
-        @Override
-        public boolean isCulture() {
-            return true;
-        }
-    },
-    FESTIVAL(2) {
-        @Override
-        public boolean isFestival() {
-            return true;
-        }
-    },
-    LEPORTS(3) {
-        @Override
-        public boolean isLeports() {
-            return true;
-        }
-    },
-    LODGE(4) {
-        @Override
-        public boolean isLodge() {
-            return true;
-        }
-    },
-    RESTAURANT(5) {
-        @Override
-        public boolean isRestaurant() {
-            return true;
-        }
-    };
-
-    private int type;
-
-    public boolean isMember() {
-        return false;
+        return null;
     }
-
-    public boolean isLodge() {
-        return false;
-    }
-
-    public boolean isRestaurant() {
-        return false;
-    }
-
-    public boolean isAttraction() {
-        return false;
-    }
-
-    public boolean isCulture() {
-        return false;
-    }
-
-    public boolean isFestival() {
-        return false;
-    }
-
-    public boolean isLeports() {
-        return false;
-    }
-
 
     @JsonProperty("type")
-    private int getType() {
+    public String getType() {
         return type;
     }
 
-    private LocationType(int type) {
+    LocationType(String type) {
         this.type = type;
     }
-
 }
