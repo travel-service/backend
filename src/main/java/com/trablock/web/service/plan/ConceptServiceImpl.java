@@ -29,8 +29,8 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     @Transactional
-    public void createConcept(Form form, HttpServletRequest request, Long plan) {
-        Plan planById = planRepository.findPlanById(plan);
+    public void createConcept(Form form, HttpServletRequest request, Long planId) {
+        Plan planById = planRepository.findPlanById(planId);
         for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
             Concept concept = Concept.builder()
                     .plan(planById)
@@ -43,30 +43,23 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<String> findConceptIdForPlanIdToList(Long planId) {
-        return conceptRepository.findByIdToList(planId);
-    }
-
-    @Override
-    public Plan findPlanId(Long planId) {
-        return conceptRepository.findId(planId);
+        return conceptRepository.findConceptNameByPlanId(planId);
     }
 
     /**
      * Concept Update
      *
-     * @param id
+     * @param planId
      * @param request
      * @param form
      */
     @Override
     @Transactional
-    public void updateConcept(Long id, HttpServletRequest request, Form form) {
-        Plan plan = planRepository.findPlanById(id);
-
-        removeConcept(plan);
-
+    public void updateConcept(Long planId, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(planId);
+        if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
+            removeConcept(plan);
         createConcept(form, request, plan.getId());
-
     }
 
     /**
@@ -77,10 +70,11 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     @Transactional
     public void removeConcept(Plan plan) {
-        List<Concept> conceptList = conceptRepository.findConceptByPlanId(plan);
+        List<Concept> conceptList = conceptRepository.findConceptByPlan(plan);
 
-        for (Concept concept : conceptList) {
-            conceptRepository.delete(concept);
+        if (conceptList == null || conceptList.isEmpty()) {
+            return;
         }
+        conceptList.forEach(conceptRepository::delete);
     }
 }
