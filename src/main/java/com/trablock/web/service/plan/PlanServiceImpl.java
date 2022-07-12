@@ -8,6 +8,7 @@ import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
+import com.trablock.web.service.plan.interfaceC.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PlanServiceImpl implements PlanService{
+public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
     private final JwtTokenProvider jwtTokenProvider;

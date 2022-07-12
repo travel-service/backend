@@ -1,4 +1,4 @@
-package com.trablock.web.service.plan;
+package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;

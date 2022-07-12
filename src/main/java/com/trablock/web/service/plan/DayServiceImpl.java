@@ -7,6 +7,8 @@ import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.plan.DayRepository;
 import com.trablock.web.repository.plan.PlanRepository;
+import com.trablock.web.service.plan.interfaceC.DayService;
+import com.trablock.web.service.plan.interfaceC.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +20,20 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class DayService {
+public class DayServiceImpl implements DayService {
 
     private final DayRepository dayRepository;
     private final PlanRepository planRepository;
     private final PlanService planService;
     private final LocationRepository locationRepository;
 
+    @Override
     @Transactional
     public void saveDay(Day day) {
         dayRepository.save(day);
     }
 
+    @Override
     @Transactional
     public void createDay(Form form, HttpServletRequest request, Long plan) {
         Plan planById = planRepository.findPlanById(plan);
@@ -58,6 +62,7 @@ public class DayService {
      * @param id
      * @return
      */
+    @Override
     public List<Day> findDayIdForPlanIdToList(Long id) {
 
         Plan plan = planRepository.findPlanById(id);
@@ -72,6 +77,7 @@ public class DayService {
      * @param request
      * @param form
      */
+    @Override
     @Transactional
     public void updateDay(Long id, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(id);
@@ -85,6 +91,7 @@ public class DayService {
      * Day Delete
      * @param plan
      */
+    @Override
     @Transactional
     public void removeDay(Plan plan) {
         List<Day> dayList = dayRepository.findByDayToList(plan);
