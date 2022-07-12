@@ -15,7 +15,6 @@ public interface ConceptService {
 
     List<String> findConceptIdForPlanIdToList(Long planId);
 
-    Plan findPlanId(Long planId);
     void updateConcept(Long id, HttpServletRequest request, Form form);
 
     void removeConcept(Plan plan);

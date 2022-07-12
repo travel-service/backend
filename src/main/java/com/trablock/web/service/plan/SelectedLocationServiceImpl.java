@@ -70,10 +70,9 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     @Override
     @Transactional
     public void removeSelectedLocation(Plan plan) {
-        List<SelectedLocation> selectedLocationByPlanId = selectedLocationRepository.findSelectedLocationByPlanId(plan);
-
-        for (SelectedLocation selectedLocation : selectedLocationByPlanId) {
-            selectedLocationRepository.delete(selectedLocation);
+        List<SelectedLocation> selectedLocations = selectedLocationRepository.findSelectedLocationByPlanId(plan);
+        if (selectedLocations == null || selectedLocations.isEmpty()) {
+            return;
         }
         selectedLocations.forEach(selectedLocationRepository::delete);
     }
