@@ -33,8 +33,8 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
     @Override
     @Transactional
-    public void createSelectedLocation(Form form, HttpServletRequest request, Long plan) {
-        Plan planById = planRepository.findPlanById(plan);
+    public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
+        Plan planById = planRepository.findPlanById(planId);
 
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
             Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
@@ -49,6 +49,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
     /**
      * SelectedLocation Update
+     *
      * @param id
      * @param request
      * @param form
@@ -57,28 +58,28 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     @Transactional
     public void updateSelectedLocation(Long id, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(id);
-
         removeSelectedLocation(plan);
-
         createSelectedLocation(form, request, plan.getId());
     }
 
     /**
      * SelectedLocation Delete
+     *
      * @param plan
      */
     @Override
     @Transactional
     public void removeSelectedLocation(Plan plan) {
-        List<SelectedLocation> selectedLocationByPlanId = selectedLocationRepository.findSelectedLocationByPlanId(plan);
-
-        for (SelectedLocation selectedLocation : selectedLocationByPlanId) {
-            selectedLocationRepository.delete(selectedLocation);
+        List<SelectedLocation> selectedLocations = selectedLocationRepository.findSelectedLocationByPlanId(plan);
+        if (selectedLocations == null || selectedLocations.isEmpty()) {
+            return;
         }
+        selectedLocations.forEach(selectedLocationRepository::delete);
     }
 
     /**
      * Location ID 반환
+     *
      * @param plan
      * @return
      */
