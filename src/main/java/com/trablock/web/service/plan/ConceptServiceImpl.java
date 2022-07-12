@@ -42,17 +42,18 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public List<String> findConceptIdForPlanIdToList(Plan id) {
-        return conceptRepository.findByIdToList(id);
+    public List<String> findConceptIdForPlanIdToList(Long planId) {
+        return conceptRepository.findByIdToList(planId);
     }
 
     @Override
-    public Plan findPlanId(Plan id) {
-        return conceptRepository.findId(id);
+    public Plan findPlanId(Long planId) {
+        return conceptRepository.findId(planId);
     }
 
     /**
      * Concept Update
+     *
      * @param id
      * @param request
      * @param form
@@ -70,6 +71,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     /**
      * Concept delete
+     *
      * @param plan
      */
     @Override
