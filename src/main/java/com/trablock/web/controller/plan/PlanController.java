@@ -34,8 +34,18 @@ public class PlanController {
     @PostMapping("/members/plan")
     public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
         Plan plan = planService.createPlan(form, request);
-
         return plan.getId();
+    }
+
+    //plan 정보 불러오기 - PlanForm
+    @GetMapping("/members/plan/{planId}")
+    public Converter.UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
+        Member memberId = planService.findMemberId(request);
+        List<Plan> planList = planService.findOne(planId, memberId);
+        List<PlanDto> collect = planList.stream()
+                .map(p -> new PlanDto(p.getId(), p.getDepart(), p.getName(), p.getPeriods()))
+                .collect(Collectors.toList());
+        return new Converter.UserPlan(collect);
     }
 
     // concept 업데이트
@@ -43,25 +53,6 @@ public class PlanController {
     @PostMapping("/members/plan/{planId}/concept")
     public void updateUserPlanConcept(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
         conceptService.updateConcept(planId, request, form);
-    }
-
-    //Day 생성
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/members/plan/{planId}/day")
-    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
-        dayService.createDay(form, request, planId);
-    }
-
-    //plan 정보 불러오기 - PlanForm
-    @GetMapping("/members/plan/{planId}")
-    public Converter.UserPlan usersPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        Member memberId = planService.findMemberId(request);
-        List<Plan> planList = planService.findOne(planId, memberId);
-        List<PlanDto> collect = planList.stream()
-                .map(p -> new PlanDto(p.getId(), p.getDepart(), p.getName(), p.getPeriods()))
-                .collect(Collectors.toList());
-
-        return new Converter.UserPlan(collect);
     }
 
     // TODO 토큰 검증 방법 구현
@@ -76,18 +67,17 @@ public class PlanController {
         return ResponseEntity.ok().body(conceptResult);
     }
 
-    // selectedLocation 정보 불러오기
-    @GetMapping("/members/plan/{planId}/selected-location")
-    public void usersSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request) {
-        Plan plan = planService.returnPlan(id, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
-
-        List<Long> locationIds = selectedLocationService.findLocationId(plan); // LocationId 리스트 형태로 반환
+    //Day 생성
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/members/plan/{planId}/day")
+    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
+        dayService.createDay(form, request, planId);
     }
 
     // TODO 토큰 검증 방법 구현
     //Day 정보 불러오기 - dayForm
     @GetMapping("/members/plan/{planId}/day")
-    public Converter.UserDay userDays(@PathVariable("planId") Long planId) {
+    public Converter.UserDay getDaysInPlan(@PathVariable("planId") Long planId) {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
 
         List<DayDto> collect = dayList.stream()
@@ -97,13 +87,27 @@ public class PlanController {
         return new Converter.UserDay(collect);
     }
 
+    // day 수정
+    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping("/members/plan/{planId}/day")
+    public void updateUserPlanDay(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
+        dayService.updateDay(planId, request, form);
+    }
+
+    // selectedLocation 정보 불러오기
+    @GetMapping("/members/plan/{planId}/selected-location")
+    public void usersSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request) {
+        Plan plan = planService.returnPlan(id, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
+
+        List<Long> locationIds = selectedLocationService.findLocationId(plan); // LocationId 리스트 형태로 반환
+    }
+
     // plan update
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId})")
     public void updateUserPlan(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
         planService.updateUserPlanContent(planId, request, userPlanUpdateDto);
     }
-
 
     // selectedLocation 수정
     @ResponseStatus(HttpStatus.CREATED)
@@ -112,10 +116,4 @@ public class PlanController {
         selectedLocationService.updateSelectedLocation(planId, request, form);
     }
 
-    // day 수정
-    @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/members/plan/{planId}/day")
-    public void updateUserPlanDay(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
-        dayService.updateDay(planId, request, form);
-    }
 }
