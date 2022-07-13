@@ -52,7 +52,6 @@ class MemberLocationRepositoryTest {
         Member member = Member.builder()
                 .userName("name")
                 .password("1234")
-                .realName("john doe")
                 .build();
 
         savedMember = memberRepository.save(member);

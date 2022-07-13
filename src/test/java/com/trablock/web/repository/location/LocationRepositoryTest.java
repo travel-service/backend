@@ -33,6 +33,7 @@ class LocationRepositoryTest {
         //given
         Location loc = Location.builder()
                 .name("test")
+                .areaCode(123)
                 .address1("경기도 수원시 팔달구")
                 .address2("권광로180번길 53-26")
                 .coords(Coords.builder()
