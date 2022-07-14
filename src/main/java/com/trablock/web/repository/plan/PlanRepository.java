@@ -18,7 +18,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findByIdToList(@Param("planId") Long planId, @Param("member") Member member);
 
     @Query("select p from Plan p where p.id = :planId and p.member = :member")
-    Optional<Plan> findPlanByMember(@Param("planId") Long planId, @Param("memberId") Member member);
+    Optional<Plan> findPlanByMember(@Param("planId") Long planId, @Param("member") Member member);
 
     @Query("select p from Plan p where p.member = :member and p.planStatus = 'MAIN'")
     List<Plan> findByMainPlanStatus(@Param("member") Member member);

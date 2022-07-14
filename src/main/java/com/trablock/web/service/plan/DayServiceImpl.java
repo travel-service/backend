@@ -66,20 +66,20 @@ public class DayServiceImpl implements DayService {
     @Override
     public List<Day> findDayIdForPlanIdToList(Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
-        return dayRepository.findByDayToList(plan);
+        return dayRepository.findDaysByPlan(plan);
     }
 
     /**
      * Day Update
      *
-     * @param id
+     * @param planId
      * @param request
      * @param form
      */
     @Override
     @Transactional
-    public void updateDay(Long id, HttpServletRequest request, Form form) {
-        Plan plan = planRepository.findPlanById(id).orElseThrow();
+    public void updateDay(Long planId, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeDay(plan);
         createDay(form, request, plan.getId());
     }
@@ -92,7 +92,7 @@ public class DayServiceImpl implements DayService {
     @Override
     @Transactional
     public void removeDay(Plan plan) {
-        List<Day> dayList = dayRepository.findByDayToList(plan);
+        List<Day> dayList = dayRepository.findDaysByPlan(plan);
         dayList.forEach(dayRepository::delete);
     }
 }
