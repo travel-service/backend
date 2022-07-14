@@ -30,11 +30,11 @@ public interface PlanService {
 
     void finishedPlan(Long planId);
 
-    void updateUserPlanContent(Long id, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto);
+    void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto);
 
     int countPlan(HttpServletRequest request);
 
     int countTrashPlan(HttpServletRequest request);
 
-    Plan returnPlan(Long id, HttpServletRequest request);
+    Plan returnPlan(Long planId, HttpServletRequest request);
 }

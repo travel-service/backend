@@ -2,7 +2,6 @@ package com.trablock.web.repository.plan;
 
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.entity.plan.PlanItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

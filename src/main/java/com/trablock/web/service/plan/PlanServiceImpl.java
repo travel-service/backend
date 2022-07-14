@@ -42,12 +42,7 @@ public class PlanServiceImpl implements PlanService {
     public Member findMemberId(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String userName = jwtTokenProvider.getUserName(token);
-        Optional<Member> userId = memberRepository.findByUserName(userName);
-        if (userId.isPresent()) {
-            return userId.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+        return memberRepository.findByUserName(userName).orElseThrow(() -> new NoSuchElementException());
     }
 
     @Override
@@ -117,64 +112,52 @@ public class PlanServiceImpl implements PlanService {
 
     /**
      * User Plan Update
-     * @param id
+     *
+     * @param planId
      * @param userPlanUpdateDto
      */
     @Override
     @Transactional
-    public void updateUserPlanContent(Long id, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
+    public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
         Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMemberId(id, memberId);
+        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
         plan.updatePlan(userPlanUpdateDto);
     }
 
     /**
      * 플랜 갯수 반환
+     *
      * @param request
      * @return
      */
     @Override
     public int countPlan(HttpServletRequest request) {
-
         Member member = findMemberId(request);
-
         return planRepository.planCount(member);
     }
 
     /**
      * 휴지통 플랜 갯수 반환
+     *
      * @param request
      * @return
      */
     @Override
     public int countTrashPlan(HttpServletRequest request) {
-
         Member member = findMemberId(request);
-
         return planRepository.trashPlanCount(member);
     }
 
-
-//    public String isFinishedPlan(Long id) {
-//        Plan plan = planRepository.findPlanById(id);
-//
-//        if (plan.getPlanComplete() == PlanComplete.FINISHED) {
-//            return "완료된 플랜입니다.";
-//        } else {
-//            return "redirect:/main-directory";
-//        }
-//
-//    }
-
     /**
-     * SelectedLocatio기 n의 locationId 를 불러오기 위한 Plan 객체 가져오
-     * @param id
+     * SelectedLocation의 locationId를 불러오기 위한 Plan 객체 가져오기
+     *
+     * @param planId
      * @param request
      * @return
      */
     @Override
-    public Plan returnPlan(Long id, HttpServletRequest request) {
+    public Plan returnPlan(Long planId, HttpServletRequest request) {
         Member memberId = findMemberId(request);
-        return planRepository.findPlanByMemberId(id, memberId);
+        return planRepository.findPlanByMemberId(planId, memberId);
     }
 }
