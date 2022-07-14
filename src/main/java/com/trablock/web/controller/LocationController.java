@@ -65,6 +65,8 @@ public class LocationController {
         return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }
 
+
+
     /**
      * MemberLocation과 관련된 문제?
      * =============================
