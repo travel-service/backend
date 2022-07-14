@@ -42,11 +42,11 @@ public class PlanItemServiceImpl implements PlanItemService {
 
         for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
 
-            Plan planId = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i));
+            Plan plan = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i)).orElseThrow();
 
             PlanItem planItem = PlanItem.builder()
                     .userDirectory(userDirectoryId)
-                    .plan(planId)
+                    .plan(plan)
                     .status(Status.UNDELETE)
                     .build();
 
@@ -72,6 +72,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 
     /**
      * user directory에 담겨 있는 플랜 갯수 반환
+     *
      * @param userDirectories
      * @return
      */

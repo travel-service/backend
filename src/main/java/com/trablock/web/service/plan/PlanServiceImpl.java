@@ -48,7 +48,6 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public Plan createPlan(Form form, HttpServletRequest request) {
-
         Plan plan = Plan.builder()
                 .depart(form.getPlanForm().getDepart())
                 .member(findMemberId(request))
@@ -65,14 +64,14 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
-        Optional<Member> memberId = Optional.ofNullable(findMemberId(request));
-        return planRepository.findByMainPlanStatus(memberId);
+        Member member = Optional.ofNullable(findMemberId(request)).orElseThrow();
+        return planRepository.findByMainPlanStatus(member);
     }
 
     @Override
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
-        Optional<Member> memberId = Optional.ofNullable(findMemberId(request));
-        return planRepository.findByTrashPlanStatus(memberId);
+        Member member = Optional.ofNullable(findMemberId(request)).orElseThrow();
+        return planRepository.findByTrashPlanStatus(member);
     }
 
 
@@ -81,7 +80,7 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     public void cancelPlan(Long planId, HttpServletRequest request) {
         Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
+        Plan plan = planRepository.findPlanByMember(planId, memberId).orElseThrow();
         plan.trash();
     }
 
@@ -89,8 +88,8 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void deletePlan(Long planId, HttpServletRequest request) {
-        Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
+        Member member = findMemberId(request);
+        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.delete();
     }
 
@@ -99,14 +98,14 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     public void revertPlan(Long planId, HttpServletRequest request) {
         Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
+        Plan plan = planRepository.findPlanByMember(planId, memberId).orElseThrow();
         plan.revert();
     }
 
     // 플랜 완성
     @Override
     public void finishedPlan(Long planId) {
-        Plan plan = planRepository.findPlanById(planId);
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         plan.finished();
     }
 
@@ -119,8 +118,8 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
-        Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMemberId(planId, memberId);
+        Member member = findMemberId(request);
+        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
     }
 
@@ -158,6 +157,6 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public Plan returnPlan(Long planId, HttpServletRequest request) {
         Member memberId = findMemberId(request);
-        return planRepository.findPlanByMemberId(planId, memberId);
+        return planRepository.findPlanByMember(planId, memberId).orElseThrow();
     }
 }

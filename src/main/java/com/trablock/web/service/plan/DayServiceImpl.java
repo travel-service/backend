@@ -35,10 +35,10 @@ public class DayServiceImpl implements DayService {
 
     @Override
     @Transactional
-    public void createDay(Form form, HttpServletRequest request, Long plan) {
-        Plan planById = planRepository.findPlanById(plan);
+    public void createDay(Form form, HttpServletRequest request, Long planId) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
-        planService.finishedPlan(planById.getId());
+        planService.finishedPlan(planId);
 
         for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
             for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
@@ -47,7 +47,7 @@ public class DayServiceImpl implements DayService {
                 Day day = Day.builder()
                         .locations(OptionalLocation.get())
                         .copyLocationId(form.getDayForm().getTravelDay().get(i).get(j).getCopyLocationId())
-                        .plan(planById)
+                        .plan(plan)
                         .days(form.getDayForm().getTravelDay().get(i).get(j).getDays())
                         .movingData(form.getDayForm().getTravelDay().get(i).get(j).getMovingData())
                         .build();
@@ -59,20 +59,19 @@ public class DayServiceImpl implements DayService {
 
     /**
      * day List 받아오기
-     * @param id
+     *
+     * @param planId
      * @return
      */
     @Override
-    public List<Day> findDayIdForPlanIdToList(Long id) {
-
-        Plan plan = planRepository.findPlanById(id);
-
+    public List<Day> findDayIdForPlanIdToList(Long planId) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         return dayRepository.findByDayToList(plan);
-
     }
 
     /**
      * Day Update
+     *
      * @param id
      * @param request
      * @param form
@@ -80,24 +79,20 @@ public class DayServiceImpl implements DayService {
     @Override
     @Transactional
     public void updateDay(Long id, HttpServletRequest request, Form form) {
-        Plan plan = planRepository.findPlanById(id);
-
+        Plan plan = planRepository.findPlanById(id).orElseThrow();
         removeDay(plan);
-
         createDay(form, request, plan.getId());
     }
 
     /**
      * Day Delete
+     *
      * @param plan
      */
     @Override
     @Transactional
     public void removeDay(Plan plan) {
         List<Day> dayList = dayRepository.findByDayToList(plan);
-
-        for (Day day : dayList) {
-            dayRepository.delete(day);
-        }
+        dayList.forEach(dayRepository::delete);
     }
 }

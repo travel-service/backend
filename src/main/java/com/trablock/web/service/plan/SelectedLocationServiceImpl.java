@@ -34,12 +34,12 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     @Override
     @Transactional
     public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
-        Plan planById = planRepository.findPlanById(planId);
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
             Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
             SelectedLocation selectedLocation = SelectedLocation.builder()
-                    .plan(planById)
+                    .plan(plan)
                     .location(OptionalLocation.get())
                     .build();
 
@@ -50,16 +50,16 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     /**
      * SelectedLocation Update
      *
-     * @param id
+     * @param planId
      * @param request
      * @param form
      */
     @Override
     @Transactional
-    public void updateSelectedLocation(Long id, HttpServletRequest request, Form form) {
-        Plan plan = planRepository.findPlanById(id);
+    public void updateSelectedLocation(Long planId, HttpServletRequest request, Form form) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeSelectedLocation(plan);
-        createSelectedLocation(form, request, plan.getId());
+        createSelectedLocation(form, request, planId);
     }
 
     /**

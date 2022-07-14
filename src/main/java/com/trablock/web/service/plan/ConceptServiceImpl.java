@@ -30,10 +30,10 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     @Transactional
     public void createConcept(Form form, HttpServletRequest request, Long planId) {
-        Plan planById = planRepository.findPlanById(planId);
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
             Concept concept = Concept.builder()
-                    .plan(planById)
+                    .plan(plan)
                     .conceptName(form.getConceptForm().getConcept().get(i))
                     .build();
 
@@ -56,7 +56,7 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     @Transactional
     public void updateConcept(Long planId, HttpServletRequest request, Form form) {
-        Plan plan = planRepository.findPlanById(planId);
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
         if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
             removeConcept(plan);
         createConcept(form, request, plan.getId());
