@@ -2,9 +2,11 @@ package com.trablock.web.controller.plan;
 
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.converter.Converter;
-import com.trablock.web.dto.plan.*;
-import com.trablock.web.entity.member.Member;
-import com.trablock.web.entity.plan.*;
+import com.trablock.web.dto.plan.DayDto;
+import com.trablock.web.dto.plan.PlanDto;
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
+import com.trablock.web.entity.plan.Day;
+import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.service.plan.interfaceC.ConceptService;
 import com.trablock.web.service.plan.interfaceC.DayService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.trablock.web.converter.Converter.*;
+
 @RestController
 @RequiredArgsConstructor
 public class PlanController {
@@ -33,19 +37,14 @@ public class PlanController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
     public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
-        Plan plan = planService.createPlan(form, request);
-        return plan.getId();
+        return planService.createPlan(form, request).getId();
     }
 
     //plan 정보 불러오기 - PlanForm
     @GetMapping("/members/plan/{planId}")
-    public Converter.UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        Member memberId = planService.findMemberId(request);
-        List<Plan> planList = planService.findOne(planId, memberId);
-        List<PlanDto> collect = planList.stream()
-                .map(p -> new PlanDto(p.getId(), p.getDepart(), p.getName(), p.getPeriods()))
-                .collect(Collectors.toList());
-        return new Converter.UserPlan(collect);
+    public UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
+        PlanDto planDto = planService.getOnePlanDto(planId, planService.findMemberId(request));
+        return new UserPlan(planDto);
     }
 
     // concept 업데이트
@@ -77,14 +76,14 @@ public class PlanController {
     // TODO 토큰 검증 방법 구현
     //Day 정보 불러오기 - dayForm
     @GetMapping("/members/plan/{planId}/day")
-    public Converter.UserDay getDaysInPlan(@PathVariable("planId") Long planId) {
+    public UserDay getDaysInPlan(@PathVariable("planId") Long planId) {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
 
         List<DayDto> collect = dayList.stream()
                 .map(d -> new DayDto(d.getCopyLocationId(), d.getMovingData(), d.getDays()))
                 .collect(Collectors.toList());
 
-        return new Converter.UserDay(collect);
+        return new UserDay(collect);
     }
 
     // day 수정
@@ -96,10 +95,9 @@ public class PlanController {
 
     // selectedLocation 정보 불러오기
     @GetMapping("/members/plan/{planId}/selected-location")
-    public void usersSelectedLocation(@PathVariable("planId") Long id, HttpServletRequest request) {
-        Plan plan = planService.returnPlan(id, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
-
-        List<Long> locationIds = selectedLocationService.findLocationId(plan); // LocationId 리스트 형태로 반환
+    public void usersSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request) {
+        Plan plan = planService.returnPlan(planId, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
+        List<Long> locationIdList = selectedLocationService.findLocationIdList(plan); // LocationId 리스트 형태로 반환
     }
 
     // plan update

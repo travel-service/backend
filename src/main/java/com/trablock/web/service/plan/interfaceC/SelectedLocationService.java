@@ -17,5 +17,5 @@ public interface SelectedLocationService {
 
     void removeSelectedLocation(Plan plan);
 
-    List<Long> findLocationId(Plan plan);
+    List<Long> findLocationIdList(Plan plan);
 }

@@ -84,7 +84,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      * @return
      */
     @Override
-    public List<Long> findLocationId(Plan plan) {
+    public List<Long> findLocationIdList(Plan plan) {
         return selectedLocationRepository.findLocationIdByPlanId(plan);
     }
 }

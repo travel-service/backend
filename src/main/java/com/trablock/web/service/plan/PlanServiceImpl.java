@@ -2,6 +2,7 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -34,8 +35,8 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public List<Plan> findOne(Long planId, Member member) {
-        return planRepository.findByIdToList(planId, member);
+    public PlanDto getOnePlanDto(Long planId, Member member) {
+        return planRepository.findPlanByMember(planId, member).orElseThrow().toDto();
     }
 
     @Override
