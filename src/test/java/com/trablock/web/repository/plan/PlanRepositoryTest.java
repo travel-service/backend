@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -97,6 +98,94 @@ class PlanRepositoryTest {
         assertThat(target.getName()).isEqualTo(plan.getName());
         assertThat(target.getPlanComplete()).isEqualTo(plan.getPlanComplete());
         assertThat(target.getPlanStatus()).isEqualTo(plan.getPlanStatus());
+    }
+
+    @Test
+    void findPlansByStatus_MAIN() throws Exception {
+        //given
+        Plan mainPlan1 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("one")
+                .planStatus(PlanStatus.MAIN)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        Plan mainPlan2 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("two")
+                .planStatus(PlanStatus.MAIN)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        Plan mainPlan3 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("three")
+                .planStatus(PlanStatus.MAIN)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        planRepository.save(mainPlan1);
+        planRepository.save(mainPlan2);
+        planRepository.save(mainPlan3);
+
+        //when
+        List<Plan> plansByPlanStatus = planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
+
+        //then
+        plansByPlanStatus.forEach(byPlanStatus -> assertThat(byPlanStatus.getPlanStatus()).isEqualTo(PlanStatus.MAIN));
+    }
+
+    @Test
+    void findPlansByStatus_DELETE() throws Exception {
+        //given
+        Plan deletePlan1 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("one")
+                .planStatus(PlanStatus.DELETE)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        Plan deletePlan2 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("two")
+                .planStatus(PlanStatus.DELETE)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        Plan deletePlan3 = Plan.builder()
+                .member(member)
+                .days(new ArrayList<>())
+                .concepts(new ArrayList<>())
+                .planItems(new ArrayList<>())
+                .name("three")
+                .planStatus(PlanStatus.DELETE)
+                .planComplete(PlanComplete.UNFINISHED)
+                .build();
+
+        planRepository.save(deletePlan1);
+        planRepository.save(deletePlan2);
+        planRepository.save(deletePlan3);
+
+        //when
+        List<Plan> plansByPlanStatus = planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
+
+        //then
+        plansByPlanStatus.forEach(byPlanStatus -> assertThat(byPlanStatus.getPlanStatus()).isEqualTo(PlanStatus.DELETE));
     }
 
 }

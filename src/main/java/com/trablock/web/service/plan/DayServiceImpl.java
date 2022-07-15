@@ -95,6 +95,7 @@ public class DayServiceImpl implements DayService {
     @Transactional
     public void removeDay(Plan plan) {
         List<Day> dayList = dayRepository.findDaysByPlan(plan);
-        dayList.forEach(dayRepository::delete);
+        if (!dayList.isEmpty())
+            dayList.forEach(dayRepository::delete);
     }
 }

@@ -77,12 +77,8 @@ public class PlanController {
     @GetMapping("/members/plan/{planId}/day")
     public UserDay getDaysInPlan(@PathVariable("planId") Long planId) {
         List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
-
-        List<DayDto> collect = dayList.stream()
-                .map(d -> new DayDto(d.getCopyLocationId(), d.getMovingData(), d.getDays()))
-                .collect(Collectors.toList());
-
-        return new UserDay(collect);
+        List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(Collectors.toList());
+        return new UserDay(dayDtos);
     }
 
     // day 수정
@@ -101,7 +97,7 @@ public class PlanController {
 
     // plan update
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/members/plan/{planId})")
+    @PutMapping("/members/plan/{planId}")
     public void updateUserPlan(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
         planService.updateUserPlanContent(planId, request, userPlanUpdateDto);
     }
