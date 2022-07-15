@@ -10,9 +10,9 @@ import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
-import com.trablock.web.service.plan.PlanItemService;
-import com.trablock.web.service.plan.PlanService;
-import com.trablock.web.service.plan.UserDirectoryService;
+import com.trablock.web.service.plan.interfaceC.PlanItemService;
+import com.trablock.web.service.plan.interfaceC.PlanService;
+import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,7 @@ public class DirectoryController {
 
 
     //main directory get
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/members/plan")
     public Converter.MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
@@ -42,6 +43,7 @@ public class DirectoryController {
     }
 
     //main-user directory get
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/members/directory")
     public Converter.MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
@@ -55,6 +57,7 @@ public class DirectoryController {
     }
 
     //trash directory get
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/trash-directory")
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
@@ -66,6 +69,7 @@ public class DirectoryController {
 
     // TODO 토큰 검증 방법 구현
     // user directory get
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/user-directory/{userDirectoryId}")
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
         List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
@@ -136,11 +140,6 @@ public class DirectoryController {
         return "redirect:/main-directory";
     }
 
-//    // 완료된 플랜 불러오기
-//    @PostMapping("/show/finished/{planId}")
-//    public String showFinishedPlan(@PathVariable("planId") Long id) {
-//        return planService.isFinishedPlan(id);
-//    }
 
     // TODO 토큰 검증 방법 구현
     // user directory 이름 변경
