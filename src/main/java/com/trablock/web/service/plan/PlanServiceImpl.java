@@ -6,6 +6,7 @@ import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.PlanService;
@@ -55,13 +56,13 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findByMainPlanStatus(member);
+        return planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
     }
 
     @Override
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findByTrashPlanStatus(member);
+        return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
     }
 
 
