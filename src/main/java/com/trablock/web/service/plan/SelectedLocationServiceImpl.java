@@ -38,9 +38,10 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
             Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
+
             SelectedLocation selectedLocation = SelectedLocation.builder()
                     .plan(plan)
-                    .location(OptionalLocation.get())
+                    .location(OptionalLocation.orElseThrow())
                     .build();
 
             saveSelectedLocation(selectedLocation);

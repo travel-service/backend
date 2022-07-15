@@ -43,10 +43,11 @@ public class DayServiceImpl implements DayService {
 
         for (int i = 0; i < dayForm.getTravelDay().size(); i++) {
             for (int j = 0; j < dayForm.getTravelDay().get(i).size(); j++) {
-                Location location = locationRepository.findLocationById(dayForm.getLocationId()).orElseThrow();
+
+                Optional<Location> optionalLocation = locationRepository.findLocationById(dayForm.getTravelDay().get(i).get(j).getLocationId());
 
                 Day day = Day.builder()
-                        .locations(location)
+                        .location(optionalLocation.orElseThrow())
                         .copyLocationId(dayForm.getTravelDay().get(i).get(j).getCopyLocationId())
                         .plan(plan)
                         .days(dayForm.getTravelDay().get(i).get(j).getDays())

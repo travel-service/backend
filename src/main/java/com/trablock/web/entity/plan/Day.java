@@ -22,7 +22,7 @@ public class Day {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
-    private Location locations;
+    private Location location;
 
     @Embedded
     private MovingData movingData;

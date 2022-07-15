@@ -68,7 +68,7 @@ public class PlanController {
     //Day 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/day")
-    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable Long planId) {
+    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable("planId") Long planId) {
         dayService.createDay(form, request, planId);
     }
 
