@@ -16,7 +16,7 @@ public interface PlanService {
 
     PlanDto getOnePlanDto(Long planId, Member member);
 
-    Member findMemberId(HttpServletRequest request);
+    Member getMemberFromPayload(HttpServletRequest request);
 
     Plan createPlan(Form form, HttpServletRequest request);
 

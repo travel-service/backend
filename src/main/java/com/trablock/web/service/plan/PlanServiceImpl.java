@@ -6,7 +6,6 @@ import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.PlanService;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,38 +38,29 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public Member findMemberId(HttpServletRequest request) {
+    public Member getMemberFromPayload(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String userName = jwtTokenProvider.getUserName(token);
-        return memberRepository.findByUserName(userName).orElseThrow(() -> new NoSuchElementException());
+        return memberRepository.findByUserName(userName).orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
     @Transactional
     public Plan createPlan(Form form, HttpServletRequest request) {
-        Plan plan = Plan.builder()
-                .depart(form.getPlanForm().getDepart())
-                .member(findMemberId(request))
-                .name(form.getPlanForm().getName())
-                .periods(form.getPlanForm().getPeriods())
-                .planStatus(form.getPlanForm().getPlanStatus())
-                .thumbnail(form.getPlanForm().getThumbnail())
-                .planComplete(PlanComplete.UNFINISHED)
-                .build();
-
+        Plan plan = form.getPlanForm().toEntity(getMemberFromPayload(request));
         savePlan(plan);
         return plan;
     }
 
     @Override
     public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
-        Member member = Optional.ofNullable(findMemberId(request)).orElseThrow();
+        Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
         return planRepository.findByMainPlanStatus(member);
     }
 
     @Override
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
-        Member member = Optional.ofNullable(findMemberId(request)).orElseThrow();
+        Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
         return planRepository.findByTrashPlanStatus(member);
     }
 
@@ -80,8 +69,8 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void cancelPlan(Long planId, HttpServletRequest request) {
-        Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMember(planId, memberId).orElseThrow();
+        Member member = getMemberFromPayload(request);
+        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.trash();
     }
 
@@ -89,17 +78,17 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void deletePlan(Long planId, HttpServletRequest request) {
-        Member member = findMemberId(request);
+        Member member = getMemberFromPayload(request);
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.delete();
     }
 
-    // 플랜 복(trash -> main)
+    // 플랜 복구(trash -> main)
     @Override
     @Transactional
     public void revertPlan(Long planId, HttpServletRequest request) {
-        Member memberId = findMemberId(request);
-        Plan plan = planRepository.findPlanByMember(planId, memberId).orElseThrow();
+        Member member = getMemberFromPayload(request);
+        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.revert();
     }
 
@@ -119,7 +108,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
-        Member member = findMemberId(request);
+        Member member = getMemberFromPayload(request);
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
     }
@@ -132,7 +121,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     public int countPlan(HttpServletRequest request) {
-        Member member = findMemberId(request);
+        Member member = getMemberFromPayload(request);
         return planRepository.planCount(member);
     }
 
@@ -144,7 +133,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     public int countTrashPlan(HttpServletRequest request) {
-        Member member = findMemberId(request);
+        Member member = getMemberFromPayload(request);
         return planRepository.trashPlanCount(member);
     }
 
@@ -157,7 +146,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     public Plan returnPlan(Long planId, HttpServletRequest request) {
-        Member memberId = findMemberId(request);
-        return planRepository.findPlanByMember(planId, memberId).orElseThrow();
+        Member member = getMemberFromPayload(request);
+        return planRepository.findPlanByMember(planId, member).orElseThrow();
     }
 }

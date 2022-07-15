@@ -1,7 +1,6 @@
 package com.trablock.web.controller.plan;
 
 import com.trablock.web.controller.form.Form;
-import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DayDto;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
@@ -43,7 +42,7 @@ public class PlanController {
     //plan 정보 불러오기 - PlanForm
     @GetMapping("/members/plan/{planId}")
     public UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        PlanDto planDto = planService.getOnePlanDto(planId, planService.findMemberId(request));
+        PlanDto planDto = planService.getOnePlanDto(planId, planService.getMemberFromPayload(request));
         return new UserPlan(planDto);
     }
 

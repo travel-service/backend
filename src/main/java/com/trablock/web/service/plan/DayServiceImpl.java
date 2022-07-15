@@ -1,5 +1,6 @@
 package com.trablock.web.service.plan;
 
+import com.trablock.web.controller.form.DayForm;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.plan.Day;
@@ -37,19 +38,19 @@ public class DayServiceImpl implements DayService {
     @Transactional
     public void createDay(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
-
         planService.finishedPlan(planId);
+        DayForm dayForm = form.getDayForm();
 
-        for (int i = 0; i < form.getDayForm().getTravelDay().size(); i++) {
-            for (int j = 0; j < form.getDayForm().getTravelDay().get(i).size(); j++) {
-                Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getDayForm().getLocationId());
+        for (int i = 0; i < dayForm.getTravelDay().size(); i++) {
+            for (int j = 0; j < dayForm.getTravelDay().get(i).size(); j++) {
+                Location location = locationRepository.findLocationById(dayForm.getLocationId()).orElseThrow();
 
                 Day day = Day.builder()
-                        .locations(OptionalLocation.get())
-                        .copyLocationId(form.getDayForm().getTravelDay().get(i).get(j).getCopyLocationId())
+                        .locations(location)
+                        .copyLocationId(dayForm.getTravelDay().get(i).get(j).getCopyLocationId())
                         .plan(plan)
-                        .days(form.getDayForm().getTravelDay().get(i).get(j).getDays())
-                        .movingData(form.getDayForm().getTravelDay().get(i).get(j).getMovingData())
+                        .days(dayForm.getTravelDay().get(i).get(j).getDays())
+                        .movingData(dayForm.getTravelDay().get(i).get(j).getMovingData())
                         .build();
 
                 saveDay(day);

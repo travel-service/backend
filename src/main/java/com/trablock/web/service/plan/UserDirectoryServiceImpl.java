@@ -42,7 +42,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user directory GET 요청
     @Override
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
-        Member memberId = planService.findMemberId(request);
+        Member memberId = planService.getMemberFromPayload(request);
         return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
     }
 
@@ -51,7 +51,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     @Transactional
     public void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
-        Member memberId = planService.findMemberId(request);
+        Member memberId = planService.getMemberFromPayload(request);
 
         int memberIdForCount = userDirectoryRepository.findMemberIdForCount(memberId);
 
@@ -84,7 +84,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     @Override
     public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
 
-        Member member = planService.findMemberId(request);
+        Member member = planService.getMemberFromPayload(request);
 
         return userDirectoryRepository.findUserDirectoryById(member);
 
