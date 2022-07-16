@@ -12,13 +12,13 @@ public interface UserDirectoryService {
 
     void saveUserDirectory(UserDirectory userDirectory);
 
-    void deleteUserDirectory(Long userDirectoryId);
+    void deleteUserDirectory(Long userDirectoryId, Long memberId);
 
     List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request);
 
     void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response);
 
-    void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto);
+    void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto, Long memberId);
 
     List<UserDirectory> findUserDirectory(HttpServletRequest request);
 }

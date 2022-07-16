@@ -34,8 +34,8 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user 디렉터리 삭제
     @Override
     @Transactional
-    public void deleteUserDirectory(Long userDirectoryId) {
-        UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryId);
+    public void deleteUserDirectory(Long userDirectoryId, Long memberId) {
+        UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryId, memberId);
         userDirectoryById.delete();
     }
 
@@ -71,8 +71,11 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     // user directory 이름 변경
     @Override
     @Transactional
-    public void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto) {
-        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id);
+    public void updateDirectoryName(Long id,
+                                    DirectoryNameUpdateDto directoryNameUpdateDto,
+                                    Long memberId) {
+
+        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id, memberId);
         userDirectory.updateName(directoryNameUpdateDto);
     }
 

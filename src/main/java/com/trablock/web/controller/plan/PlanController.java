@@ -4,6 +4,7 @@ import com.trablock.web.controller.form.Form;
 import com.trablock.web.dto.plan.DayDto;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
+import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.service.plan.interfaceC.ConceptService;
@@ -49,20 +50,27 @@ public class PlanController {
     // concept 업데이트
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/concept")
-    public void updateUserPlanConcept(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
+    public void updateUserPlanConcept(@PathVariable("planId") Long planId,
+                                      HttpServletRequest request,
+                                      @RequestBody Form form) {
         conceptService.updateConcept(planId, request, form);
     }
 
-    // TODO 토큰 검증 방법 구현
     // concept 정보 불러오기 - ConceptForm
     @GetMapping("/members/plan/{planId}/concept")
-    public ResponseEntity<?> usersConcepts(@PathVariable("planId") Long planId) {
-        List<String> conceptIdForPlanIdToList = conceptService.findConceptIdForPlanIdToList(planId);
-        Map<String, Object> conceptResult = new HashMap<>();
-        conceptResult.put("conceptForm", conceptIdForPlanIdToList);
-        conceptResult.put("planId", planId);
+    public ResponseEntity<?> usersConcepts(@PathVariable("planId") Long planId, HttpServletRequest request) {
+        Member memberFromPayload = planService.getMemberFromPayload(request);
 
-        return ResponseEntity.ok().body(conceptResult);
+        if (memberFromPayload.getId() != null) {
+            List<String> conceptIdForPlanIdToList = conceptService.findConceptIdForPlanIdToList(planId);
+            Map<String, Object> conceptResult = new HashMap<>();
+            conceptResult.put("conceptForm", conceptIdForPlanIdToList);
+            conceptResult.put("planId", planId);
+
+            return ResponseEntity.ok().body(conceptResult);
+        } else {
+            throw new IllegalStateException("가입되지 않은 회원입니다.");
+        }
     }
 
     //Day 생성
@@ -72,19 +80,26 @@ public class PlanController {
         dayService.createDay(form, request, planId);
     }
 
-    // TODO 토큰 검증 방법 구현
     //Day 정보 불러오기 - dayForm
     @GetMapping("/members/plan/{planId}/day")
-    public UserDay getDaysInPlan(@PathVariable("planId") Long planId) {
-        List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
-        List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(Collectors.toList());
-        return new UserDay(dayDtos);
+    public UserDay getDaysInPlan(@PathVariable("planId") Long planId, HttpServletRequest request) {
+        Member memberFromPayload = planService.getMemberFromPayload(request);
+
+        if (memberFromPayload.getId() != null) {
+            List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
+            List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(Collectors.toList());
+            return new UserDay(dayDtos);
+        } else {
+            throw new IllegalStateException("가입되지 않은 회원입니다.");
+        }
     }
 
     // day 수정
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/day")
-    public void updateUserPlanDay(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
+    public void updateUserPlanDay(@PathVariable("planId") Long planId,
+                                  HttpServletRequest request,
+                                  @RequestBody Form form) {
         dayService.updateDay(planId, request, form);
     }
 
@@ -98,14 +113,18 @@ public class PlanController {
     // plan update
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}")
-    public void updateUserPlan(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
+    public void updateUserPlan(@PathVariable("planId") Long planId,
+                               HttpServletRequest request,
+                               @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
         planService.updateUserPlanContent(planId, request, userPlanUpdateDto);
     }
 
     // selectedLocation 수정
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/selected-location")
-    public void updateUserPlanSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request, @RequestBody Form form) {
+    public void updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
+                                               HttpServletRequest request,
+                                               @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(planId, request, form);
     }
 

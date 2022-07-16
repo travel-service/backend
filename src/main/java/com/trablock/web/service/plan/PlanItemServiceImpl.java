@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class PlanItemServiceImpl implements PlanItemService {
     //유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
     @Override
     @Transactional
-    public void moveUserPlan(MoveDirectoryForm moveDirectoryForm) {
+    public void moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
 
-        UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId());
+        UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
 
         for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
 

@@ -12,13 +12,14 @@ import java.util.Optional;
 
 public interface UserDirectoryRepository extends JpaRepository<UserDirectory, Long> {
 
-    UserDirectory findUserDirectoryById(Long id);
+    @Query("select u from UserDirectory u where u.id = :userDirectoryId and u.member= :memberId")
+    UserDirectory findUserDirectoryById(@Param("userDirectoryId") Long userDirectoryId, @Param("memberId") Long memberId);
 
     @Query("select u from UserDirectory u where u.member= :memberId")
-    List<UserDirectory> findMemberIdForList(@Param("memberId") Optional<Member> id);
+    List<UserDirectory> findMemberIdForList(@Param("memberId") Optional<Member> memberId);
 
     @Query("select u from UserDirectory u where u.member= :memberId")
-    List<UserDirectory> findUserDirectoryById(@Param("memberId") Member id);
+    List<UserDirectory> findUserDirectoryById(@Param("memberId") Member memberId);
 
     @Query("select count(u) from UserDirectory as u where u.member = :memberId")
     int findMemberIdForCount(@Param("memberId") Member id);
