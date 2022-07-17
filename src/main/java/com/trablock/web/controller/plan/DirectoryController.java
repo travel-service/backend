@@ -60,7 +60,7 @@ public class DirectoryController {
 
     //trash directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/trash-directory")
+    @GetMapping("/members/trash-directory")
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -71,7 +71,7 @@ public class DirectoryController {
 
     // user directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/user-directory/{userDirectoryId}")
+    @GetMapping("/member/{userDirectoryId}directory")
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
 
@@ -91,7 +91,7 @@ public class DirectoryController {
 
     //플랜 삭제(main -> trash)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/main-directory/cancel")
+    @PostMapping("/member/directory/cancel")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             planService.cancelPlan(stateChangeForm.getPlanId().get(i), request);
@@ -101,7 +101,7 @@ public class DirectoryController {
 
     //플랜 복구(trash -> main)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/trash-directory/revert")
+    @PostMapping("/member/trash-directory/revert")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             planService.revertPlan(stateChangeForm.getPlanId().get(i), request);
@@ -111,7 +111,7 @@ public class DirectoryController {
 
     //플랜 영구 삭제(trash -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/trash-directory/delete")
+    @PostMapping("/member/trash-directory/delete")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             planService.deletePlan(stateChangeForm.getPlanId().get(i), request);
@@ -121,7 +121,7 @@ public class DirectoryController {
 
     //user directory 생성
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/create/user-directory")
+    @PostMapping("/member/directory/create")
     public String createUserDirectory(HttpServletRequest request,
                                       @RequestBody UserDirectoryForm userDirectoryForm,
                                       HttpServletResponse response) {
@@ -131,7 +131,7 @@ public class DirectoryController {
 
     //user directory 삭제(undelete -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/delete/user-directory")
+    @PostMapping("/member/directory/delete")
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -145,7 +145,7 @@ public class DirectoryController {
 
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/move/user-directory")
+    @PostMapping("/member/directory/move")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
 
         Member member = planService.getMemberFromPayload(request);
@@ -156,7 +156,7 @@ public class DirectoryController {
 
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/update/user-directory-name/{userDirectoryId}")
+    @PostMapping("/member/directory-name/{userDirectoryId}/update")
     public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id,
                                         @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
                                         HttpServletRequest request) {
