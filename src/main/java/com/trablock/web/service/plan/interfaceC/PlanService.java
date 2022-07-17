@@ -1,6 +1,7 @@
 package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
@@ -24,11 +25,11 @@ public interface PlanService {
 
     List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request);
 
-    void cancelPlan(Long planId, HttpServletRequest request);
+    void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
 
-    void deletePlan(Long planId, HttpServletRequest request);
+    void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request);
 
-    void revertPlan(Long planId, HttpServletRequest request);
+    void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
 
     void finishedPlan(Long planId);
 

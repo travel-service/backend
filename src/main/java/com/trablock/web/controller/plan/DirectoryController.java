@@ -8,11 +8,13 @@ import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
+import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
+import jdk.jfr.Frequency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -58,95 +60,105 @@ public class DirectoryController {
 
     //trash directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/trash-directory")
+    @GetMapping("/members/trash-directory")
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+
         return new Converter.TrashDirectory(trashPlanCount, collect);
     }
 
-    // TODO 토큰 검증 방법 구현
     // user directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/user-directory/{userDirectoryId}")
-    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory id, HttpServletRequest request) {
-        List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(id);
-        List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
-                .collect(Collectors.toList());
+    @GetMapping("/member/{userDirectoryId}directory")
+    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory userDirectoryId,
+                                                           HttpServletRequest request) {
+        Member member = planService.getMemberFromPayload(request);
 
-        return new Converter.ShowUserDirectory(collect);
+        if (member.getId() != null) {
+            List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(userDirectoryId);
+            List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
+                    .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
+                    .collect(Collectors.toList());
+
+            return new Converter.ShowUserDirectory(collect);
+        } else {
+            throw new IllegalStateException("가입되지 않은 회원입니다.");
+        }
     }
 
     //플랜 삭제(main -> trash)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/main-directory/cancel")
+    @PostMapping("/member/directory/cancel")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.cancelPlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.cancelPlan(stateChangeForm, request);
+
         return "redirect:/main-directory";
     }
 
     //플랜 복구(trash -> main)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/trash-directory/revert")
+    @PostMapping("/member/trash-directory/revert")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.revertPlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.revertPlan(stateChangeForm, request);
+
         return "redirect:/main-directory";
     }
 
     //플랜 영구 삭제(trash -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/trash-directory/delete")
+    @PostMapping("/member/trash-directory/delete")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.deletePlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.deletePlan(stateChangeForm, request);
+
         return "redirect:/trash-directory";
     }
 
     //user directory 생성
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/create/user-directory")
-    public String createUserDirectory(HttpServletRequest request, @RequestBody UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
+    @PostMapping("/member/directory/create")
+    public String createUserDirectory(HttpServletRequest request,
+                                      @RequestBody UserDirectoryForm userDirectoryForm,
+                                      HttpServletResponse response) {
         userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
+
         return "redirect:/main-directory";
     }
 
-    // TODO 토큰 검증 방법 구현
     //user directory 삭제(undelete -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/delete/user-directory")
-    public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm) {
-        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
-            userDirectoryService.deleteUserDirectory(userDirectoryForm.getUserDirectoryId().get(i));
-        }
+    @PostMapping("/member/directory/delete")
+    public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
+        Member member = planService.getMemberFromPayload(request);
+
+        userDirectoryService.deleteUserDirectory(userDirectoryForm, member.getId());
         planItemService.deleteMapping(userDirectoryForm);
 
         return "redirect:/main-directory";
     }
 
-    // TODO 토큰 검증 방법 구현
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/move/user-directory")
-    public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm) {
-        planItemService.moveUserPlan(moveDirectoryForm);
+    @PostMapping("/member/directory/move")
+    public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
+        Member member = planService.getMemberFromPayload(request);
+        planItemService.moveUserPlan(moveDirectoryForm, member.getId());
+
         return "redirect:/main-directory";
     }
 
-
-    // TODO 토큰 검증 방법 구현
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/update/user-directory-name/{userDirectoryId}")
-    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id, @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto) {
-        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto);
+    @PostMapping("/member/directory-name/{userDirectoryId}/update")
+    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id,
+                                        @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
+                                        HttpServletRequest request) {
+
+        Member member = planService.getMemberFromPayload(request);
+
+        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
 
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {

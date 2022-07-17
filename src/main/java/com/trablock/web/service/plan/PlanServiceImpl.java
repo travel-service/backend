@@ -2,6 +2,7 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
@@ -65,32 +66,42 @@ public class PlanServiceImpl implements PlanService {
         return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
     }
 
-
     // 플랜 삭제(main -> trash)
     @Override
     @Transactional
-    public void cancelPlan(Long planId, HttpServletRequest request) {
+    public void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
+
         Member member = getMemberFromPayload(request);
-        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
-        plan.trash();
+
+        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
+            Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
+            plan.trash();
+
+        }
     }
 
     // 플랜 완전 삭제(trash -> delete)
     @Override
     @Transactional
-    public void deletePlan(Long planId, HttpServletRequest request) {
+    public void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
-        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
-        plan.delete();
+
+        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
+            Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
+            plan.delete();
+        }
     }
 
     // 플랜 복구(trash -> main)
     @Override
     @Transactional
-    public void revertPlan(Long planId, HttpServletRequest request) {
+    public void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
-        Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
-        plan.revert();
+
+        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
+            Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
+            plan.revert();
+        }
     }
 
     // 플랜 완성
