@@ -1,4 +1,4 @@
-package com.trablock.web.dto.location;
+package com.trablock.web.dto.location.type;
 
 import com.trablock.web.domain.LocationType;
 import lombok.AllArgsConstructor;

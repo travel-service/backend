@@ -1,12 +1,9 @@
 package com.trablock.web.repository.location.type;
 
-import com.trablock.web.dto.location.AttractionDto;
 import com.trablock.web.entity.location.type.Attraction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
 
 public interface AttractionRepository extends JpaRepository<Attraction, Long> {
 

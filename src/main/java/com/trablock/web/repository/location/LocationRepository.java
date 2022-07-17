@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long>, LocationRepositoryCustom {
 
+    @Query("select l from Location l where l.id in :idList")
+    List<Location> findAllLocationByIdIn(@Param("idList") List<Long> locationIdList);
+
     @Query("select l from Location l where l.type = :type and l.isMember = false")
     <T> HashSet<T> findAllByTypeAndIsMemberFalse(@Param("type") LocationType locationType, Class<T> tClass);
 

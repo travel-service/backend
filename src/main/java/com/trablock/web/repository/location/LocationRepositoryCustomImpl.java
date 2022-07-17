@@ -3,16 +3,14 @@ package com.trablock.web.repository.location;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.trablock.web.dto.location.*;
-import com.trablock.web.entity.location.Location;
+import com.trablock.web.dto.location.type.*;
 import com.trablock.web.entity.location.QInformation;
 import com.trablock.web.entity.location.QLocation;
 import com.trablock.web.entity.location.type.*;
-import com.trablock.web.entity.plan.QPlan;
 import com.trablock.web.entity.plan.QSelectedLocation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.HashSet;
 import java.util.List;
 
 public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {

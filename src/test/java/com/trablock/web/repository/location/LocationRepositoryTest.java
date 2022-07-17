@@ -5,6 +5,7 @@ import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.type.Restaurant;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +31,59 @@ class LocationRepositoryTest {
 
     @PersistenceContext
     EntityManager em;
+
+    @Test
+    @DisplayName("id 리스트로 조회")
+    void findByIdList() throws Exception {
+        Location loc = Location.builder()
+                .name("test1")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude(37.123).longitude(127.123).build()
+                ).build();
+        Location loc1 = Location.builder()
+                .name("test2")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude(37.123).longitude(127.123).build()
+                ).build();
+        Location loc2 = Location.builder()
+                .name("test3")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude(37.123).longitude(127.123).build()
+                ).build();
+        Location loc3 = Location.builder()
+                .name("test4")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .coords(Coords.builder()
+                        .latitude(37.123).longitude(127.123).build()
+                ).build();
+
+        List<Location> locations = new ArrayList<>();
+        for (Location location : Arrays.asList(loc, loc1, loc2, loc3)) {
+            locations.add(location);
+        }
+
+        List<Location> savedList = locationRepository.saveAll(locations);
+
+        List<Long> idList = savedList.stream().map(Location::getId).collect(Collectors.toList());
+
+        List<Location> allLocationByIdIn = locationRepository.findAllLocationByIdIn(idList);
+        assertThat(allLocationByIdIn.size()).isEqualTo(4);
+        for (Location location : allLocationByIdIn) {
+            System.out.println("location = " + location);
+        }
+
+    }
 
     @Test
     void create() {

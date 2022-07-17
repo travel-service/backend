@@ -1,10 +1,9 @@
 package com.trablock.web.repository.location;
 
 import com.trablock.web.dto.location.*;
-import com.trablock.web.entity.location.Location;
+import com.trablock.web.dto.location.type.*;
 import com.trablock.web.entity.location.type.*;
 
-import java.util.HashSet;
 import java.util.List;
 
 public interface LocationRepositoryCustom {

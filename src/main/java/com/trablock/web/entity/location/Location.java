@@ -2,6 +2,8 @@ package com.trablock.web.entity.location;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.dto.location.BlockLocationDto;
+import com.trablock.web.dto.location.MarkLocationDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,6 +58,27 @@ public class Location {
 
     public String changeName(String name) {
         return this.name = name;
+    }
+
+
+    public BlockLocationDto toBlockLocationDto() {
+        return BlockLocationDto.builder()
+                .id(id)
+                .name(name)
+                .address1(address1)
+                .address2(address2)
+                .image(image)
+                .type(type)
+                .build();
+    }
+
+    public MarkLocationDto toMarkLocationDto() {
+        return MarkLocationDto.builder()
+                .id(id)
+                .name(name)
+                .coords(coords)
+                .type(type)
+                .build();
     }
 
 }
