@@ -12,7 +12,7 @@ public interface UserDirectoryService {
 
     void saveUserDirectory(UserDirectory userDirectory);
 
-    void deleteUserDirectory(Long userDirectoryId, Long memberId);
+    void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId);
 
     List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request);
 

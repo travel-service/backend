@@ -34,9 +34,11 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user 디렉터리 삭제
     @Override
     @Transactional
-    public void deleteUserDirectory(Long userDirectoryId, Long memberId) {
-        UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryId, memberId);
-        userDirectoryById.delete();
+    public void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId) {
+        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
+            UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(i), memberId);
+            userDirectoryById.delete();
+        }
     }
 
     //user directory GET 요청

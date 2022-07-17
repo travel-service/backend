@@ -66,6 +66,7 @@ public class DirectoryController {
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+
         return new Converter.TrashDirectory(trashPlanCount, collect);
     }
 
@@ -74,7 +75,6 @@ public class DirectoryController {
     @GetMapping("/member/{userDirectoryId}directory")
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
-
         Member member = planService.getMemberFromPayload(request);
 
         if (member.getId() != null) {
@@ -93,9 +93,8 @@ public class DirectoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/member/directory/cancel")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.cancelPlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.cancelPlan(stateChangeForm, request);
+
         return "redirect:/main-directory";
     }
 
@@ -103,9 +102,8 @@ public class DirectoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/member/trash-directory/revert")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.revertPlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.revertPlan(stateChangeForm, request);
+
         return "redirect:/main-directory";
     }
 
@@ -113,9 +111,8 @@ public class DirectoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/member/trash-directory/delete")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
-            planService.deletePlan(stateChangeForm.getPlanId().get(i), request);
-        }
+        planService.deletePlan(stateChangeForm, request);
+
         return "redirect:/trash-directory";
     }
 
@@ -126,6 +123,7 @@ public class DirectoryController {
                                       @RequestBody UserDirectoryForm userDirectoryForm,
                                       HttpServletResponse response) {
         userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
+
         return "redirect:/main-directory";
     }
 
@@ -135,9 +133,7 @@ public class DirectoryController {
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
-        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
-            userDirectoryService.deleteUserDirectory(userDirectoryForm.getUserDirectoryId().get(i), member.getId());
-        }
+        userDirectoryService.deleteUserDirectory(userDirectoryForm, member.getId());
         planItemService.deleteMapping(userDirectoryForm);
 
         return "redirect:/main-directory";
@@ -147,10 +143,9 @@ public class DirectoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/member/directory/move")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
-
         Member member = planService.getMemberFromPayload(request);
-
         planItemService.moveUserPlan(moveDirectoryForm, member.getId());
+
         return "redirect:/main-directory";
     }
 
