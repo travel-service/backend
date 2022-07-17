@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,14 +32,19 @@ public class ConceptServiceImpl implements ConceptService {
     @Transactional
     public void createConcept(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
+
+        ArrayList<Concept> conceptList = new ArrayList<>();
+
         for (int i = 0; i < form.getConceptForm().getConcept().size(); i++) {
             Concept concept = Concept.builder()
                     .plan(plan)
                     .conceptName(form.getConceptForm().getConcept().get(i))
                     .build();
 
-            saveConcept(concept);
+            conceptList.add(concept);
         }
+
+        conceptRepository.saveAll(conceptList);
     }
 
     @Override

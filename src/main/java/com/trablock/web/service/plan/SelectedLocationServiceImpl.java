@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,8 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
     public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
+        ArrayList<SelectedLocation> selectedLocationList = new ArrayList<>();
+
         for (int i = 0; i < form.getSelectedLocationForm().getSelectedLocation().size(); i++) {
             Optional<Location> OptionalLocation = locationRepository.findLocationById(form.getSelectedLocationForm().getSelectedLocation().get(i));
 
@@ -44,8 +47,10 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
                     .location(OptionalLocation.orElseThrow())
                     .build();
 
-            saveSelectedLocation(selectedLocation);
+            selectedLocationList.add(selectedLocation);
         }
+
+        selectedLocationRepository.saveAll(selectedLocationList);
     }
 
     /**

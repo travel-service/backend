@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,8 @@ public class DayServiceImpl implements DayService {
         planService.finishedPlan(planId);
         DayForm dayForm = form.getDayForm();
 
+        ArrayList<Day> dayList = new ArrayList();
+
         for (int i = 0; i < dayForm.getTravelDay().size(); i++) {
             for (int j = 0; j < dayForm.getTravelDay().get(i).size(); j++) {
 
@@ -54,9 +57,11 @@ public class DayServiceImpl implements DayService {
                         .movingData(dayForm.getTravelDay().get(i).get(j).getMovingData())
                         .build();
 
-                saveDay(day);
+                dayList.add(day);
             }
         }
+
+        dayRepository.saveAll(dayList);
     }
 
     /**

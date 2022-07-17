@@ -41,8 +41,9 @@ public class PlanItemServiceImpl implements PlanItemService {
 
         UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
 
-        for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
+        ArrayList<PlanItem> planItemList = new ArrayList<>();
 
+        for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i)).orElseThrow();
 
             PlanItem planItem = PlanItem.builder()
@@ -51,8 +52,10 @@ public class PlanItemServiceImpl implements PlanItemService {
                     .status(Status.UNDELETE)
                     .build();
 
-            planItemRepository.save(planItem);
+            planItemList.add(planItem);
         }
+
+        planItemRepository.saveAll(planItemList);
     }
 
     @Override

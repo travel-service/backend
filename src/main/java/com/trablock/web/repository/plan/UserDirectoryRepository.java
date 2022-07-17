@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserDirectoryRepository extends JpaRepository<UserDirectory, Long> {
 
-    @Query("select u from UserDirectory u where u.id = :userDirectoryId and u.member= :memberId")
+    @Query("select u from UserDirectory u where u.id = :userDirectoryId and u.member.id = :memberId")
     UserDirectory findUserDirectoryById(@Param("userDirectoryId") Long userDirectoryId, @Param("memberId") Long memberId);
 
     @Query("select u from UserDirectory u where u.member= :memberId")
