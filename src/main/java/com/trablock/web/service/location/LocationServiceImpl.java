@@ -1,21 +1,23 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
-import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.BlockLocationView;
+import com.trablock.web.dto.location.LocationWrapperDto;
+import com.trablock.web.dto.location.MarkLocationView;
+import com.trablock.web.dto.location.TypeLocationRequestDto;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.location.type.*;
 import com.trablock.web.repository.location.InformationRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
-import com.trablock.web.service.location.mapper.LocationMapper;
 import com.trablock.web.service.location.mapper.TypeLocationMapper;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.trablock.web.domain.LocationType.*;
 
@@ -27,7 +29,6 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
     private final InformationRepository informationRepository;
-    private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
     private final TypeLocationMapper typeLocationMapper;
 
     @Override
@@ -60,9 +61,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public HashMap<String, Object> getSelectedLocationList(Long planId) {
-
-        return null;
+    public List<Location> getLocationListWithLocationIds(List<Long> locationIdList) {
+        return locationRepository.findAllLocationByIdIn(locationIdList);
     }
 
     @Override
@@ -142,28 +142,6 @@ public class LocationServiceImpl implements LocationService {
         map.put("Leports", getBlockLocationListWithType(LEPORTS));
 
         return map;
-    }
-
-
-    @Override
-    public List<LocationDto> getMemberLocationList(Long memberId) {
-
-        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberId(memberId)) {
-            Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
-        }
-        return new ArrayList<LocationDto>();
-    }
-
-
-    @Override
-    public List<LocationDto> getPublicMemberLocationList(Long memberId) {
-
-        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId)) {
-            Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
-        }
-        return new ArrayList<LocationDto>();
     }
 
     @Override

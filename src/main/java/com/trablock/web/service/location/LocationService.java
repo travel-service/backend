@@ -2,6 +2,7 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.entity.location.Location;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,11 +25,7 @@ public interface LocationService {
 
     HashMap<String, Object> getBlockLocationList();
 
-    HashMap<String, Object> getSelectedLocationList(Long plnaId);
-
-    List<LocationDto> getMemberLocationList(Long memberId);
-
-    List<LocationDto> getPublicMemberLocationList(Long memberId);
+    List<Location> getLocationListWithLocationIds(List<Long> locationIds);
 
     HashSet<MarkLocationView> getMarkLocationListWithType(LocationType type);
 
