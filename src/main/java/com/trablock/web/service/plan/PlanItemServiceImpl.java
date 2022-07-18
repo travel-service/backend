@@ -9,10 +9,12 @@ import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
+import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,37 +22,43 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PlanItemService {
+public class PlanItemServiceImpl implements PlanItemService {
 
     private final PlanItemRepository planItemRepository;
     private final PlanRepository planRepository;
     private final UserDirectoryRepository userDirectoryRepository;
 
+    @Override
     @Transactional
     public void savePlanItem(PlanItem planItem) {
         planItemRepository.save(planItem);
     }
 
     //유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
+    @Override
     @Transactional
-    public void moveUserPlan(MoveDirectoryForm moveDirectoryForm) {
+    public void moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
 
-        UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId());
+        UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
+
+        ArrayList<PlanItem> planItemList = new ArrayList<>();
 
         for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
-
-            Plan planId = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i));
+            Plan plan = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i)).orElseThrow();
 
             PlanItem planItem = PlanItem.builder()
                     .userDirectory(userDirectoryId)
-                    .plan(planId)
+                    .plan(plan)
                     .status(Status.UNDELETE)
                     .build();
 
-            planItemRepository.save(planItem);
+            planItemList.add(planItem);
         }
+
+        planItemRepository.saveAll(planItemList);
     }
 
+    @Override
     @Transactional
     public void deleteMapping(UserDirectoryForm userDirectoryForm) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
@@ -61,15 +69,18 @@ public class PlanItemService {
         }
     }
 
+    @Override
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
         return planItemRepository.findPlanItemByPI(id);
     }
 
     /**
      * user directory에 담겨 있는 플랜 갯수 반환
+     *
      * @param userDirectories
      * @return
      */
+    @Override
     public List<Integer> countPlan(List<UserDirectory> userDirectories) {
         List<Integer> countPlanList = new ArrayList<>();
 

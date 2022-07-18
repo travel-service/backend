@@ -1,7 +1,6 @@
-package com.trablock.web.dto.location;
+package com.trablock.web.dto.location.type;
 
 import com.trablock.web.domain.LocationType;
-import com.trablock.web.entity.location.Coords;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class AttractionDto {
+public class FestivalDto {
 
     private Long locationId;
     private String name;
@@ -26,7 +25,13 @@ public class AttractionDto {
     private String report;
     private LocationType type;
 
-    private boolean parking;
-    private String restDate;
+    private String homepage;
+    private String place;
+    private String placeInfo;
+    private String startDate;
+    private String endDate;
+    private String playTime;
+    private String program;
+    private String fee;
 
 }
