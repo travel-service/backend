@@ -2,8 +2,8 @@ package com.trablock.web.entity.plan;
 
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.repository.MemberRepository;
 import com.trablock.web.repository.location.LocationRepository;
+import com.trablock.web.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,8 @@ class SelectedLocationTest {
 
     @PersistenceContext
     EntityManager em;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired
     LocationRepository locationRepository;
 

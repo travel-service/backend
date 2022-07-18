@@ -42,7 +42,7 @@ public class MailServiceImpl implements MailService {
         MailDto mailDto = MailDto.builder()
                 .toAddress(email)
                 .title(title)
-                .message(message + "http://localhost:8080/api/sign/confirm-email?email="+email+"&uuid="+uuid)
+                .message(message + "http://localhost:8080/auth/email?email="+email+"&uuid="+uuid)
                 .fromAddress(fromAddress)
                 .build();
 

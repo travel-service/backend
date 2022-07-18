@@ -26,7 +26,7 @@ public class FileService {
 
     @Autowired
     public FileService(FileStorageProperties fileStorageProperties) {
-        dirLocation = Path.of(fileStorageProperties.getUploadDir());
+        dirLocation = Path.of("./image");
         try {
             Files.createDirectories(dirLocation);
         } catch (IOException e) {
