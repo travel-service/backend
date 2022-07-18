@@ -4,18 +4,17 @@ import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.entity.location.Location;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public interface LocationService {
 
-    Object getLocationDetails(Long locationId, LocationType locationType);
+    TypeLocationDto getLocationDetails(Long locationId, LocationType locationType);
 
     Long createLocationByMember(LocationWrapperDto wrapperDto);
 

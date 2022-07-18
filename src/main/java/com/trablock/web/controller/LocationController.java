@@ -1,6 +1,7 @@
 package com.trablock.web.controller;
 
 import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/{locationId}", method = RequestMethod.GET)
-    public ResponseEntity<Object> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
+    public ResponseEntity<TypeLocationDto> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
         return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationTypeDto.getType()));
     }
 

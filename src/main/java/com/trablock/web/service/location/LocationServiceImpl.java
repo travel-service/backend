@@ -4,6 +4,7 @@ import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.type.*;
 import com.trablock.web.repository.location.InformationRepository;
@@ -134,7 +135,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Object getLocationDetails(Long locationId, LocationType locationType) {
+    public TypeLocationDto getLocationDetails(Long locationId, LocationType locationType) {
         switch (locationType) {
             case ATTRACTION:
                 return locationRepository.findAttractionByLocationId(locationId);

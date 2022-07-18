@@ -66,7 +66,8 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                         information.report,
                         location.type,
                         attraction.parking,
-                        attraction.restDate
+                        attraction.restDate,
+                        attraction.useTime
                 )).from(location)
                 .leftJoin(attraction).on(location.id.eq(attraction.locationId))
                 .leftJoin(information).on(location.id.eq(information.locationId))
