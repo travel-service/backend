@@ -3,16 +3,15 @@ package com.trablock.web.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum LocationType {
-    ATTRACTION("ATTRACTION"),
-    CULTURE("CULTURE"),
-    FESTIVAL("FESTIVAL"),
-    LEPORTS("LEPORTS"),
-    LODGE("LODGE"),
-    RESTAURANT("RESTAURANT");
+    ATTRACTION("Attraction"),
+    CULTURE("Culture"),
+    FESTIVAL("Festival"),
+    LEPORTS("Leports"),
+    LODGE("Lodge"),
+    RESTAURANT("restaurant");
 
     private String type;
 

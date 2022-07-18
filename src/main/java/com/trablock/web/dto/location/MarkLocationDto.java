@@ -12,7 +12,7 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class MarkLocationDto {
 
-    private Long id;
+    private Long locationId;
     private String name;
     private Coords coords;
     private LocationType type;
