@@ -34,6 +34,7 @@ public class Day {
 
     public DayDto toDto() {
         return DayDto.builder()
+                .locationId(location.getId())
                 .copyLocationId(copyLocationId)
                 .movingData(movingData)
                 .days(days)
