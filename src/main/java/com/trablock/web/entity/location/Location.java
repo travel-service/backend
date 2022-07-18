@@ -63,7 +63,7 @@ public class Location {
 
     public BlockLocationDto toBlockLocationDto() {
         return BlockLocationDto.builder()
-                .id(id)
+                .locationId(id)
                 .name(name)
                 .address1(address1)
                 .address2(address2)
@@ -74,7 +74,7 @@ public class Location {
 
     public MarkLocationDto toMarkLocationDto() {
         return MarkLocationDto.builder()
-                .id(id)
+                .locationId(id)
                 .name(name)
                 .coords(coords)
                 .type(type)

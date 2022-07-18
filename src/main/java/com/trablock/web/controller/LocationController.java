@@ -1,14 +1,16 @@
 package com.trablock.web.controller;
 
-import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.BlockLocationDto;
+import com.trablock.web.dto.location.LocationTypeDto;
+import com.trablock.web.dto.location.LocationWrapperDto;
+import com.trablock.web.dto.location.MarkLocationDto;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/{locationId}", method = RequestMethod.GET)
-    public ResponseEntity<Object> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
+    public ResponseEntity<TypeLocationDto> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
         return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationTypeDto.getType()));
     }
 

@@ -14,7 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class BlockLocationDto {
 
-    private Long id;
+    private Long locationId;
     private String name;
     private String address1;
     private String address2;

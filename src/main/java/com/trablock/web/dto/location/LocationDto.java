@@ -11,7 +11,7 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class LocationDto {
 
-    private Long id;
+    private Long locationId;
     private String name;
     private String address1;
     private String address2;
