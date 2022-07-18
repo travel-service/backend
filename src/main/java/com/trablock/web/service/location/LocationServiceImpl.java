@@ -2,22 +2,22 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.save.InformationRequestDto;
+import com.trablock.web.dto.location.save.MemberLocationRequestDto;
 import com.trablock.web.entity.location.Location;
-import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.location.type.*;
 import com.trablock.web.repository.location.InformationRepository;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.location.MemberLocationRepository;
-import com.trablock.web.service.location.mapper.LocationMapper;
 import com.trablock.web.service.location.mapper.TypeLocationMapper;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-
-import static com.trablock.web.domain.LocationType.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,24 +27,33 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final MemberLocationRepository memberLocationRepository;
     private final InformationRepository informationRepository;
-    private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
     private final TypeLocationMapper typeLocationMapper;
 
     @Override
     @Transactional
-    public Long createLocationByMember(LocationWrapperDto wrapperDto) {
-        Location savedLocation = locationRepository.save(wrapperDto.getLocation().toEntity());
-        Long locationId = savedLocation.getId();
-        LocationType type = savedLocation.getType();
-
-        informationRepository.save(wrapperDto.getInformation().toEntity(locationId));
-        memberLocationRepository.save(wrapperDto.getMemberLocation().toEntity(locationId));
+    public synchronized Long createLocationByMember(LocationWrapperDto wrapperDto) {
+        Location location = locationRepository.save(wrapperDto.getLocation().toEntity());
+        Long locationId = location.getId();
+        LocationType type = location.getType();
 
         TypeLocationRequestDto typeLocationRequestDto = wrapperDto.getTypeLocation();
         typeLocationRequestDto.setLocationId(locationId);
 
+        updateLocationInformation(wrapperDto.getInformation(), locationId);
+        updateMemberLocation(wrapperDto.getMemberLocation(), locationId);
         saveTypeLocation(typeLocationRequestDto, type);
+
         return locationId;
+    }
+
+    @Override
+    public boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId) {
+        return informationRepository.save(informationDto.toEntity(locationId)).getLocationId() == locationId;
+    }
+
+    @Override
+    public boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId) {
+        return memberLocationRepository.save(memberLocationDto.toEntity(locationId)).getLocationId() == locationId;
     }
 
     @Override
@@ -55,14 +64,47 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId) {
-
         return false;
     }
 
     @Override
-    public HashMap<String, Object> getSelectedLocationList(Long planId) {
+    public List<Location> getLocationListWithLocationIds(List<Long> locationIdList) {
+        return locationRepository.findAllLocationByIdIn(locationIdList);
+    }
 
-        return null;
+    @Override
+    public Map<String, List<BlockLocationDto>> getBlockLocationListFromLocationList(List<Location> locationList) {
+        List<BlockLocationDto> blockLocationDtoList = toBlockLocationDtoList(locationList);
+        return classifyBlockLocationListWithType(blockLocationDtoList);
+    }
+
+    @Override
+    public Map<String, List<MarkLocationDto>> getMarkLocationListFromLocationList(List<Location> locationList) {
+        List<MarkLocationDto> markLocationDtoList = toMarkLocationDtoList(locationList);
+        return classifyMarkLocationDtoList(markLocationDtoList);
+    }
+
+
+    @Override
+    public List<MarkLocationDto> toMarkLocationDtoList(List<Location> locationList) {
+        return locationList.stream().map(Location::toMarkLocationDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BlockLocationDto> toBlockLocationDtoList(List<Location> locationList) {
+        return locationList.stream().map(Location::toBlockLocationDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, List<BlockLocationDto>> classifyBlockLocationListWithType(List<BlockLocationDto> blockLocationDtoListList) {
+        return blockLocationDtoListList.stream().collect(Collectors
+                .groupingBy(blockLocationDto -> blockLocationDto.getType().getType()));
+    }
+
+    @Override
+    public Map<String, List<MarkLocationDto>> classifyMarkLocationDtoList(List<MarkLocationDto> markLocationDtoListList) {
+        return markLocationDtoListList.stream().collect(Collectors
+                .groupingBy(markLocationDto -> markLocationDto.getType().getType()));
     }
 
     @Override
@@ -71,29 +113,24 @@ public class LocationServiceImpl implements LocationService {
             case ATTRACTION:
                 Attraction attraction = typeLocationMapper.getAttractionMapper().toEntity(requestDto);
                 locationRepository.saveAttraction(attraction);
-                return true;
             case CULTURE:
                 Culture culture = typeLocationMapper.getCultureMapper().toEntity(requestDto);
                 locationRepository.saveCulture(culture);
-                return true;
             case FESTIVAL:
                 Festival festival = typeLocationMapper.getFestivalMapper().toEntity(requestDto);
                 locationRepository.saveFestival(festival);
-                return true;
             case LEPORTS:
                 Leports leports = typeLocationMapper.getLeportsMapper().toEntity(requestDto);
                 locationRepository.saveLeports(leports);
-                return true;
             case LODGE:
                 Lodge lodge = typeLocationMapper.getLodgeMapper().toEntity(requestDto);
                 locationRepository.saveLodge(lodge);
-                return true;
             case RESTAURANT:
                 Restaurant restaurant = typeLocationMapper.getRestaurantMapper().toEntity(requestDto);
                 locationRepository.saveRestaurant(restaurant);
+            default:
                 return true;
         }
-        return false;
     }
 
     @Override
@@ -116,54 +153,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public HashMap<String, Object> getMarkLocationList() { // 반환 타입이 Object인 것이 맘에 들지 않는다.
-        // 부모 클래스 만들어서 묶어버릴까.. 생각중.
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        map.put("Lodge", getMarkLocationListWithType(LODGE));
-        map.put("Restaurant", getMarkLocationListWithType(RESTAURANT));
-        map.put("Attraction", getMarkLocationListWithType(ATTRACTION));
-        map.put("Culture", getMarkLocationListWithType(CULTURE));
-        map.put("Festival", getMarkLocationListWithType(FESTIVAL));
-        map.put("Leports", getMarkLocationListWithType(LEPORTS));
-
-        return map;
+    public Map<String, List<MarkLocationDto>> getMarkLocationList() { // 반환 타입이 Object인 것이 맘에 들지 않는다.
+        List<Location> locationList = locationRepository.findAllByIsMemberFalse();
+        return getMarkLocationListFromLocationList(locationList);
     }
 
     @Override
-    public HashMap<String, Object> getBlockLocationList() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        map.put("Lodge", getBlockLocationListWithType(LODGE));
-        map.put("Restaurant", getBlockLocationListWithType(RESTAURANT));
-        map.put("Attraction", getBlockLocationListWithType(ATTRACTION));
-        map.put("Culture", getBlockLocationListWithType(CULTURE));
-        map.put("Festival", getBlockLocationListWithType(FESTIVAL));
-        map.put("Leports", getBlockLocationListWithType(LEPORTS));
-
-        return map;
-    }
-
-
-    @Override
-    public List<LocationDto> getMemberLocationList(Long memberId) {
-
-        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberId(memberId)) {
-            Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
-        }
-        return new ArrayList<LocationDto>();
-    }
-
-
-    @Override
-    public List<LocationDto> getPublicMemberLocationList(Long memberId) {
-
-        for (MemberLocation memberLocation : memberLocationRepository.findAllByMemberIdAndIsPublicTrue(memberId)) {
-            Optional<Location> byId = locationRepository.findById(memberLocation.getLocationId());
-            byId.ifPresent(location -> ((List<LocationDto>) new ArrayList<LocationDto>()).add(locationMapper.toDto(location)));
-        }
-        return new ArrayList<LocationDto>();
+    public Map<String, List<BlockLocationDto>> getBlockLocationList() {
+        List<Location> locationList = locationRepository.findAllByIsMemberFalse();
+        return getBlockLocationListFromLocationList(locationList);
     }
 
     @Override

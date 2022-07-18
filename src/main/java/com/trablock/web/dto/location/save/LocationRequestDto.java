@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 @Data
 @Builder
@@ -42,6 +45,7 @@ public class LocationRequestDto {
                 .image(image)
                 .areaCode(areaCode)
                 .type(type)
+                .isMember(true)
                 .build();
     }
 }

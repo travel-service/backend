@@ -6,6 +6,8 @@ import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
+import com.trablock.web.service.plan.interfaceC.PlanService;
+import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,34 +20,40 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserDirectoryService {
+public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     private final UserDirectoryRepository userDirectoryRepository;
     private final PlanService planService;
 
+    @Override
     @Transactional
     public void saveUserDirectory(UserDirectory userDirectory) {
         userDirectoryRepository.save(userDirectory);
     }
 
     //user 디렉터리 삭제
+    @Override
     @Transactional
-    public void deleteUserDirectory(Long userDirectoryId) {
-        UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryId);
-        userDirectoryById.delete();
+    public void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId) {
+        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
+            UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(i), memberId);
+            userDirectoryById.delete();
+        }
     }
 
     //user directory GET 요청
+    @Override
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
-        Member memberId = planService.findMemberId(request);
+        Member memberId = planService.getMemberFromPayload(request);
         return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
     }
 
     //user directory 생성
+    @Override
     @Transactional
     public void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
-        Member memberId = planService.findMemberId(request);
+        Member memberId = planService.getMemberFromPayload(request);
 
         int memberIdForCount = userDirectoryRepository.findMemberIdForCount(memberId);
 
@@ -63,9 +71,13 @@ public class UserDirectoryService {
     }
 
     // user directory 이름 변경
+    @Override
     @Transactional
-    public void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto) {
-        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id);
+    public void updateDirectoryName(Long id,
+                                    DirectoryNameUpdateDto directoryNameUpdateDto,
+                                    Long memberId) {
+
+        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id, memberId);
         userDirectory.updateName(directoryNameUpdateDto);
     }
 
@@ -74,9 +86,10 @@ public class UserDirectoryService {
      * @param request
      * @return
      */
+    @Override
     public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
 
-        Member member = planService.findMemberId(request);
+        Member member = planService.getMemberFromPayload(request);
 
         return userDirectoryRepository.findUserDirectoryById(member);
 

@@ -2,33 +2,50 @@ package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.save.InformationRequestDto;
+import com.trablock.web.dto.location.save.MemberLocationRequestDto;
+import com.trablock.web.entity.location.Location;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public interface LocationService {
 
-    Long createLocationByMember(LocationWrapperDto wrapperDto);
-
     Object getLocationDetails(Long locationId, LocationType locationType);
 
+    Long createLocationByMember(LocationWrapperDto wrapperDto);
+
     boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
+
+    boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId);
+
+    boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId);
 
     boolean deleteLocationByMember(Long locationId);
 
     boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId);
 
-    HashMap<String, Object> getMarkLocationList();
+    Map<String, List<BlockLocationDto>> getBlockLocationListFromLocationList(List<Location> locationList);
 
-    HashMap<String, Object> getBlockLocationList();
+    Map<String, List<MarkLocationDto>> getMarkLocationListFromLocationList(List<Location> locationList);
 
-    HashMap<String, Object> getSelectedLocationList(Long plnaId);
+    List<MarkLocationDto> toMarkLocationDtoList(List<Location> locationList);
 
-    List<LocationDto> getMemberLocationList(Long memberId);
+    List<BlockLocationDto> toBlockLocationDtoList(List<Location> locationList);
 
-    List<LocationDto> getPublicMemberLocationList(Long memberId);
+    Map<String, List<BlockLocationDto>> classifyBlockLocationListWithType(List<BlockLocationDto> blockLocationDtoListList);
+
+    Map<String, List<MarkLocationDto>> classifyMarkLocationDtoList(List<MarkLocationDto> markLocationDtoListList);
+
+    Map<String, List<MarkLocationDto>> getMarkLocationList();
+
+    Map<String, List<BlockLocationDto>> getBlockLocationList();
+
+    List<Location> getLocationListWithLocationIds(List<Long> locationIds);
 
     HashSet<MarkLocationView> getMarkLocationListWithType(LocationType type);
 

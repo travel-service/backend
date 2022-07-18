@@ -1,5 +1,6 @@
 package com.trablock.web.entity.plan;
 
+import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.BaseTimeEntity;
 import com.trablock.web.entity.member.Member;
@@ -51,6 +52,7 @@ public class Plan extends BaseTimeEntity {
     private PlanComplete planComplete;
 
     //==비지니스 로직==//
+
     /**
      * 플랜 삭제
      */
@@ -95,6 +97,7 @@ public class Plan extends BaseTimeEntity {
 
     /**
      * Plan Update
+     *
      * @param userPlanUpdateDto
      */
     public void updatePlan(UserPlanUpdateDto userPlanUpdateDto) {
@@ -102,5 +105,14 @@ public class Plan extends BaseTimeEntity {
         this.name = userPlanUpdateDto.getName();
         this.periods = userPlanUpdateDto.getPeriods();
         this.thumbnail = userPlanUpdateDto.getThumbnail();
+    }
+
+    public PlanDto toDto() {
+        return PlanDto.builder()
+                .planId(id)
+                .depart(depart)
+                .name(name)
+                .periods(periods)
+                .build();
     }
 }

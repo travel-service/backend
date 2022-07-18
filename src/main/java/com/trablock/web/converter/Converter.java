@@ -18,7 +18,7 @@ public class Converter {
     @Data
     @AllArgsConstructor
     public static class UserDay<T> {
-        private T dayFom;
+        private T dayForm;
     }
 
     // 메인 디렉터리를 반환하기 위한 클래스

@@ -1,6 +1,7 @@
-package com.trablock.web.dto.location;
+package com.trablock.web.dto.location.type;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.entity.location.Coords;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class LeportsDto {
+public class AttractionDto {
 
     private Long locationId;
     private String name;
@@ -25,11 +26,7 @@ public class LeportsDto {
     private String report;
     private LocationType type;
 
-    private String openPeriod;
     private boolean parking;
-    private String reservation;
     private String restDate;
-    private String fee;
-    private String useTime;
 
 }

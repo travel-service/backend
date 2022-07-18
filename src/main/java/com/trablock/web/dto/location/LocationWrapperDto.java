@@ -1,7 +1,6 @@
 package com.trablock.web.dto.location;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.LocationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;

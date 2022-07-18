@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -32,7 +34,7 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/mark", method = RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> viewMarkLocationsOnMap() {
+    public ResponseEntity<Map<String, List<MarkLocationDto>>> viewMarkLocationsOnMap() {
         return ResponseEntity.ok().body(locationService.getMarkLocationList());
     }
 
@@ -41,7 +43,7 @@ public class LocationController {
      */
     @ResponseBody
     @RequestMapping(value = "/locations/block", method = RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> viewBlockLocationList() {
+    public ResponseEntity<Map<String, List<BlockLocationDto>>> viewBlockLocationList() {
         return ResponseEntity.ok().body(locationService.getBlockLocationList());
     }
 
@@ -64,6 +66,7 @@ public class LocationController {
     public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId) {
         return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }
+
 
     /**
      * MemberLocation과 관련된 문제?
