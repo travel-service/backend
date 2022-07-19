@@ -15,4 +15,5 @@ public class MovingData {
     private String movingTime;
     private String stayTime;
     private String startTime;
+    private String arriveTime;
 }
