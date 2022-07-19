@@ -27,8 +27,9 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     @Override
     @Transactional
-    public void saveUserDirectory(UserDirectory userDirectory) {
-        userDirectoryRepository.save(userDirectory);
+    public Long saveUserDirectory(UserDirectory userDirectory) {
+        UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
+        return userDirectories.getId();
     }
 
     //user 디렉터리 삭제
@@ -51,7 +52,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user directory 생성
     @Override
     @Transactional
-    public void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
+    public Long createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
         Member memberId = planService.getMemberFromPayload(request);
 
@@ -59,6 +60,8 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
 
         if (memberIdForCount >= 6) {
             response.setStatus(512, "디렉터리는 5개 까지만 생성 가능합니다.");
+
+            return null;
         } else {
             UserDirectory userDirectory = UserDirectory.builder()
                     .directoryName(userDirectoryForm.getDirectoryName())
@@ -66,7 +69,9 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
                     .status(Status.UNDELETE)
                     .build();
 
-            saveUserDirectory(userDirectory);
+            UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
+
+            return userDirectories.getId();
         }
     }
 

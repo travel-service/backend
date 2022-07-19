@@ -60,7 +60,7 @@ public class DirectoryController {
 
     //trash directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/directories/{directory-id}")
+    @GetMapping("/directories/trash")
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -119,12 +119,10 @@ public class DirectoryController {
     //user directory 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/directories")
-    public String createUserDirectory(HttpServletRequest request,
+    public Long createUserDirectory(HttpServletRequest request,
                                       @RequestBody UserDirectoryForm userDirectoryForm,
                                       HttpServletResponse response) {
-        userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
-
-        return "redirect:/main-directory";
+        return userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
     }
 
     //user directory 삭제(undelete -> delete)

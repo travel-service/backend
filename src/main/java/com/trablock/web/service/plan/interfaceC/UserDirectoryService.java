@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface UserDirectoryService {
 
-    void saveUserDirectory(UserDirectory userDirectory);
+    Long saveUserDirectory(UserDirectory userDirectory);
 
     void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId);
 
     List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request);
 
-    void createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response);
+    Long createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response);
 
     void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto, Long memberId);
 
