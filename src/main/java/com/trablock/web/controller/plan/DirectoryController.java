@@ -35,7 +35,7 @@ public class DirectoryController {
 
     //main directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/members/plan")
+    @GetMapping("/directories/main")
     public Converter.MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -46,7 +46,7 @@ public class DirectoryController {
 
     //main-user directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/members/directory")
+    @GetMapping("/directories/members")
     public Converter.MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
@@ -60,7 +60,7 @@ public class DirectoryController {
 
     //trash directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/members/trash-directory")
+    @GetMapping("/directories/{directory-id}")
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -72,8 +72,8 @@ public class DirectoryController {
 
     // user directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/member/{userDirectoryId}directory")
-    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("userDirectoryId") UserDirectory userDirectoryId,
+    @GetMapping("/directories/{directory-id}")
+    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("directory-id") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -91,7 +91,7 @@ public class DirectoryController {
 
     //플랜 삭제(main -> trash)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/directory/cancel")
+    @PostMapping("/directories/trash")
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.cancelPlan(stateChangeForm, request);
 
@@ -100,7 +100,7 @@ public class DirectoryController {
 
     //플랜 복구(trash -> main)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/trash-directory/revert")
+    @PostMapping("/directories/main")
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.revertPlan(stateChangeForm, request);
 
@@ -109,7 +109,7 @@ public class DirectoryController {
 
     //플랜 영구 삭제(trash -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/trash-directory/delete")
+    @PostMapping("directories/plans")
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.deletePlan(stateChangeForm, request);
 
@@ -118,7 +118,7 @@ public class DirectoryController {
 
     //user directory 생성
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/directory/create")
+    @PostMapping("/directories")
     public String createUserDirectory(HttpServletRequest request,
                                       @RequestBody UserDirectoryForm userDirectoryForm,
                                       HttpServletResponse response) {
@@ -129,7 +129,7 @@ public class DirectoryController {
 
     //user directory 삭제(undelete -> delete)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/directory/delete")
+    @PostMapping("/directories/members")
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -141,7 +141,7 @@ public class DirectoryController {
 
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/directory/move")
+    @PostMapping("/directories/{directory-id}/plans")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
         planItemService.moveUserPlan(moveDirectoryForm, member.getId());
@@ -151,8 +151,8 @@ public class DirectoryController {
 
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/member/directory-name/{userDirectoryId}/update")
-    public void updateUserDirectoryName(@PathVariable("userDirectoryId") Long id,
+    @PostMapping("/directories/{directory-id}/name")
+    public void updateUserDirectoryName(@PathVariable("directory-id") Long id,
                                         @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
                                         HttpServletRequest request) {
 
