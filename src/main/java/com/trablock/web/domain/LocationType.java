@@ -11,7 +11,7 @@ public enum LocationType {
     FESTIVAL("Festival"),
     LEPORTS("Leports"),
     LODGE("Lodge"),
-    RESTAURANT("restaurant");
+    RESTAURANT("Restaurant");
 
     private String type;
 
