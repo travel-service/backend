@@ -14,13 +14,14 @@ import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
-import jdk.jfr.Frequency;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,29 @@ public class DirectoryController {
         int planCount = planService.countPlan(request); // 플랜 갯수 반환
         return new Converter.MainDirectory(planCount, collect);
     }
+
+
+    //main directory get
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/directories/main/test")
+    public Converter.Test test(HttpServletRequest request) {
+        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
+        List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
+
+        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+
+        List<List<Long>> test = new ArrayList<>();
+
+        for (Plan plan : planDirectoryMain) {
+            List<Long> userDirectoryIds = planItemService.getUserDirectoriesId(plan.getId());
+
+            test.add(userDirectoryIds);
+        }
+
+        return new Converter.Test(planCount, test, collect);
+    }
+
+    //
 
     //main-user directory get
     @ResponseStatus(HttpStatus.OK)
@@ -139,7 +163,7 @@ public class DirectoryController {
 
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/directories/{directory-id}/plans")
+    @PostMapping("/directories/directory/plans")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
         planItemService.moveUserPlan(moveDirectoryForm, member.getId());

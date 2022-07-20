@@ -1,7 +1,6 @@
 package com.trablock.web.repository.plan;
 
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +25,5 @@ public interface UserDirectoryRepository extends JpaRepository<UserDirectory, Lo
 
     @Query("select u from UserDirectory u where u.id = :id")
     UserDirectory findByIdForUserDirectory(@Param("id") Long id);
+
 }

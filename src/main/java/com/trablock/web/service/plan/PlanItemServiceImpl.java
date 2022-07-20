@@ -92,4 +92,9 @@ public class PlanItemServiceImpl implements PlanItemService {
 
         return countPlanList;
     }
+
+    @Override
+    public List<Long> getUserDirectoriesId(Long planId) {
+        return planItemRepository.getUserDirectoriesIdByPlanId(planId);
+    }
 }
