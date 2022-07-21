@@ -130,7 +130,6 @@ public class MemberServiceImpl implements MemberService{
     public ResponseEntity<?> MemberLogout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         Long id = tokenRepository.findByRefreshToken(refreshToken);
-        System.out.println("id = " + id);
 
         tokenRepository.deleteById(id);
         jwtTokenProvider.setHeaderLogoutRefreshToken(response, "");

@@ -75,7 +75,7 @@ public class MemberController {
     }
 
     // 회원 - 로그아웃
-    @RequestMapping("/members/logout")
+    @PostMapping("/members/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         return memberServiceImpl.MemberLogout(request, response);
     }

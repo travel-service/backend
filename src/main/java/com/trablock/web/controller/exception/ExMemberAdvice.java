@@ -40,9 +40,9 @@ public class ExMemberAdvice {
     }
 
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ErrorResult exHandle(Exception e) {
-        return new ErrorResult("EX", "내부 로직 오류");
-    }
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler
+//    public ErrorResult exHandle(Exception e) {
+//        return new ErrorResult("EX", "내부 로직 오류");
+//    }
 }
