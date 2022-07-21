@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,7 +136,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public TypeLocationDto getLocationDetails(Long locationId, LocationType locationType) {
+    public TypeLocationDto getLocationDetails(Long locationId, LocationType locationType) throws NoSuchElementException {
         switch (locationType) {
             case ATTRACTION:
                 return locationRepository.findAttractionByLocationId(locationId);
@@ -150,7 +151,7 @@ public class LocationServiceImpl implements LocationService {
             case RESTAURANT:
                 return locationRepository.findRestaurantByLocationId(locationId);
         }
-        return null; // 예외처리 조금 더 고민해보자
+        throw new NoSuchElementException("해당 타입의 관광지가 없어요!");
     }
 
     @Override
