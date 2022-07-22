@@ -473,5 +473,63 @@ class PlanServiceTest {
 
         //then
         assertEquals(countPlan, 3);
+    }
+
+
+    @Test
+    @DisplayName("휴지통에 있는 플랜 갯수 불러오는 test")
+    public void countTrashPlanTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.MAIN)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        List<Long> planIds = new ArrayList<>();
+
+        planIds.add(plan1.getId());
+        planIds.add(plan2.getId());
+
+        StateChangeForm stateChangeForm = StateChangeForm.builder()
+                .planId(planIds)
+                .build();
+
+        planService.cancelPlan(stateChangeForm, member);
+
+        //when
+        int countTrashPlan = planService.countTrashPlan(member);
+
+        //then
+        assertEquals(countTrashPlan, 2);
      }
+
 }

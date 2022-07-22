@@ -131,13 +131,11 @@ public class PlanServiceImpl implements PlanService {
     /**
      * 휴지통 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    // TODO TEST
-    public int countTrashPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countTrashPlan(Member member) {
         return planRepository.trashPlanCount(member);
     }
 

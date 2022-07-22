@@ -93,10 +93,12 @@ public class DirectoryController {
     @GetMapping("/directories/trash")
     // TODO TEST
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
+        Member member = planService.getMemberFromPayload(request);
+
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        int trashPlanCount = planService.countTrashPlan(request); // 휴지통 플랜 갯수 반환
+        int trashPlanCount = planService.countTrashPlan(member); // 휴지통 플랜 갯수 반환
 
         return new Converter.TrashDirectory(trashPlanCount, collect);
     }
