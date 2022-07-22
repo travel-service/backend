@@ -48,7 +48,6 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    // TODO TEST
     public Member getMemberFromPayload(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String userName = jwtTokenProvider.getUserName(token);
@@ -56,10 +55,9 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    // TODO TEST
-    public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
-        Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
+    public List<Plan> findMainPlanDirectoryMain(Member member) {
+        Member optionalMember = Optional.ofNullable(member).orElseThrow();
+        return planRepository.findPlansByPlanStatus(optionalMember, PlanStatus.MAIN);
     }
 
     @Override

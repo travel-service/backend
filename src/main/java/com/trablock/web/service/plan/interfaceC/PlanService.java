@@ -21,7 +21,7 @@ public interface PlanService {
 
     Plan createPlan(Form form, Member member);
 
-    List<Plan> findMainPlanDirectoryMain(HttpServletRequest request);
+    List<Plan> findMainPlanDirectoryMain(Member member);
 
     List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request);
 

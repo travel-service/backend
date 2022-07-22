@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -133,5 +134,48 @@ class PlanServiceTest {
         assertEquals(onePlanDto.getName(), plan.getName());
      }
 
+    @Test
+    @DisplayName("main 디렉터리 정보 GET test")
+    public void findMainPlanDirectoryMainTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
 
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.MAIN)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        //when
+        List<Plan> mainPlanDirectoryMain = planService.findMainPlanDirectoryMain(member);
+
+        //then
+        assertEquals(mainPlanDirectoryMain.size(), 3);
+    }
 }

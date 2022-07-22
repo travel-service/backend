@@ -38,7 +38,9 @@ public class DirectoryController {
     @GetMapping("/directories/main")
     // TODO TEST
     public Converter.MainDirectory mainPlans(HttpServletRequest request) {
-        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
+        Member member = planService.getMemberFromPayload(request);
+
+        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int planCount = planService.countPlan(request); // 플랜 갯수 반환
@@ -51,7 +53,9 @@ public class DirectoryController {
     @GetMapping("/directories/main/test")
     // TODO TEST
     public Converter.Test test(HttpServletRequest request) {
-        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
+        Member member = planService.getMemberFromPayload(request);
+
+        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
         int planCount = planService.countPlan(request); // 플랜 갯수 반환
