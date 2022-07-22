@@ -141,7 +141,9 @@ public class DirectoryController {
     @PostMapping("/directories/main")
     // TODO TEST
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        planService.revertPlan(stateChangeForm, request);
+        Member member = planService.getMemberFromPayload(request);
+
+        planService.revertPlan(stateChangeForm, member);
 
         return "redirect:/main-directory";
     }

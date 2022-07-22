@@ -90,10 +90,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 복구(trash -> main)
     @Override
     @Transactional
-    // TODO TEST
-    public void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void revertPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.revert();
