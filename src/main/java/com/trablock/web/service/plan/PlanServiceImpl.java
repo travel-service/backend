@@ -30,20 +30,9 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void savePlan(Plan plan) {
         planRepository.save(plan);
-    }
-
-    @Override
-    public PlanDto getOnePlanDto(Long planId, Member member) {
-        return planRepository.findPlanByMember(planId, member).orElseThrow().toDto();
-    }
-
-    @Override
-    public Member getMemberFromPayload(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveAccessToken(request);
-        String userName = jwtTokenProvider.getUserName(token);
-        return memberRepository.findByUserName(userName).orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
@@ -55,12 +44,28 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    // TODO TEST
+    public PlanDto getOnePlanDto(Long planId, Member member) {
+        return planRepository.findPlanByMember(planId, member).orElseThrow().toDto();
+    }
+
+    @Override
+    // TODO TEST
+    public Member getMemberFromPayload(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        String userName = jwtTokenProvider.getUserName(token);
+        return memberRepository.findByUserName(userName).orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Override
+    // TODO TEST
     public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
         return planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
     }
 
     @Override
+    // TODO TEST
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
         return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
@@ -69,6 +74,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 삭제(main -> trash)
     @Override
     @Transactional
+    // TODO TEST
     public void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
 
         Member member = getMemberFromPayload(request);
@@ -83,6 +89,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 완전 삭제(trash -> delete)
     @Override
     @Transactional
+    // TODO TEST
     public void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
 
@@ -95,6 +102,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 복구(trash -> main)
     @Override
     @Transactional
+    // TODO TEST
     public void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
 
@@ -106,6 +114,7 @@ public class PlanServiceImpl implements PlanService {
 
     // 플랜 완성
     @Override
+    // TODO TEST
     public void finishedPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         plan.finished();

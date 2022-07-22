@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface DayRepository extends JpaRepository<Day, Long> {
 
+    // TODO TEST
     @Query("select d from Day d where d.plan = :plan")
     List<Day> findDaysByPlan(@Param("plan") Plan plan);
 

@@ -38,6 +38,41 @@ class PlanServiceTest {
     Member member;
 
     @Test
+    @DisplayName("Plan 저장 테스트")
+    public void savePlan() throws Exception {
+        //given
+        Member initMember = new Member("username", "1234",
+                new MemberProfile("nickname", "bio"),
+                new MemberInfo("19980102", Gender.MALE, "wkdwoo@kakao.com"),
+                new ArrayList<>(), true);
+
+        member = memberRepository.save(initMember);
+
+        //when
+        plan = Plan.builder()
+                .depart("test-depart")
+                .name("test-name")
+                .planComplete(PlanComplete.UNFINISHED)
+                .planStatus(PlanStatus.MAIN)
+                .thumbnail("test-thumbnail")
+                .periods(1)
+                .member(member)
+                .build();
+
+        planService.savePlan(plan);
+
+        //then
+        assertEquals(plan.getPlanStatus(), PlanStatus.MAIN);
+        assertEquals(plan.getMember(), member);
+        assertEquals(plan.getName(), "test-name");
+        assertEquals(plan.getDepart(), "test-depart");
+        assertEquals(plan.getThumbnail(), "test-thumbnail");
+        assertEquals(plan.getPeriods(), 1);
+        assertEquals(plan.getPlanComplete(), PlanComplete.UNFINISHED);
+        assertEquals(plan.getMember().getId(), member.getId());
+    }
+
+    @Test
     @DisplayName("plan 생성 test")
     void createPlan() throws Exception {
         //given

@@ -15,7 +15,6 @@ import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +36,7 @@ public class DirectoryController {
     //main directory get
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/directories/main")
+    // TODO TEST
     public Converter.MainDirectory mainPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -49,6 +49,7 @@ public class DirectoryController {
     //main directory get
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/directories/main/test")
+    // TODO TEST
     public Converter.Test test(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -66,11 +67,11 @@ public class DirectoryController {
         return new Converter.Test(planCount, test, collect);
     }
 
-    //
 
     //main-user directory get
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/directories/members")
+    // TODO TEST
     public Converter.MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
@@ -82,9 +83,11 @@ public class DirectoryController {
         return new Converter.MainUserDirectory(planCount, collect);
     }
 
+
     //trash directory get
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/directories/trash")
+    // TODO TEST
     public Converter.TrashDirectory trashPlans(HttpServletRequest request) {
         List<Plan> planDirectoryMain = planService.findTrashPlanDirectoryMain(request);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
@@ -94,9 +97,11 @@ public class DirectoryController {
         return new Converter.TrashDirectory(trashPlanCount, collect);
     }
 
+
     // user directory get
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/directories/{directory-id}")
+    // TODO TEST
     public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("directory-id") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -113,45 +118,55 @@ public class DirectoryController {
         }
     }
 
+
     //플랜 삭제(main -> trash)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/directories/trash")
+    // TODO TEST
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.cancelPlan(stateChangeForm, request);
 
         return "redirect:/main-directory";
     }
 
+
     //플랜 복구(trash -> main)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/directories/main")
+    // TODO TEST
     public String revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.revertPlan(stateChangeForm, request);
 
         return "redirect:/main-directory";
     }
 
+
     //플랜 영구 삭제(trash -> delete)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("directories/plans")
+    // TODO TEST
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         planService.deletePlan(stateChangeForm, request);
 
         return "redirect:/trash-directory";
     }
 
+
     //user directory 생성
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/directories")
+    // TODO TEST
     public Long createUserDirectory(HttpServletRequest request,
                                       @RequestBody UserDirectoryForm userDirectoryForm,
                                       HttpServletResponse response) {
         return userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
     }
 
+
     //user directory 삭제(undelete -> delete)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/directories/members")
+    // TODO TEST
     public String deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -161,8 +176,10 @@ public class DirectoryController {
         return "redirect:/main-directory";
     }
 
+
     //plan 이동(main 디렉터리 -> user 디렉터리)
     @ResponseStatus(HttpStatus.CREATED)
+    // TODO TEST
     @PostMapping("/directories/directory/plans")
     public String moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -171,8 +188,10 @@ public class DirectoryController {
         return "redirect:/main-directory";
     }
 
+
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
+    // TODO TEST
     @PostMapping("/directories/{directory-id}/name")
     public void updateUserDirectoryName(@PathVariable("directory-id") Long id,
                                         @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
@@ -183,6 +202,8 @@ public class DirectoryController {
         userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
 
+
+    // TODO TEST
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
