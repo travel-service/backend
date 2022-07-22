@@ -15,6 +15,9 @@ import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.PlanService;
+import org.aspectj.lang.annotation.After;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -241,6 +245,67 @@ class PlanServiceTest {
     }
 
     @Test
+    @DisplayName("사용자가 플랜을 휴지통으로 버릴 시 PlanStatus가 MAIN -> TRASH로 update 되지 않는 예외 상황 test")
+    public void cancelPlanExceptionTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.TRASH)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.TRASH)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.DELETE)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        List<Long> planIds1 = new ArrayList<>();
+
+        planIds1.add(plan1.getId());
+        planIds1.add(plan2.getId());
+
+        StateChangeForm stateChangeForm1 = StateChangeForm.builder()
+                .planId(planIds1)
+                .build();
+
+        List<Long> planIds2 = new ArrayList<>();
+
+        planIds2.add(plan3.getId());
+
+        StateChangeForm stateChangeForm2 = StateChangeForm.builder()
+                .planId(planIds2)
+                .build();
+
+        //when
+        assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm1, member));
+
+        assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm2, member));
+    }
+
+    @Test
     @DisplayName("사용자가 플랜을 완전 삭제 시 PlanStatus가 TRASH -> DELETE 로 update 되는지 test")
     public void deletePlanTest() throws Exception {
         //given
@@ -296,7 +361,71 @@ class PlanServiceTest {
          assertEquals(plan1.getPlanStatus(), PlanStatus.DELETE);
          assertEquals(plan2.getPlanStatus(), PlanStatus.DELETE);
          assertEquals(plan3.getPlanStatus(), PlanStatus.MAIN);
-      }
+    }
+
+
+    @Test
+    @DisplayName("사용자가 플랜을 완전 삭제 시 PlanStatus가 TRASH -> DELETE 로 update 되는지 않는 예외 상황 test")
+    public void deletePlanExceptionTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.DELETE)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.DELETE)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        List<Long> planIds1 = new ArrayList<>();
+
+        planIds1.add(plan1.getId());
+        planIds1.add(plan2.getId());
+
+        StateChangeForm stateChangeForm1 = StateChangeForm.builder()
+                .planId(planIds1)
+                .build();
+
+        List<Long> planIds2 = new ArrayList<>();
+
+        planIds2.add(plan3.getId());
+
+        StateChangeForm stateChangeForm2 = StateChangeForm.builder()
+                .planId(planIds2)
+                .build();
+
+
+
+        //when
+        assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm1, member));
+
+        assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm2, member));
+    }
 
     @Test
     @DisplayName("사용자가 플랜을 복구 시 PlanStatus가 TRASH -> MAIN 로 update 되는지 test")
@@ -365,6 +494,66 @@ class PlanServiceTest {
          assertEquals(plan3.getPlanStatus(), PlanStatus.TRASH);
     }
 
+    @Test
+    @DisplayName("사용자가 플랜을 복구 시 PlanStatus가 TRASH -> MAIN 로 update 되지 않는 예외 상황 test")
+    public void revertPlanExceptionTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.MAIN)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.DELETE)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        List<Long> planIds1 = new ArrayList<>();
+        List<Long> planIds2 = new ArrayList<>();
+
+        planIds1.add(plan1.getId());
+        planIds1.add(plan2.getId());
+
+        StateChangeForm stateChangeForm1 = StateChangeForm.builder()
+                .planId(planIds1)
+                .build();
+
+        planIds2.add(plan3.getId());
+
+        StateChangeForm stateChangeForm2 = StateChangeForm.builder()
+                .planId(planIds2)
+                .build();
+
+        //when
+        assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm1, member));
+
+        assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm2, member));
+    }
+
 
     @Test
     @DisplayName("플랜 완성시 PLanComplete status 가 UNFINISHED -> FINISHED 로 변경되는 지 test")
@@ -389,6 +578,31 @@ class PlanServiceTest {
 
         //then
         assertEquals(plan.getPlanComplete(), PlanComplete.FINISHED);
+    }
+
+    @Test
+    @DisplayName("플랜 완성시 PLanComplete status 가 UNFINISHED -> FINISHED 로 변경되지 않는 예외 상황 test")
+    public void finishedPlanExceptionTest() throws Exception {
+        //given
+        Form form = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planComplete(PlanComplete.UNFINISHED)
+                                .planStatus(PlanStatus.MAIN)
+                                .thumbnail("test-thumbnail")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan = planService.createPlan(form, member);
+
+        //when
+        planService.finishedPlan(plan.getId());
+
+        //then
+        assertThrows(IllegalStateException.class, () -> planService.finishedPlan(plan.getId()));
     }
 
     @Test
@@ -555,5 +769,6 @@ class PlanServiceTest {
 
         //then
         assertEquals(returnPlan.getId(), plan.getId());
+        assertThat(returnPlan.getId()).isEqualTo(plan.getId());
     }
 }
