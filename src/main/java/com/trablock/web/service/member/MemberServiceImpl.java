@@ -117,20 +117,24 @@ public class MemberServiceImpl implements MemberService{
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
-        tokenRepository.save(new RefreshToken(refreshToken));
+        tokenRepository.save(RefreshToken.builder().refreshToken(refreshToken).build());
 
         return member.getMemberProfile().getNickName();
     }
 
-    public String MemberLogout(HttpServletRequest request) {
+    /**
+     * 회원 로그아웃
+     * @param request
+     * @return
+     */
+    public ResponseEntity<?> MemberLogout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
-        boolean result = tokenRepository.deleteRefreshToken(refreshToken);
+        Long id = tokenRepository.findByRefreshToken(refreshToken);
 
-        if (result) {
-            return "success";
-        } else {
-            return "Can't find RefreshToken";
-        }
+        tokenRepository.deleteById(id);
+        jwtTokenProvider.setHeaderLogoutRefreshToken(response, "");
+
+        return ResponseEntity.ok().body("Logout Success");
     }
 
     /**
@@ -232,19 +236,6 @@ public class MemberServiceImpl implements MemberService{
     }
 
     /**
-     * 중복 ID 체크
-     * @param userName
-     * @return
-     */
-    public boolean checkValidUserName(String userName) {
-        if (MemberValidation(userName)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 비밀번호 찾기 (임시 비밀번호 발급)
      * @return
      */
@@ -272,6 +263,11 @@ public class MemberServiceImpl implements MemberService{
         return true;
     }
 
+    /**
+     * AccessToken을 이용하여 사용자 정보 유지하기
+     * @param request
+     * @return
+     */
     public ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
 
@@ -290,6 +286,12 @@ public class MemberServiceImpl implements MemberService{
         throw new MemberException("AccessToken 이 없습니다.");
     }
 
+    /**
+     * RefreshToken 으로 AccessToken 재발급 받기
+     * @param request
+     * @param response
+     * @return
+     */
     public ResponseEntity<?> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
@@ -313,6 +315,7 @@ public class MemberServiceImpl implements MemberService{
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
     /**
      * 회원 비밀번호 수정
       */
@@ -337,11 +340,25 @@ public class MemberServiceImpl implements MemberService{
      */
     public boolean MemberValidation(String userName) {
         Optional<Member> member = memberRepository.findByUserName(userName);
-
         if (member.isEmpty()) {
             return true;
         }
         else {
+            return false;
+        }
+    }
+
+    /**
+     * 닉네임 중복 검사
+     * @param nickname
+     * @return boolean
+     */
+    public boolean checkValidNickName(String nickname) {
+        String value = memberRepository.findByNickName(nickname);
+        System.out.println("value = " + value);
+        if (value == null) {
+            return true;
+        } else {
             return false;
         }
     }
