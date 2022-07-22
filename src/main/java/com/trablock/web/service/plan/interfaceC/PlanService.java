@@ -26,7 +26,7 @@ public interface PlanService {
 
     void cancelPlan(StateChangeForm stateChangeForm, Member member);
 
-    void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request);
+    void deletePlan(StateChangeForm stateChangeForm, Member member);
 
     void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
 

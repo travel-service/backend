@@ -70,7 +70,6 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 삭제(main -> trash)
     @Override
     @Transactional
-    // TODO TEST
     public void cancelPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
@@ -81,10 +80,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 완전 삭제(trash -> delete)
     @Override
     @Transactional
-    // TODO TEST
-    public void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void deletePlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.delete();

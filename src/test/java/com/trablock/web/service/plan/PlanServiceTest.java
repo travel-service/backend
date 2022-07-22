@@ -17,6 +17,7 @@ import com.trablock.web.service.plan.interfaceC.PlanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -237,4 +238,62 @@ class PlanServiceTest {
         assertEquals(plan2.getPlanStatus(), PlanStatus.TRASH);
         assertEquals(plan3.getPlanStatus(), PlanStatus.MAIN);
      }
+
+     @Test
+     @DisplayName("사용자가 플랜을 완전 삭제 시 PlanStatus가 TRASH -> DELETE 로 update 되는지 test")
+     public void deletePlanTest() throws Exception {
+         //given
+         Form form1 = Form.builder()
+                 .planForm(
+                         PlanForm.builder()
+                                 .depart("test-depart")
+                                 .name("test-name")
+                                 .planStatus(PlanStatus.MAIN)
+                                 .periods(1)
+                                 .build()
+                 ).build();
+
+         Form form2 = Form.builder()
+                 .planForm(
+                         PlanForm.builder()
+                                 .depart("test-depart")
+                                 .planStatus(PlanStatus.MAIN)
+                                 .name("test-name")
+                                 .periods(1)
+                                 .build()
+                 ).build();
+
+         Form form3 = Form.builder()
+                 .planForm(
+                         PlanForm.builder()
+                                 .depart("test-depart")
+                                 .name("test-name")
+                                 .planStatus(PlanStatus.MAIN)
+                                 .periods(1)
+                                 .build()
+                 ).build();
+
+         Plan plan1 = planService.createPlan(form1, member);
+         Plan plan2 = planService.createPlan(form2, member);
+         Plan plan3 = planService.createPlan(form3, member);
+
+         List<Long> planIds = new ArrayList<>();
+
+         planIds.add(plan1.getId());
+         planIds.add(plan2.getId());
+
+         StateChangeForm stateChangeForm = StateChangeForm.builder()
+                 .planId(planIds)
+                 .build();
+
+         //when
+         planService.cancelPlan(stateChangeForm, member);
+
+         planService.deletePlan(stateChangeForm, member);
+
+         //then
+         assertEquals(plan1.getPlanStatus(), PlanStatus.DELETE);
+         assertEquals(plan2.getPlanStatus(), PlanStatus.DELETE);
+         assertEquals(plan3.getPlanStatus(), PlanStatus.MAIN);
+      }
 }

@@ -152,7 +152,9 @@ public class DirectoryController {
     @PostMapping("directories/plans")
     // TODO TEST
     public String deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        planService.deletePlan(stateChangeForm, request);
+        Member member = planService.getMemberFromPayload(request);
+
+        planService.deletePlan(stateChangeForm, member);
 
         return "redirect:/trash-directory";
     }
