@@ -38,5 +38,5 @@ public interface PlanService {
 
     int countTrashPlan(Member member);
 
-    Plan returnPlan(Long planId, HttpServletRequest request);
+    Plan returnPlan(Long planId, Member member);
 }

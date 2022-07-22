@@ -124,7 +124,9 @@ public class PlanController {
     // TODO TEST
     @GetMapping("/members/plan/{planId}/selected-location")
     public void usersSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        Plan plan = planService.returnPlan(planId, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
+        Member member = planService.getMemberFromPayload(request);
+
+        Plan plan = planService.returnPlan(planId, member); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
         List<Long> locationIdList = selectedLocationService.findLocationIdList(plan); // LocationId 리스트 형태로 반환
     }
 

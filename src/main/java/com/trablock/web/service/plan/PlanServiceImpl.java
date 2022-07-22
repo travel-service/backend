@@ -143,13 +143,11 @@ public class PlanServiceImpl implements PlanService {
      * SelectedLocation의 locationId를 불러오기 위한 Plan 객체 가져오기
      *
      * @param planId
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    // TODO TEST
-    public Plan returnPlan(Long planId, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public Plan returnPlan(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow();
     }
 }

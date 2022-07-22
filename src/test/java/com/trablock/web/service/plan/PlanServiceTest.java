@@ -530,6 +530,30 @@ class PlanServiceTest {
 
         //then
         assertEquals(countTrashPlan, 2);
-     }
+    }
 
+    @Test
+    @DisplayName("SelectedLocation의 locationId를 불러오기 위한 Plan 객체 가져오는 test")
+    public void returnPlanTest() throws Exception {
+        //given
+        Form form = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planComplete(PlanComplete.UNFINISHED)
+                                .planStatus(PlanStatus.MAIN)
+                                .thumbnail("test-thumbnail")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan = planService.createPlan(form, member);
+
+        //when
+        Plan returnPlan = planService.returnPlan(plan.getId(), member);
+
+        //then
+        assertEquals(returnPlan.getId(), plan.getId());
+    }
 }
