@@ -50,4 +50,5 @@ public interface LocationService {
 
     HashSet<BlockLocationView> getBlockLocationListWithType(LocationType type);
 
+    MemberLocationListDto getMemberLocationList(Long memberId);
 }

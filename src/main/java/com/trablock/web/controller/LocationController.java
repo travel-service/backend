@@ -1,9 +1,7 @@
 package com.trablock.web.controller;
 
-import com.trablock.web.dto.location.BlockLocationDto;
-import com.trablock.web.dto.location.LocationTypeDto;
-import com.trablock.web.dto.location.LocationWrapperDto;
-import com.trablock.web.dto.location.MarkLocationDto;
+import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import java.util.Map;
 public class LocationController {
 
     private final LocationService locationService;
+    private final JwtTokenService jwtTokenService;
 
     /**
      * 로케이션의 details를 반환
@@ -36,6 +36,12 @@ public class LocationController {
     @GetMapping("/locations/mark")
     public ResponseEntity<Map<String, List<MarkLocationDto>>> viewMarkLocationsOnMap() {
         return ResponseEntity.ok().body(locationService.getMarkLocationList());
+    }
+
+    @GetMapping("locations/member")
+    public ResponseEntity<MemberLocationListDto> viewMemberLocations(HttpServletRequest request) {
+        Long memberId = jwtTokenService.TokenToUserId(request);
+        return ResponseEntity.ok().body(locationService.getMemberLocationList(memberId));
     }
 
     /**
@@ -56,12 +62,11 @@ public class LocationController {
         return new ResponseEntity<Long>(locationService.createLocationByMember(wrapperDto), HttpStatus.CREATED);
     }
 
-
     /**
      * 멤버 로케이션 삭제.
      * 로케이션 정보는 남겨두고 MemberLocation만 삭제하도록 하였다.
      */
-    @RequestMapping(value = "/locations/member/{locationId}", method = RequestMethod.DELETE)
+    @DeleteMapping("/locations/member/{locationId}")
     public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId) {
         return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }

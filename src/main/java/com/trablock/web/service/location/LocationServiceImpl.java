@@ -176,4 +176,10 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationView.class);
     }
 
+    @Override
+    public MemberLocationListDto getMemberLocationList(Long memberId) {
+        List<Location> locations = locationRepository.findLocationsByMemberId(memberId);
+        return new MemberLocationListDto(getMarkLocationListFromLocationList(locations),
+                getBlockLocationListFromLocationList(locations));
+    }
 }

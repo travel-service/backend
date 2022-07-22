@@ -69,6 +69,30 @@ class LocationRepositoryCustomTest {
 
         assertThat(memberLocation.getId()).isNotNull();
 
+        Location location2 = locationRepository.save(Location.builder()
+                .name("test2")
+                .areaCode(123)
+                .address1("경기도 수원시 권선구")
+                .address2("권선대로 694")
+                .image("url:GBSG/1244")
+                .coords(Coords.builder()
+                        .latitude(37.153).longitude(127.123).build()
+                )
+                .isMember(true)
+                .type(LocationType.RESTAURANT)
+                .build());
+
+        assertThat(location2.getId()).isNotNull();
+
+        MemberLocation memberLocation2 = memberLocationRepository.save(MemberLocation.builder()
+                .locationId(location.getId())
+                .member(member)
+                .memberId(member.getId())
+                .isPublic(true)
+                .build());
+
+        assertThat(memberLocation2.getId()).isNotNull();
+
         //when
         List<Location> locationsByMemberId = locationRepository.findLocationsByMemberId(member.getId());
 
@@ -76,11 +100,7 @@ class LocationRepositoryCustomTest {
 
         //then
         assertThat(locationsByMemberId.isEmpty()).isFalse();
-        for (Location locInList : locationsByMemberId) {
-            assertThat(locInList.getIsMember()).isTrue();
-            System.out.println("locInList = " + locInList);
-        }
-
+        locationsByMemberId.forEach(locInList -> assertThat(locInList.getIsMember()).isTrue());
+        assertThat(locationsByMemberId.size()).isEqualTo(2);
     }
-
 }
