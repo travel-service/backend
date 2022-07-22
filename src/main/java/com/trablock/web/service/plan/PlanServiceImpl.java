@@ -48,8 +48,8 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional
-    public Plan createPlan(Form form, HttpServletRequest request) {
-        Plan plan = form.getPlanForm().toEntity(getMemberFromPayload(request));
+    public Plan createPlan(Form form, Member member) {
+        Plan plan = form.getPlanForm().toEntity(member);
         savePlan(plan);
         return plan;
     }

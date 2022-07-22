@@ -19,7 +19,7 @@ public interface PlanService {
 
     Member getMemberFromPayload(HttpServletRequest request);
 
-    Plan createPlan(Form form, HttpServletRequest request);
+    Plan createPlan(Form form, Member member);
 
     List<Plan> findMainPlanDirectoryMain(HttpServletRequest request);
 

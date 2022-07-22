@@ -37,7 +37,9 @@ public class PlanController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
     public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
-        return planService.createPlan(form, request).getId();
+        Member member = planService.getMemberFromPayload(request);
+
+        return planService.createPlan(form, member).getId();
     }
 
     //plan 정보 불러오기 - PlanForm
