@@ -113,8 +113,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     // TODO TEST
-    public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
-        Member member = getMemberFromPayload(request);
+    public void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto) {
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
     }

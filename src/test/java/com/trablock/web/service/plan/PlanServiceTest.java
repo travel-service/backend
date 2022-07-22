@@ -4,6 +4,7 @@ import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.PlanForm;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
+import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Gender;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.member.MemberInfo;
@@ -389,4 +390,43 @@ class PlanServiceTest {
         //then
         assertEquals(plan.getPlanComplete(), PlanComplete.FINISHED);
      }
+
+     @Test
+     @DisplayName("플랜 수정 test")
+     public void updateUserPlanContentTest() throws Exception {
+         //given
+         Form form = Form.builder()
+                 .planForm(
+                         PlanForm.builder()
+                                 .depart("test-depart")
+                                 .name("test-name")
+                                 .planComplete(PlanComplete.UNFINISHED)
+                                 .planStatus(PlanStatus.MAIN)
+                                 .thumbnail("test-thumbnail")
+                                 .periods(1)
+                                 .build()
+                 ).build();
+
+         Plan plan = planService.createPlan(form, member);
+
+         //when
+
+         UserPlanUpdateDto userPlanUpdateDto = UserPlanUpdateDto.builder()
+                 .depart("depart-update")
+                 .name("name-update")
+                 .periods(2)
+                 .thumbnail("thumbnail-update")
+                 .build();
+
+         planService.updateUserPlanContent(plan.getId(), member, userPlanUpdateDto);
+
+         //then
+         assertEquals(plan.getDepart(), "depart-update");
+         assertEquals(plan.getName(), "name-update");
+         assertEquals(plan.getPeriods(), 2);
+         assertEquals(plan.getThumbnail(), "thumbnail-update");
+         assertEquals(plan.getPlanStatus(), PlanStatus.MAIN);
+         assertEquals(plan.getPlanComplete(), PlanComplete.UNFINISHED);
+         assertEquals(plan.getConcepts(), null);
+      }
 }

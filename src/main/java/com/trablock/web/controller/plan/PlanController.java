@@ -136,7 +136,10 @@ public class PlanController {
     public void updateUserPlan(@PathVariable("planId") Long planId,
                                HttpServletRequest request,
                                @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
-        planService.updateUserPlanContent(planId, request, userPlanUpdateDto);
+
+        Member member = planService.getMemberFromPayload(request);
+
+        planService.updateUserPlanContent(planId, member, userPlanUpdateDto);
     }
 
 

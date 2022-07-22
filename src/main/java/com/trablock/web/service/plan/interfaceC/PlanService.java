@@ -32,7 +32,7 @@ public interface PlanService {
 
     void finishedPlan(Long planId);
 
-    void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto);
+    void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto);
 
     int countPlan(HttpServletRequest request);
 
