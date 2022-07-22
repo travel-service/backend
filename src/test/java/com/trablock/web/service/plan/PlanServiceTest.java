@@ -389,44 +389,89 @@ class PlanServiceTest {
 
         //then
         assertEquals(plan.getPlanComplete(), PlanComplete.FINISHED);
+    }
+
+    @Test
+    @DisplayName("플랜 수정 test")
+    public void updateUserPlanContentTest() throws Exception {
+        //given
+        Form form = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planComplete(PlanComplete.UNFINISHED)
+                                .planStatus(PlanStatus.MAIN)
+                                .thumbnail("test-thumbnail")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan = planService.createPlan(form, member);
+
+        //when
+
+        UserPlanUpdateDto userPlanUpdateDto = UserPlanUpdateDto.builder()
+                .depart("depart-update")
+                .name("name-update")
+                .periods(2)
+                .thumbnail("thumbnail-update")
+                .build();
+
+        planService.updateUserPlanContent(plan.getId(), member, userPlanUpdateDto);
+
+        //then
+        assertEquals(plan.getDepart(), "depart-update");
+        assertEquals(plan.getName(), "name-update");
+        assertEquals(plan.getPeriods(), 2);
+        assertEquals(plan.getThumbnail(), "thumbnail-update");
+        assertEquals(plan.getPlanStatus(), PlanStatus.MAIN);
+        assertEquals(plan.getPlanComplete(), PlanComplete.UNFINISHED);
+        assertEquals(plan.getConcepts(), null);
+    }
+
+    @Test
+    @DisplayName("사용자가 만든 플랜 갯수 불러오는 test")
+    public void countPlanTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.MAIN)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        planService.createPlan(form1, member);
+        planService.createPlan(form2, member);
+        planService.createPlan(form3, member);
+
+        //when
+        int countPlan = planService.countPlan(member);
+
+        //then
+        assertEquals(countPlan, 3);
      }
-
-     @Test
-     @DisplayName("플랜 수정 test")
-     public void updateUserPlanContentTest() throws Exception {
-         //given
-         Form form = Form.builder()
-                 .planForm(
-                         PlanForm.builder()
-                                 .depart("test-depart")
-                                 .name("test-name")
-                                 .planComplete(PlanComplete.UNFINISHED)
-                                 .planStatus(PlanStatus.MAIN)
-                                 .thumbnail("test-thumbnail")
-                                 .periods(1)
-                                 .build()
-                 ).build();
-
-         Plan plan = planService.createPlan(form, member);
-
-         //when
-
-         UserPlanUpdateDto userPlanUpdateDto = UserPlanUpdateDto.builder()
-                 .depart("depart-update")
-                 .name("name-update")
-                 .periods(2)
-                 .thumbnail("thumbnail-update")
-                 .build();
-
-         planService.updateUserPlanContent(plan.getId(), member, userPlanUpdateDto);
-
-         //then
-         assertEquals(plan.getDepart(), "depart-update");
-         assertEquals(plan.getName(), "name-update");
-         assertEquals(plan.getPeriods(), 2);
-         assertEquals(plan.getThumbnail(), "thumbnail-update");
-         assertEquals(plan.getPlanStatus(), PlanStatus.MAIN);
-         assertEquals(plan.getPlanComplete(), PlanComplete.UNFINISHED);
-         assertEquals(plan.getConcepts(), null);
-      }
 }

@@ -112,7 +112,6 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     @Transactional
-    // TODO TEST
     public void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto) {
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
@@ -121,13 +120,11 @@ public class PlanServiceImpl implements PlanService {
     /**
      * 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    // TODO TEST
-    public int countPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countPlan(Member member) {
         return planRepository.planCount(member);
     }
 

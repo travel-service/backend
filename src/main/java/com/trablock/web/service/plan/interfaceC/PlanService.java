@@ -34,7 +34,7 @@ public interface PlanService {
 
     void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto);
 
-    int countPlan(HttpServletRequest request);
+    int countPlan(Member member);
 
     int countTrashPlan(HttpServletRequest request);
 

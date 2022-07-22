@@ -43,7 +43,7 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+        int planCount = planService.countPlan(member); // 플랜 갯수 반환
         return new Converter.MainDirectory(planCount, collect);
     }
 
@@ -58,7 +58,7 @@ public class DirectoryController {
         List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
         List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
 
-        int planCount = planService.countPlan(request); // 플랜 갯수 반환
+        int planCount = planService.countPlan(member); // 플랜 갯수 반환
 
         List<List<Long>> test = new ArrayList<>();
 
