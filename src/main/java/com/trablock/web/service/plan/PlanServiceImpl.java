@@ -99,7 +99,6 @@ public class PlanServiceImpl implements PlanService {
 
     // 플랜 완성
     @Override
-    // TODO TEST
     public void finishedPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         plan.finished();

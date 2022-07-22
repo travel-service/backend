@@ -362,5 +362,31 @@ class PlanServiceTest {
          assertEquals(plan1.getPlanStatus(), PlanStatus.MAIN);
          assertEquals(plan2.getPlanStatus(), PlanStatus.MAIN);
          assertEquals(plan3.getPlanStatus(), PlanStatus.TRASH);
-      }
+    }
+
+
+    @Test
+    @DisplayName("플랜 완성시 PLanComplete status 가 UNFINISHED -> FINISHED 로 변경되는 지 test")
+    public void finishedPlanTest() throws Exception {
+        //given
+        Form form = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planComplete(PlanComplete.UNFINISHED)
+                                .planStatus(PlanStatus.MAIN)
+                                .thumbnail("test-thumbnail")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan = planService.createPlan(form, member);
+
+        //when
+        planService.finishedPlan(plan.getId());
+
+        //then
+        assertEquals(plan.getPlanComplete(), PlanComplete.FINISHED);
+     }
 }
