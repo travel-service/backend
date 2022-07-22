@@ -47,7 +47,9 @@ public class PlanController {
     // TODO TEST
     @GetMapping("/members/plan/{planId}")
     public UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        PlanDto planDto = planService.getOnePlanDto(planId, planService.getMemberFromPayload(request));
+        Member member = planService.getMemberFromPayload(request);
+
+        PlanDto planDto = planService.getOnePlanDto(planId, member);
         return new UserPlan(planDto);
     }
 

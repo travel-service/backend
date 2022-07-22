@@ -30,7 +30,6 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional
-    // TODO TEST
     public void savePlan(Plan plan) {
         planRepository.save(plan);
     }
@@ -44,7 +43,6 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    // TODO TEST
     public PlanDto getOnePlanDto(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow().toDto();
     }
@@ -128,6 +126,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
         Member member = getMemberFromPayload(request);
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
@@ -141,6 +140,7 @@ public class PlanServiceImpl implements PlanService {
      * @return
      */
     @Override
+    // TODO TEST
     public int countPlan(HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
         return planRepository.planCount(member);
@@ -153,6 +153,7 @@ public class PlanServiceImpl implements PlanService {
      * @return
      */
     @Override
+    // TODO TEST
     public int countTrashPlan(HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
         return planRepository.trashPlanCount(member);
@@ -166,6 +167,7 @@ public class PlanServiceImpl implements PlanService {
      * @return
      */
     @Override
+    // TODO TEST
     public Plan returnPlan(Long planId, HttpServletRequest request) {
         Member member = getMemberFromPayload(request);
         return planRepository.findPlanByMember(planId, member).orElseThrow();
