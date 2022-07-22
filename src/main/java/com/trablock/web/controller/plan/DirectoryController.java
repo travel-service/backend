@@ -128,7 +128,9 @@ public class DirectoryController {
     @PostMapping("/directories/trash")
     // TODO TEST
     public String cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
-        planService.cancelPlan(stateChangeForm, request);
+        Member member = planService.getMemberFromPayload(request);
+
+        planService.cancelPlan(stateChangeForm, member);
 
         return "redirect:/main-directory";
     }

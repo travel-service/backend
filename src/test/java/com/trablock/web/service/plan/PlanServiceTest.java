@@ -2,6 +2,7 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.PlanForm;
+import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.entity.member.Gender;
 import com.trablock.web.entity.member.Member;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class PlanServiceTest {
 
     @Autowired
@@ -168,9 +171,9 @@ class PlanServiceTest {
                                 .build()
                 ).build();
 
-        Plan plan1 = planService.createPlan(form1, member);
-        Plan plan2 = planService.createPlan(form2, member);
-        Plan plan3 = planService.createPlan(form3, member);
+        planService.createPlan(form1, member);
+        planService.createPlan(form2, member);
+        planService.createPlan(form3, member);
 
         //when
         List<Plan> mainPlanDirectoryMain = planService.findMainPlanDirectoryMain(member);
@@ -178,4 +181,60 @@ class PlanServiceTest {
         //then
         assertEquals(mainPlanDirectoryMain.size(), 3);
     }
+
+    @Test
+    @DisplayName("사용자가 플랜을 휴지통으로 버릴 시 PlanStatus가 MAIN -> TRASH로 update 되는지 test")
+    public void cancelPlanTest() throws Exception {
+        //given
+        Form form1 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form2 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .planStatus(PlanStatus.MAIN)
+                                .name("test-name")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Form form3 = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planStatus(PlanStatus.MAIN)
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan1 = planService.createPlan(form1, member);
+        Plan plan2 = planService.createPlan(form2, member);
+        Plan plan3 = planService.createPlan(form3, member);
+
+        List<Long> planIds = new ArrayList<>();
+
+        planIds.add(plan1.getId());
+        planIds.add(plan2.getId());
+
+        StateChangeForm stateChangeForm = StateChangeForm.builder()
+                .planId(planIds)
+                .build();
+
+        //when
+        planService.cancelPlan(stateChangeForm, member);
+
+        //then
+        assertEquals(plan1.getPlanStatus(), PlanStatus.TRASH);
+        assertEquals(plan2.getPlanStatus(), PlanStatus.TRASH);
+        assertEquals(plan3.getPlanStatus(), PlanStatus.MAIN);
+     }
 }

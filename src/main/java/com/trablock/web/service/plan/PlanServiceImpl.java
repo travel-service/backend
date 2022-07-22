@@ -71,14 +71,10 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     // TODO TEST
-    public void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-
-        Member member = getMemberFromPayload(request);
-
+    public void cancelPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.trash();
-
         }
     }
 

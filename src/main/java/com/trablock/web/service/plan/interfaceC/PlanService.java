@@ -9,7 +9,6 @@ import com.trablock.web.entity.plan.Plan;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 public interface PlanService {
 
@@ -25,7 +24,7 @@ public interface PlanService {
 
     List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request);
 
-    void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
+    void cancelPlan(StateChangeForm stateChangeForm, Member member);
 
     void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request);
 
