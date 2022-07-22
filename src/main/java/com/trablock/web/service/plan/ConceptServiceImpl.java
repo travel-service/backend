@@ -24,12 +24,14 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void saveConcept(Concept concept) {
         conceptRepository.save(concept);
     }
 
     @Override
     @Transactional
+    // TODO TEST
     public void createConcept(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
@@ -48,6 +50,7 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
+    // TODO TEST
     public List<String> findConceptIdForPlanIdToList(Long planId) {
         return conceptRepository.findConceptNameByPlanId(planId);
     }
@@ -61,6 +64,7 @@ public class ConceptServiceImpl implements ConceptService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void updateConcept(Long planId, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
@@ -75,6 +79,7 @@ public class ConceptServiceImpl implements ConceptService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void removeConcept(Plan plan) {
         List<Concept> conceptList = conceptRepository.findConceptByPlan(plan);
 

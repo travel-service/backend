@@ -27,6 +27,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     @Override
     @Transactional
+    // TODO TEST
     public Long saveUserDirectory(UserDirectory userDirectory) {
         UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
         return userDirectories.getId();
@@ -35,6 +36,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user 디렉터리 삭제
     @Override
     @Transactional
+    // TODO TEST
     public void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
             UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(i), memberId);
@@ -44,6 +46,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     //user directory GET 요청
     @Override
+    // TODO TEST
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
         Member memberId = planService.getMemberFromPayload(request);
         return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
@@ -52,6 +55,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     //user directory 생성
     @Override
     @Transactional
+    // TODO TEST
     public Long createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
 
         Member memberId = planService.getMemberFromPayload(request);
@@ -78,6 +82,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     // user directory 이름 변경
     @Override
     @Transactional
+    // TODO TEST
     public void updateDirectoryName(Long id,
                                     DirectoryNameUpdateDto directoryNameUpdateDto,
                                     Long memberId) {
@@ -92,6 +97,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
      * @return
      */
     @Override
+    // TODO TEST
     public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
 
         Member member = planService.getMemberFromPayload(request);

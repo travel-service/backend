@@ -52,7 +52,7 @@ class PlanRepositoryTest {
     }
 
     @Test
-    @DisplayName("Plan 생성 테스트")
+    @DisplayName("Plan 저장 테스트")
     void save() throws Exception {
         //given
 

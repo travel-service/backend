@@ -30,6 +30,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void savePlanItem(PlanItem planItem) {
         planItemRepository.save(planItem);
     }
@@ -37,6 +38,7 @@ public class PlanItemServiceImpl implements PlanItemService {
     //유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
     @Override
     @Transactional
+    // TODO TEST
     public void moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
 
         UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
@@ -60,6 +62,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void deleteMapping(UserDirectoryForm userDirectoryForm) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
             List<PlanItem> planItemByUserDirectoryId = planItemRepository.findPlanItemByUserDirectoryId(userDirectoryForm.getUserDirectoryId().get(i));
@@ -70,6 +73,7 @@ public class PlanItemServiceImpl implements PlanItemService {
     }
 
     @Override
+    // TODO TEST
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
         return planItemRepository.findPlanItemByPI(id);
     }
@@ -81,6 +85,7 @@ public class PlanItemServiceImpl implements PlanItemService {
      * @return
      */
     @Override
+    // TODO TEST
     public List<Integer> countPlan(List<UserDirectory> userDirectories) {
         List<Integer> countPlanList = new ArrayList<>();
 
@@ -91,5 +96,11 @@ public class PlanItemServiceImpl implements PlanItemService {
         }
 
         return countPlanList;
+    }
+
+    @Override
+    // TODO TEST
+    public List<Long> getUserDirectoriesId(Long planId) {
+        return planItemRepository.getUserDirectoriesIdByPlanId(planId);
     }
 }

@@ -37,6 +37,14 @@ public class Converter {
         private T mainUserDirectory;
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class Test<T> {
+        private int planCount;
+        private List<List<Long>> test;
+        private T mainUserDirectory;
+    }
+
     // trash 디렉터리를 반환하기 위한 클래스
     @Data
     @AllArgsConstructor

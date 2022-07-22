@@ -35,6 +35,14 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    @Transactional
+    public Plan createPlan(Form form, Member member) {
+        Plan plan = form.getPlanForm().toEntity(member);
+        savePlan(plan);
+        return plan;
+    }
+
+    @Override
     public PlanDto getOnePlanDto(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow().toDto();
     }
@@ -47,20 +55,13 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    @Transactional
-    public Plan createPlan(Form form, HttpServletRequest request) {
-        Plan plan = form.getPlanForm().toEntity(getMemberFromPayload(request));
-        savePlan(plan);
-        return plan;
+    public List<Plan> findMainPlanDirectoryMain(Member member) {
+        Member optionalMember = Optional.ofNullable(member).orElseThrow();
+        return planRepository.findPlansByPlanStatus(optionalMember, PlanStatus.MAIN);
     }
 
     @Override
-    public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
-        Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
-    }
-
-    @Override
+    // TODO TEST
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
         return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
@@ -69,23 +70,17 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 삭제(main -> trash)
     @Override
     @Transactional
-    public void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-
-        Member member = getMemberFromPayload(request);
-
+    public void cancelPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.trash();
-
         }
     }
 
     // 플랜 완전 삭제(trash -> delete)
     @Override
     @Transactional
-    public void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void deletePlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.delete();
@@ -95,9 +90,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 복구(trash -> main)
     @Override
     @Transactional
-    public void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void revertPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.revert();
@@ -119,8 +112,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     @Transactional
-    public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
-        Member member = getMemberFromPayload(request);
+    public void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto) {
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
     }
@@ -128,24 +120,22 @@ public class PlanServiceImpl implements PlanService {
     /**
      * 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public int countPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countPlan(Member member) {
         return planRepository.planCount(member);
     }
 
     /**
      * 휴지통 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public int countTrashPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countTrashPlan(Member member) {
         return planRepository.trashPlanCount(member);
     }
 
@@ -153,12 +143,11 @@ public class PlanServiceImpl implements PlanService {
      * SelectedLocation의 locationId를 불러오기 위한 Plan 객체 가져오기
      *
      * @param planId
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public Plan returnPlan(Long planId, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public Plan returnPlan(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow();
     }
 }

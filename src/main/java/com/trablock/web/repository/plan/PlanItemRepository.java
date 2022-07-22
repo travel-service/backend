@@ -11,16 +11,25 @@ import java.util.List;
 
 public interface PlanItemRepository extends JpaRepository<PlanItem, Long> {
 
+    // TODO TEST
     List<PlanItem> findPlanItemByUserDirectoryId(Long id);
 
+    // TODO TEST
     @Query("select pi.plan from PlanItem pi where pi.userDirectory = :userDirectoryId")
     List<Plan> findPlanItemByPI(@Param("userDirectoryId") UserDirectory id);
 
+    // TODO TEST
     @Query("select count(pi) from PlanItem pi where pi.userDirectory = :userDirectoryId")
     Integer countPlan (@Param("userDirectoryId") UserDirectory id);
 
+    // TODO TEST
     PlanItem findPlanItemById(Long id);
 
+    // TODO TEST
     @Query("select pi from PlanItem pi where pi.userDirectory = :userDirectoryId")
     List<PlanItem> findPlanItemByUDID(@Param("userDirectoryId") Long id);
+
+    // TODO TEST
+    @Query("select pi.userDirectory.id from PlanItem pi where pi.plan.id = :planId")
+    List<Long> getUserDirectoriesIdByPlanId(@Param("planId") Long planId);
 }

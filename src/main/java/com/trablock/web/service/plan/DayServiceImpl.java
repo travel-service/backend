@@ -31,12 +31,14 @@ public class DayServiceImpl implements DayService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void saveDay(Day day) {
         dayRepository.save(day);
     }
 
     @Override
     @Transactional
+    // TODO TEST
     public void createDay(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         planService.finishedPlan(planId);
@@ -71,6 +73,7 @@ public class DayServiceImpl implements DayService {
      * @return
      */
     @Override
+    // TODO TEST
     public List<Day> findDayIdForPlanIdToList(Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         return dayRepository.findDaysByPlan(plan);
@@ -85,6 +88,7 @@ public class DayServiceImpl implements DayService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void updateDay(Long planId, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeDay(plan);
@@ -98,6 +102,7 @@ public class DayServiceImpl implements DayService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void removeDay(Plan plan) {
         List<Day> dayList = dayRepository.findDaysByPlan(plan);
         if (!dayList.isEmpty())

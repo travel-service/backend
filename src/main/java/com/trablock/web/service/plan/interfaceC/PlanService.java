@@ -9,7 +9,6 @@ import com.trablock.web.entity.plan.Plan;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 public interface PlanService {
 
@@ -19,25 +18,25 @@ public interface PlanService {
 
     Member getMemberFromPayload(HttpServletRequest request);
 
-    Plan createPlan(Form form, HttpServletRequest request);
+    Plan createPlan(Form form, Member member);
 
-    List<Plan> findMainPlanDirectoryMain(HttpServletRequest request);
+    List<Plan> findMainPlanDirectoryMain(Member member);
 
     List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request);
 
-    void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
+    void cancelPlan(StateChangeForm stateChangeForm, Member member);
 
-    void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request);
+    void deletePlan(StateChangeForm stateChangeForm, Member member);
 
-    void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request);
+    void revertPlan(StateChangeForm stateChangeForm, Member member);
 
     void finishedPlan(Long planId);
 
-    void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto);
+    void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto);
 
-    int countPlan(HttpServletRequest request);
+    int countPlan(Member member);
 
-    int countTrashPlan(HttpServletRequest request);
+    int countTrashPlan(Member member);
 
-    Plan returnPlan(Long planId, HttpServletRequest request);
+    Plan returnPlan(Long planId, Member member);
 }

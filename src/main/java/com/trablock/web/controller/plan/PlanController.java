@@ -37,17 +37,25 @@ public class PlanController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
     public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
-        return planService.createPlan(form, request).getId();
+        Member member = planService.getMemberFromPayload(request);
+
+        return planService.createPlan(form, member).getId();
     }
 
+
     //plan 정보 불러오기 - PlanForm
+    // TODO TEST
     @GetMapping("/members/plan/{planId}")
     public UserPlan getUserPlans(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        PlanDto planDto = planService.getOnePlanDto(planId, planService.getMemberFromPayload(request));
+        Member member = planService.getMemberFromPayload(request);
+
+        PlanDto planDto = planService.getOnePlanDto(planId, member);
         return new UserPlan(planDto);
     }
 
+
     // concept 업데이트
+    // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/concept")
     public void updateUserPlanConcept(@PathVariable("planId") Long planId,
@@ -56,8 +64,10 @@ public class PlanController {
         conceptService.updateConcept(planId, request, form);
     }
 
+
     // concept 정보 불러오기 - ConceptForm
     @GetMapping("/members/plan/{planId}/concept")
+    // TODO TEST
     public ResponseEntity<?> usersConcepts(@PathVariable("planId") Long planId, HttpServletRequest request) {
         Member memberFromPayload = planService.getMemberFromPayload(request);
 
@@ -73,14 +83,18 @@ public class PlanController {
         }
     }
 
+
     //Day 생성
+    // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/day")
     public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable("planId") Long planId) {
         dayService.createDay(form, request, planId);
     }
 
+
     //Day 정보 불러오기 - dayForm
+    // TODO TEST
     @GetMapping("/members/plan/{planId}/day")
     public UserDay getDaysInPlan(@PathVariable("planId") Long planId, HttpServletRequest request) {
         Member memberFromPayload = planService.getMemberFromPayload(request);
@@ -94,7 +108,9 @@ public class PlanController {
         }
     }
 
-    // day 수정
+
+    // Day 수정
+    // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/day")
     public void updateUserPlanDay(@PathVariable("planId") Long planId,
@@ -103,23 +119,34 @@ public class PlanController {
         dayService.updateDay(planId, request, form);
     }
 
-    // selectedLocation 정보 불러오기
+
+    // SelectedLocation 정보 불러오기
+    // TODO TEST
     @GetMapping("/members/plan/{planId}/selected-location")
     public void usersSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request) {
-        Plan plan = planService.returnPlan(planId, request); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
+        Member member = planService.getMemberFromPayload(request);
+
+        Plan plan = planService.returnPlan(planId, member); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
         List<Long> locationIdList = selectedLocationService.findLocationIdList(plan); // LocationId 리스트 형태로 반환
     }
 
-    // plan update
+
+    // Plan update
+    // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}")
     public void updateUserPlan(@PathVariable("planId") Long planId,
                                HttpServletRequest request,
                                @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
-        planService.updateUserPlanContent(planId, request, userPlanUpdateDto);
+
+        Member member = planService.getMemberFromPayload(request);
+
+        planService.updateUserPlanContent(planId, member, userPlanUpdateDto);
     }
 
-    // selectedLocation 수정
+
+    // SelectedLocation 수정
+    // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/selected-location")
     public void updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
@@ -127,5 +154,4 @@ public class PlanController {
                                                @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(planId, request, form);
     }
-
 }

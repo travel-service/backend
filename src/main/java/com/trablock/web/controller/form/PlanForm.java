@@ -4,9 +4,12 @@ import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class PlanForm {
 
     private String depart;

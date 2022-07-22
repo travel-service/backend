@@ -12,21 +12,27 @@ import java.util.Optional;
 
 public interface PlanRepository extends JpaRepository<Plan, Long> {
 
+    // TODO TEST
     @Query("select p from Plan p where p.member = :member")
     List<Plan> findPlansByMember(@Param("member") Member member);
 
+    // TODO TEST
     @Query("select p from Plan p where p.id = :planId")
     Optional<Plan> findPlanById(@Param("planId") Long planId);
 
+    // TODO TEST
     @Query("select p from Plan p where p.id = :planId and p.member = :member")
     Optional<Plan> findPlanByMember(@Param("planId") Long planId, @Param("member") Member member);
 
+    // TODO TEST
     @Query("select p from Plan p where p.member = :member and p.planStatus =:status")
     List<Plan> findPlansByPlanStatus(@Param("member") Member member, @Param("status") PlanStatus status);
 
+    // TODO TEST
     @Query("select count(p) from Plan p where p.member = :member")
     int planCount(@Param("member") Member member);
 
+    // TODO TEST
     @Query("select count(p) from Plan p where p.member = :member and p.planStatus = 'TRASH'")
     int trashPlanCount(@Param("member") Member member);
 }

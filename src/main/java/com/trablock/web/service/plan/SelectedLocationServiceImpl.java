@@ -28,12 +28,14 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
     @Override
     @Transactional
+    // TODO TEST
     public void saveSelectedLocation(SelectedLocation selectedLocation) {
         selectedLocationRepository.save(selectedLocation);
     }
 
     @Override
     @Transactional
+    // TODO TEST
     public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
@@ -62,6 +64,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void updateSelectedLocation(Long planId, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeSelectedLocation(plan);
@@ -75,6 +78,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      */
     @Override
     @Transactional
+    // TODO TEST
     public void removeSelectedLocation(Plan plan) {
         List<SelectedLocation> selectedLocations = selectedLocationRepository.findSelectedLocationByPlanId(plan);
         if (selectedLocations == null || selectedLocations.isEmpty()) {
@@ -90,6 +94,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      * @return
      */
     @Override
+    // TODO TEST
     public List<Long> findLocationIdList(Plan plan) {
         return selectedLocationRepository.findLocationIdByPlanId(plan);
     }

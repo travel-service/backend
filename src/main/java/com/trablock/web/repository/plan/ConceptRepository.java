@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface ConceptRepository extends JpaRepository<Concept, Long> {
 
+    // TODO TEST
     @Query("select c.conceptName from Concept c where c.plan.id = :planId")
     List<String> findConceptNameByPlanId(@Param("planId") Long planId);
 
+    // TODO TEST
     @Query("select c from Concept c where c.plan = :plan")
     List<Concept> findConceptByPlan(@Param("plan") Plan plan);
 
