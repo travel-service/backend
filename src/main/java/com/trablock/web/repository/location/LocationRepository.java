@@ -32,4 +32,5 @@ public interface LocationRepository extends JpaRepository<Location, Long>, Locat
 
     @Query("select l from Location l where l.id = :locationId")
     Optional<Location> findLocationById(@Param("locationId") Long locationId);
+
 }

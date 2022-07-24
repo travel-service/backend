@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class LocationTypeDto {
 
-    LocationType type;
+    private LocationType type;
 
 }

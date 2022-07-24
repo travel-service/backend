@@ -1,11 +1,13 @@
 package com.trablock.web.service.location;
 
+import com.trablock.web.controller.exception.MemberHasNoneOwnershipException;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
 import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.entity.location.Location;
+import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.location.type.*;
 import com.trablock.web.repository.location.InformationRepository;
 import com.trablock.web.repository.location.LocationRepository;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,24 +51,24 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId) {
-        return informationRepository.save(informationDto.toEntity(locationId)).getLocationId() == locationId;
+    public boolean deleteLocationByMember(Long locationId, Long memberId) {
+        MemberLocation memberLocation = memberLocationRepository.findByLocationId(locationId).orElseThrow();
+        if (verifyLocationOwnership(memberId, memberLocation)) {
+            memberLocationRepository.deleteMemberLocationByLocationId(locationId);
+            return !memberLocationRepository.existsMemberLocationByLocationId(locationId);
+        }
+        throw new NoSuchElementException("장소를 찾을 수 없어요!");
     }
 
     @Override
-    public boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId) {
-        return memberLocationRepository.save(memberLocationDto.toEntity(locationId)).getLocationId() == locationId;
-    }
-
-    @Override
-    public boolean deleteLocationByMember(Long locationId) {
-        memberLocationRepository.deleteMemberLocationByLocationId(locationId);
-        return memberLocationRepository.existsMemberLocationByLocationId(locationId);
-    }
-
-    @Override
-    public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId) {
-        return false;
+    public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId, Long memberId) throws MemberHasNoneOwnershipException {
+        MemberLocation memberLocation = memberLocationRepository.findByLocationId(locationId).orElseThrow();
+        if (verifyLocationOwnership(memberId, memberLocation)) {
+            updateLocationInformation(wrapperDto.getInformation(), locationId);
+            updateMemberLocation(wrapperDto.getMemberLocation(), locationId);
+            return true;
+        }
+        throw new MemberHasNoneOwnershipException("권한이 없습니다.");
     }
 
     @Override
@@ -84,7 +87,6 @@ public class LocationServiceImpl implements LocationService {
         List<MarkLocationDto> markLocationDtoList = toMarkLocationDtoList(locationList);
         return classifyMarkLocationDtoList(markLocationDtoList);
     }
-
 
     @Override
     public List<MarkLocationDto> toMarkLocationDtoList(List<Location> locationList) {
@@ -109,33 +111,38 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) {
+    public boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) throws NoSuchElementException {
         switch (locationType) {
             case ATTRACTION:
                 Attraction attraction = typeLocationMapper.getAttractionMapper().toEntity(requestDto);
                 locationRepository.saveAttraction(attraction);
+                return true;
             case CULTURE:
                 Culture culture = typeLocationMapper.getCultureMapper().toEntity(requestDto);
                 locationRepository.saveCulture(culture);
+                return true;
             case FESTIVAL:
                 Festival festival = typeLocationMapper.getFestivalMapper().toEntity(requestDto);
                 locationRepository.saveFestival(festival);
+                return true;
             case LEPORTS:
                 Leports leports = typeLocationMapper.getLeportsMapper().toEntity(requestDto);
                 locationRepository.saveLeports(leports);
+                return true;
             case LODGE:
                 Lodge lodge = typeLocationMapper.getLodgeMapper().toEntity(requestDto);
                 locationRepository.saveLodge(lodge);
+                return true;
             case RESTAURANT:
                 Restaurant restaurant = typeLocationMapper.getRestaurantMapper().toEntity(requestDto);
                 locationRepository.saveRestaurant(restaurant);
-            default:
                 return true;
         }
+        throw new NoSuchElementException("설정할 수 없는 타입이에요!");
     }
 
     @Override
-    public TypeLocationDto getLocationDetails(Long locationId, LocationType locationType) {
+    public TypeLocationDto getLocationDetails(Long locationId, LocationType locationType) throws NoSuchElementException {
         switch (locationType) {
             case ATTRACTION:
                 return locationRepository.findAttractionByLocationId(locationId);
@@ -150,7 +157,7 @@ public class LocationServiceImpl implements LocationService {
             case RESTAURANT:
                 return locationRepository.findRestaurantByLocationId(locationId);
         }
-        return null; // 예외처리 조금 더 고민해보자
+        throw new NoSuchElementException("해당 타입의 관광지가 없어요!");
     }
 
     @Override
@@ -173,6 +180,28 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public HashSet<BlockLocationView> getBlockLocationListWithType(LocationType type) {
         return locationRepository.findAllByTypeAndIsMemberFalse(type, BlockLocationView.class);
+    }
+
+    @Override
+    public MemberLocationListDto getMemberLocationList(Long memberId) {
+        List<Location> locations = locationRepository.findLocationsByMemberId(memberId);
+        return new MemberLocationListDto(getMarkLocationListFromLocationList(locations),
+                getBlockLocationListFromLocationList(locations));
+    }
+
+    @Override
+    public boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId) {
+        return informationRepository.save(informationDto.toEntity(locationId)).getLocationId().equals(locationId);
+    }
+
+    @Override
+    public boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId) {
+        return memberLocationRepository.save(memberLocationDto.toEntity(locationId)).getLocationId().equals(locationId);
+    }
+
+    @Override
+    public boolean verifyLocationOwnership(Long memberId, MemberLocation memberLocation) {
+        return memberLocation.getMemberId().equals(memberId);
     }
 
 }
