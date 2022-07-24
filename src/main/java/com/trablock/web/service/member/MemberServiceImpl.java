@@ -59,8 +59,9 @@ public class MemberServiceImpl implements MemberService{
      * @param memberSaveDto
      * @return 회원 nickName
      */
-    public String MemberSignUp(MemberSaveDto memberSaveDto) {
-        boolean CanSignUp = MemberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
+    @Override
+    public String memberSignUp(MemberSaveDto memberSaveDto) {
+        boolean CanSignUp = memberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
 
         if (CanSignUp) {
             EmailAuth emailAuth = emailAuthRepository.save(
@@ -88,6 +89,7 @@ public class MemberServiceImpl implements MemberService{
         } else throw new IllegalArgumentException("중복 되는 아이디 존재");
     }
 
+    @Override
     public String confirmEmail(EmailAuthDto requestDto) {
         EmailAuth emailAuth = emailAuthRepository.findValidAuthByEmail(requestDto.getEmail(), requestDto.getUuid(), LocalDateTime.now())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 UUID"));
@@ -104,7 +106,8 @@ public class MemberServiceImpl implements MemberService{
      * @param response
      * @return 회원 nickName
      */
-    public String MemberLogin(LoginForm loginForm, HttpServletResponse response) {
+    @Override
+    public String memberLogin(LoginForm loginForm, HttpServletResponse response) {
         Member member = memberRepository.findByUserName(loginForm.getUserName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
@@ -127,7 +130,8 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      * @return
      */
-    public ResponseEntity<?> MemberLogout(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public ResponseEntity<?> memberLogout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         Long id = tokenRepository.findByRefreshToken(refreshToken);
 
@@ -142,12 +146,13 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      * @return nickname, bio, + .. 추가 가능
      */
+    @Override
     public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
-        String userName = jwtTokenService.TokenToUserName(request);
+        String userName = jwtTokenService.tokenToUserName(request);
         Member member = memberRepository.findByUserName(userName).get();
 
         // 회원 닉네임 + ..
-        String nickName = jwtTokenService.TokenToNickName(request);
+        String nickName = jwtTokenService.tokenToNickName(request);
         String bio = member.getMemberProfile().getBio();
 
         Map<String, Object> res = new HashMap<>();
@@ -164,6 +169,7 @@ public class MemberServiceImpl implements MemberService{
      * @return MemberImg
      * @throws FileNotFoundException
      */
+    @Override
     public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
 //        String fileName = jwtTokenService.TokenToUserName(request) + ".png"; # 현재 이미지 처리 규칙이 없기에 잠궈놓겠습니다 (22-06-23)
         String fileName = "default_profile.png";
@@ -191,8 +197,9 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      * @return MemberProfile, MemberInfo (닉네임, 회원사진, 생일, 성별, 전화번호, 이메일)
      */
-    public ResponseEntity<?> MemberEditPage(HttpServletRequest request) {
-        String userName = jwtTokenService.TokenToUserName(request);
+    @Override
+    public ResponseEntity<?> memberEditPage(HttpServletRequest request) {
+        String userName = jwtTokenService.tokenToUserName(request);
         Member member = memberRepository.findByUserName(userName).get();
 
         MemberProfile mp = member.getMemberProfile();
@@ -210,8 +217,9 @@ public class MemberServiceImpl implements MemberService{
      * @param bio
      * @param request
      */
-    public void UpdateComment(String bio, HttpServletRequest request) {
-        Long id = jwtTokenService.TokenToUserId(request);
+    @Override
+    public void updateComment(String bio, HttpServletRequest request) {
+        Long id = jwtTokenService.tokenToUserId(request);
         Member member = memberRepository.findMemberId(id);
         member.getMemberProfile().setBio(bio);
         memberRepository.save(member);
@@ -222,8 +230,9 @@ public class MemberServiceImpl implements MemberService{
      * @param memberUpdateDto
      * @param request
      */
+    @Override
     public void updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
-        Long id = jwtTokenService.TokenToUserId(request);
+        Long id = jwtTokenService.tokenToUserId(request);
         Member member = memberRepository.findMemberId(id);
 
         member.getMemberProfile().setNickName(memberUpdateDto.getNickName());
@@ -239,6 +248,7 @@ public class MemberServiceImpl implements MemberService{
      * 비밀번호 찾기 (임시 비밀번호 발급)
      * @return
      */
+    @Override
     public boolean getTmpPassword(Map<String, String> userInfo) {
         char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -268,12 +278,13 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      * @return
      */
+    @Override
     public ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
 
         if (accessToken != null) {
             if (jwtTokenProvider.validateToken(accessToken)) {
-                String nickName = jwtTokenService.TokenToNickName(request);
+                String nickName = jwtTokenService.tokenToNickName(request);
                 Map<String, Object> res = new HashMap<>();
 
                 res.put("nickName", nickName);
@@ -292,6 +303,7 @@ public class MemberServiceImpl implements MemberService{
      * @param response
      * @return
      */
+    @Override
     public ResponseEntity<?> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
@@ -319,8 +331,9 @@ public class MemberServiceImpl implements MemberService{
     /**
      * 회원 비밀번호 수정
       */
+    @Override
     public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
-        String userName = jwtTokenService.TokenToUserName(request);
+        String userName = jwtTokenService.tokenToUserName(request);
         Optional<Member> member = memberRepository.findByUserName(userName);
 
         String origin = memberPwdDto.getOriginPwd();
@@ -338,7 +351,8 @@ public class MemberServiceImpl implements MemberService{
      * @param userName
      * @return
      */
-    public boolean MemberValidation(String userName) {
+    @Override
+    public boolean memberValidation(String userName) {
         Optional<Member> member = memberRepository.findByUserName(userName);
         if (member.isEmpty()) {
             return true;
@@ -353,9 +367,9 @@ public class MemberServiceImpl implements MemberService{
      * @param nickname
      * @return boolean
      */
+    @Override
     public boolean checkValidNickName(String nickname) {
         String value = memberRepository.findByNickName(nickname);
-        System.out.println("value = " + value);
         if (value == null) {
             return true;
         } else {

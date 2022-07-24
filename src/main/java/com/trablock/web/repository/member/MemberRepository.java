@@ -1,6 +1,5 @@
 package com.trablock.web.repository.member;
 
-import com.trablock.web.dto.member.MemberProfileDto;
 import com.trablock.web.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
