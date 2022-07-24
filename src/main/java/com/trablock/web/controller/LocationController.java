@@ -58,7 +58,10 @@ public class LocationController {
      * 그 이후 TypeLocation, Information, MemberLocation이 순차적으로 생성되어야 한다.
      */
     @PostMapping("/locations/member")
-    public ResponseEntity<Long> memberLocationAdd(@RequestBody LocationWrapperDto wrapperDto) {
+    public ResponseEntity<Long> memberLocationAdd(@RequestBody LocationWrapperDto wrapperDto, HttpServletRequest request) {
+        Long memberId = jwtTokenService.TokenToUserId(request);
+        wrapperDto.getMemberLocation().setMemberId(memberId);
+        System.out.println("memberId = " + memberId);
         return new ResponseEntity<Long>(locationService.createLocationByMember(wrapperDto), HttpStatus.CREATED);
     }
 
@@ -67,8 +70,9 @@ public class LocationController {
      * 로케이션 정보는 남겨두고 MemberLocation만 삭제하도록 하였다.
      */
     @DeleteMapping("/locations/member/{locationId}")
-    public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId) {
-        return locationService.deleteLocationByMember(locationId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
+    public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId, HttpServletRequest request) {
+        Long memberId = jwtTokenService.TokenToUserId(request);
+        return locationService.deleteLocationByMember(locationId, memberId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }
 
 
