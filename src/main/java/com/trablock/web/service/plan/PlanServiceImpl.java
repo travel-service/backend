@@ -4,11 +4,14 @@ import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
+import com.trablock.web.dto.plan.PlanInfoDto;
+import com.trablock.web.dto.plan.UserDirectoryIdDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,6 +30,7 @@ import java.util.Optional;
 public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
+    private final PlanItemRepository planItemRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
@@ -149,5 +155,34 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public Plan returnPlan(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow();
+    }
+
+    /**
+     * test
+     * @param memberId
+     * @return
+     */
+    @Override
+    public List<PlanInfoDto> findPlanInfo(Long memberId) {
+        List<PlanInfoDto> planInfo = planRepository.findPlanInfoCustom(memberId);
+
+        Map<Long, List<UserDirectoryIdDto>> testDtoMap = findPlanItemMap(toPlanId(planInfo));
+
+        planInfo.forEach(p -> p.setUserDirectoryId(testDtoMap.get(p.getPlanId())));
+
+        return planInfo;
+    }
+
+    private Map<Long, List<UserDirectoryIdDto>> findPlanItemMap(List<Long> toPlanId) {
+        List<UserDirectoryIdDto> userDirectoryIds = planItemRepository.findUserDirectoryIdByPlanIdCustom(toPlanId);
+
+        return userDirectoryIds.stream()
+                .collect(Collectors.groupingBy(UserDirectoryIdDto::getPlanId));
+    }
+
+    private List<Long> toPlanId(List<PlanInfoDto> planInfo) {
+        return planInfo.stream()
+                .map(p -> p.getPlanId())
+                .collect(Collectors.toList());
     }
 }

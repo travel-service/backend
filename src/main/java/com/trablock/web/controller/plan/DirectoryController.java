@@ -7,6 +7,7 @@ import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
+import com.trablock.web.dto.plan.PlanInfoDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -69,6 +70,19 @@ public class DirectoryController {
         }
 
         return new Converter.Test(planCount, test, collect);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/directories/main/test2")
+    public Converter.Test2 test2(HttpServletRequest request) {
+
+        Member member = planService.getMemberFromPayload(request);
+
+        List<PlanInfoDto> testDtos = planService.findPlanInfo(member.getId());
+
+        int planCount = planService.countPlan(member); // 플랜 갯수 반환
+
+        return new Converter.Test2(planCount, testDtos);
     }
 
 

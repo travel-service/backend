@@ -25,7 +25,7 @@ public class PlanForm {
                 .member(member)
                 .name(name)
                 .periods(periods)
-                .planStatus(planStatus)
+                .planStatus(PlanStatus.MAIN)
                 .thumbnail(thumbnail)
                 .planComplete(PlanComplete.UNFINISHED)
                 .build();

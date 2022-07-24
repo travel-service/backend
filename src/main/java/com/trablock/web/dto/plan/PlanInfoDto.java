@@ -1,0 +1,28 @@
+package com.trablock.web.dto.plan;
+
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+@EqualsAndHashCode(of = "planId")
+public class PlanInfoDto {
+
+    private Long planId;
+    private String name;
+    private int periods;
+    private LocalDateTime createdDate;
+    private PlanComplete planComplete;
+    private List<UserDirectoryIdDto> userDirectoryId;
+
+    public PlanInfoDto(Long planId, String name, int periods, LocalDateTime createdDate, PlanComplete planComplete) {
+        this.planId = planId;
+        this.name = name;
+        this.periods = periods;
+        this.createdDate = createdDate;
+        this.planComplete = planComplete;
+    }
+}

@@ -134,7 +134,7 @@ public class PlanController {
     // Plan update
     // TODO TEST
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/members/plan/{planId}")
+    @PostMapping("/members/plan/{planId}")
     public void updateUserPlan(@PathVariable("planId") Long planId,
                                HttpServletRequest request,
                                @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
