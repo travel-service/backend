@@ -5,6 +5,7 @@ import com.trablock.web.dto.member.MemberPwdDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.member.LoginForm;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +20,13 @@ public interface MemberService {
 
     String memberLogin(LoginForm loginForm, HttpServletResponse response);
 
-    ResponseEntity<?> memberLogout(HttpServletRequest request, HttpServletResponse response);
+    String memberLogout(HttpServletRequest request, HttpServletResponse response);
 
-    ResponseEntity<?> getMemberPage(HttpServletRequest request);
+    Map<String, Object> getMemberPage(HttpServletRequest request);
 
-    ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException;
+    ResponseEntity<Resource> getMemberImg(HttpServletRequest request) throws FileNotFoundException;
 
-    ResponseEntity<?> memberEditPage(HttpServletRequest request);
+    Map<String, Object> memberEditPage(HttpServletRequest request);
 
     void updateComment(String bio, HttpServletRequest request);
 
@@ -33,9 +34,9 @@ public interface MemberService {
 
     boolean getTmpPassword(Map<String, String> userInfo);
 
-    ResponseEntity<?> getMemberInfo(HttpServletRequest request);
+    Map<String, Object> getMemberInfo(HttpServletRequest request);
 
-    ResponseEntity<?> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response);
+    boolean memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response);
 
     void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto);
 

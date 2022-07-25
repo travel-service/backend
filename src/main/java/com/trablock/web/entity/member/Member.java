@@ -1,6 +1,7 @@
 package com.trablock.web.entity.member;
 
 
+import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.entity.location.MemberLocation;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,8 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@Builder(builderMethodName = "MemberBuilder")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements UserDetails{
 
@@ -50,13 +54,15 @@ public class Member implements UserDetails{
     private List<UserDirectory> userDirectories = new ArrayList<>();
 
     @Builder
-    public Member(String userName, String password, MemberProfile memberProfile, MemberInfo memberInfo, List<String> roles, Boolean emailAuth) {
-        this.userName = userName;
-        this.password = password;
-        this.memberProfile = memberProfile;
-        this.memberInfo = memberInfo;
-        this.roles = roles;
-        this.emailAuth = emailAuth;
+    public static MemberBuilder builder(MemberSaveDto memberSaveDto, String pwd) {
+        return MemberBuilder()
+                .userName(memberSaveDto.getUserName())
+                .password(pwd)
+                .emailAuth(false)
+                .memberProfile(new MemberProfile(memberSaveDto.getNickName(), null))
+                .memberInfo(new MemberInfo(memberSaveDto.getBirthday(), Gender.valueOf(memberSaveDto.getGender()),
+                        memberSaveDto.getEmail()))
+                .roles(Collections.singletonList("ROLE_USER")); // 일반 유저
     }
 
     public void emailVerifiedSuccess() {

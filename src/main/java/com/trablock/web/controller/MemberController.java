@@ -9,6 +9,7 @@ import com.trablock.web.entity.member.*;
 import com.trablock.web.service.file.FileService;
 import com.trablock.web.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,8 +29,8 @@ public class MemberController {
 
     // 비회원 - 회원가입
     @PostMapping("/api/signup")
-    public String signup(@RequestBody MemberSaveDto signupForm) {
-        return memberService.memberSignUp(signupForm);
+    public ResponseEntity<String> signup(@RequestBody MemberSaveDto signupForm) {
+        return ResponseEntity.ok().body(memberService.memberSignUp(signupForm));
     }
 
     // 이메일 인증
@@ -39,14 +40,14 @@ public class MemberController {
     }
     // 비회원 - 중복 ID 체크
     @GetMapping("/api/username/{username}")
-    public boolean checkId(@PathVariable("username") String userName) {
-        return memberService.memberValidation(userName);
+    public ResponseEntity<Boolean> checkId(@PathVariable("username") String userName) {
+        return ResponseEntity.ok().body(memberService.memberValidation(userName));
     }
 
     // 비회원 - 비밀번호 찾기 (임시비밀번호 발급)
     @PostMapping("/api/password")
-    public boolean findUserPwd(@RequestBody Map<String, String> userInfo) {
-        return memberService.getTmpPassword(userInfo);
+    public ResponseEntity<Boolean> findUserPwd(@RequestBody Map<String, String> userInfo) {
+        return ResponseEntity.ok().body(memberService.getTmpPassword(userInfo));
     }
 
     // 비회원 - 로그인
@@ -57,44 +58,44 @@ public class MemberController {
 
     // 비회원 - 사용자 정보 가져오기
     @GetMapping("/auth/status")
-    public ResponseEntity<?> getInfo(HttpServletRequest request) {
-        return memberService.getMemberInfo(request);
+    public ResponseEntity<Map<String, Object>> getInfo(HttpServletRequest request) {
+        return ResponseEntity.ok().body(memberService.getMemberInfo(request));
     }
 
     // 비회원 - Refresh To Access
     @GetMapping("/auth/refresh")
-    public ResponseEntity<?> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        return memberService.memberRefreshToAccess(request, response);
+    public ResponseEntity<Boolean> getAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok().body(memberService.memberRefreshToAccess(request, response));
     }
 
     // 공통 - 닉네임 중복 검사 (회원가입 시, 닉네임 변경 시)
     @GetMapping("/api/nickname/{nickname}")
-    public boolean checkNickName(@PathVariable("nickname") String nickname) {
-        return memberService.checkValidNickName(nickname);
+    public ResponseEntity<Boolean> checkNickName(@PathVariable("nickname") String nickname) {
+        return ResponseEntity.ok().body(memberService.checkValidNickName(nickname));
     }
 
     // 회원 - 로그아웃
     @PostMapping("/members/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        return memberService.memberLogout(request, response);
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok().body(memberService.memberLogout(request, response));
     }
 
     // 회원 - 회원 개인페이지 필요 DATA + (여행 디렉토리도 추가 예정)
     @GetMapping("/members/my-page")
-    public ResponseEntity<?> getMemberPage(HttpServletRequest request) {
-        return memberService.getMemberPage(request);
+    public ResponseEntity<Map<String, Object>> getMemberPage(HttpServletRequest request) {
+        return ResponseEntity.ok().body(memberService.getMemberPage(request));
     }
 
     // 회원 - 회원 개인페이지 프로필 사진
     @GetMapping("/members/my-page/img")
-    public ResponseEntity<?> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
+    public ResponseEntity<Resource> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
         return memberService.getMemberImg(request);
     }
 
     // 회원 - 개인정보 수정페이지 필요 DATA
     @GetMapping("/members/profile/edit")
-    public ResponseEntity<?> getMemberEditPage(HttpServletRequest request) {
-        return memberService.memberEditPage(request);
+    public ResponseEntity<Map<String, Object>> getMemberEditPage(HttpServletRequest request) {
+        return ResponseEntity.ok().body(memberService.memberEditPage(request));
     }
 
     // 회원 - 프로필 사진 업데이트
