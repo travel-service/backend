@@ -31,6 +31,8 @@ public interface LocationService {
 
     boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId, Long memberId) throws MemberHasNoneOwnershipException;
 
+    MarkAndBlockLocationListDto getMarkAndBlockLocationsFromLocationIds(List<Long> locationIds);
+
     Map<String, List<BlockLocationDto>> getBlockLocationListFromLocationList(List<Location> locationList);
 
     Map<String, List<MarkLocationDto>> getMarkLocationListFromLocationList(List<Location> locationList);
@@ -55,5 +57,5 @@ public interface LocationService {
 
     boolean verifyLocationOwnership(Long memberId, MemberLocation memberLocation);
 
-    MemberLocationListDto getMemberLocationList(Long memberId);
+    MarkAndBlockLocationListDto getMemberLocationList(Long memberId);
 }

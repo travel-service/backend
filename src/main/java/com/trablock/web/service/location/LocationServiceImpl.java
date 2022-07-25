@@ -51,6 +51,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public boolean deleteLocationByMember(Long locationId, Long memberId) {
         MemberLocation memberLocation = memberLocationRepository.findByLocationId(locationId).orElseThrow();
         if (verifyLocationOwnership(memberId, memberLocation)) {
@@ -61,6 +62,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId, Long memberId) throws MemberHasNoneOwnershipException {
         MemberLocation memberLocation = memberLocationRepository.findByLocationId(locationId).orElseThrow();
         if (verifyLocationOwnership(memberId, memberLocation)) {
@@ -111,6 +113,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Transactional
     public boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType locationType) throws NoSuchElementException {
         switch (locationType) {
             case ATTRACTION:
@@ -161,6 +164,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public MarkAndBlockLocationListDto getMarkAndBlockLocationsFromLocationIds(List<Long> locationIds) {
+        List<Location> locations = getLocationListWithLocationIds(locationIds);
+        return new MarkAndBlockLocationListDto(getMarkLocationListFromLocationList(locations),
+                getBlockLocationListFromLocationList(locations));
+    }
+
+    @Override
     public Map<String, List<MarkLocationDto>> getMarkLocationList() { // 반환 타입이 Object인 것이 맘에 들지 않는다.
         List<Location> locationList = locationRepository.findAllByIsMemberFalse();
         return getMarkLocationListFromLocationList(locationList);
@@ -183,18 +193,20 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public MemberLocationListDto getMemberLocationList(Long memberId) {
+    public MarkAndBlockLocationListDto getMemberLocationList(Long memberId) {
         List<Location> locations = locationRepository.findLocationsByMemberId(memberId);
-        return new MemberLocationListDto(getMarkLocationListFromLocationList(locations),
+        return new MarkAndBlockLocationListDto(getMarkLocationListFromLocationList(locations),
                 getBlockLocationListFromLocationList(locations));
     }
 
     @Override
+    @Transactional
     public boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId) {
         return informationRepository.save(informationDto.toEntity(locationId)).getLocationId().equals(locationId);
     }
 
     @Override
+    @Transactional
     public boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId) {
         return memberLocationRepository.save(memberLocationDto.toEntity(locationId)).getLocationId().equals(locationId);
     }
