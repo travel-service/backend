@@ -39,7 +39,7 @@ public class LocationController {
     }
 
     @GetMapping("locations/member")
-    public ResponseEntity<MemberLocationListDto> viewMemberLocations(HttpServletRequest request) {
+    public ResponseEntity<MarkAndBlockLocationListDto> viewMemberLocations(HttpServletRequest request) {
         Long memberId = jwtTokenService.TokenToUserId(request);
         return ResponseEntity.ok().body(locationService.getMemberLocationList(memberId));
     }

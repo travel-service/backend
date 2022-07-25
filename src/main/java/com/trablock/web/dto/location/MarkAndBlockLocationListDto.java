@@ -11,7 +11,7 @@ import static lombok.AccessLevel.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class MemberLocationListDto {
+public class MarkAndBlockLocationListDto {
 
     private Map<String, List<MarkLocationDto>> markLocations;
     private Map<String, List<BlockLocationDto>> blockLocations;
