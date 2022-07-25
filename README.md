@@ -8,7 +8,7 @@
 
 ## Flowchart
 
-## Planning 작업 (핵심 비즈나스)
+## Planning 작업 (핵심 비즈니스)
 
 ![image](https://user-images.githubusercontent.com/68547545/180674113-acc86b39-c429-4ce6-ad2e-bf704db1a4c0.png)
 
