@@ -5,7 +5,6 @@ import com.trablock.web.entity.location.MemberLocation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @Builder
@@ -17,22 +16,6 @@ public class MemberLocationRequestDto {
 
     @JsonProperty("isPublic")
     private Boolean isPublic;
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
 
     public MemberLocation toEntity(Long locationId) {
         return MemberLocation.builder()

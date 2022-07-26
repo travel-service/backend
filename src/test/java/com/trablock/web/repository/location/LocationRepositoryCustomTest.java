@@ -1,9 +1,11 @@
 package com.trablock.web.repository.location;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.dto.location.type.AttractionDto;
 import com.trablock.web.entity.location.Coords;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.MemberLocation;
+import com.trablock.web.entity.location.type.Attraction;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.repository.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +37,40 @@ class LocationRepositoryCustomTest {
     @PersistenceContext
     EntityManager em;
 
+
+    @Test
+    @DisplayName("타입 로케이션 저장")
+    void saveTypes() throws Exception {
+        //given
+
+        Location location = locationRepository.save(locationRepository.save(Location.builder()
+                .name("test1")
+                .areaCode(123)
+                .address1("경기도 수원시 팔달구")
+                .address2("권광로180번길 53-26")
+                .image("url:GBSG/1234")
+                .coords(Coords.builder()
+                        .latitude(37.123).longitude(127.123).build()
+                )
+                .isMember(true)
+                .type(LocationType.LODGE)
+                .build()));
+
+
+        //when
+        locationRepository.saveAttraction(Attraction.builder()
+                .locationId(location.getId())
+                .parking(true)
+                .restDate("매주 일요일")
+                .useTime("09:00~22:00")
+                .build());
+        AttractionDto attractionDto = locationRepository.findAttractionByLocationId(location.getId());
+        //then
+        assertThat(attractionDto.getLocationId()).isEqualTo(location.getId());
+        assertThat(attractionDto.isParking()).isTrue();
+        assertThat(attractionDto.getRestDate()).isEqualTo("매주 일요일");
+        assertThat(attractionDto.getUseTime()).isEqualTo("09:00~22:00");
+    }
 
     @Test
     @DisplayName("memberId로 Location 조회")
@@ -103,4 +139,5 @@ class LocationRepositoryCustomTest {
         locationsByMemberId.forEach(locInList -> assertThat(locInList.getIsMember()).isTrue());
         assertThat(locationsByMemberId.size()).isEqualTo(2);
     }
+
 }
