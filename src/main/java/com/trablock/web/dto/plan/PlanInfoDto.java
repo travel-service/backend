@@ -14,7 +14,7 @@ public class PlanInfoDto {
     private Long planId;
     private String name;
     private int periods;
-    private LocalDateTime createdDate;
+    private String createdDate;
     private PlanComplete planComplete;
     private List<UserDirectoryIdDto> userDirectoryId;
 
@@ -22,7 +22,7 @@ public class PlanInfoDto {
         this.planId = planId;
         this.name = name;
         this.periods = periods;
-        this.createdDate = createdDate;
+        this.createdDate = createdDate.toString().substring(0, 10);
         this.planComplete = planComplete;
     }
 }

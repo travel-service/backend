@@ -120,9 +120,9 @@ public class DirectoryController {
 
     // user directory get
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/directories/{directory-id}")
+    @GetMapping("/directories/{directoryId}")
     // TODO TEST
-    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("directory-id") UserDirectory userDirectoryId,
+    public Converter.ShowUserDirectory usersDirectoryPlans(@PathVariable("directoryId") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -218,8 +218,8 @@ public class DirectoryController {
     // user directory 이름 변경
     @ResponseStatus(HttpStatus.CREATED)
     // TODO TEST
-    @PostMapping("/directories/{directory-id}/name")
-    public void updateUserDirectoryName(@PathVariable("directory-id") Long id,
+    @PostMapping("/directories/{directoryId}/name")
+    public void updateUserDirectoryName(@PathVariable("directoryId") Long id,
                                         @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
                                         HttpServletRequest request) {
 

@@ -1,5 +1,6 @@
 package com.trablock.web.converter;
 
+import com.trablock.web.global.HttpStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class Converter {
     @AllArgsConstructor
     public static class UserPlan<T> {
         private T planForm;
+        private int httpStatus;
     }
 
     // day 을 반환하기 위한 클래스

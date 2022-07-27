@@ -50,7 +50,7 @@ public class PlanController {
         Member member = planService.getMemberFromPayload(request);
 
         PlanDto planDto = planService.getOnePlanDto(planId, member);
-        return new UserPlan(planDto);
+        return new UserPlan(planDto, com.trablock.web.global.HttpStatus.Created.getCode());
     }
 
 
