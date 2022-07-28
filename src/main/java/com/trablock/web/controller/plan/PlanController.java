@@ -68,7 +68,7 @@ public class PlanController {
                                       @RequestBody Form form) {
         conceptService.updateConcept(planId, request, form);
 
-        String message = "Concept이 정상적으로 업데이트 되었습니다.";
+        String message = "Concept이 정상적으로 생성 및 업데이트 되었습니다.";
 
         return new UpdateConcept(HTTPStatus.Created.getCode(), message);
     }
@@ -173,7 +173,7 @@ public class PlanController {
                                                @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(planId, request, form);
 
-        String message = "SelectedLocation이 정상적으로 수정 되었습니다.";
+        String message = "SelectedLocation이 정상적으로 생성 및 업데이트 되었습니다.";
 
         return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
     }

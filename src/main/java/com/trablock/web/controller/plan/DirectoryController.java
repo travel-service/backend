@@ -54,6 +54,7 @@ public class DirectoryController {
     // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
+
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(Collectors.toList());
@@ -96,7 +97,7 @@ public class DirectoryController {
         if (member.getId() != null) {
             List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(userDirectoryId);
             List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
-                    .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
+                    .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
                     .collect(Collectors.toList());
 
             return new ShowUserDirectory(HTTPStatus.OK.getCode(), message, collect);
@@ -130,12 +131,12 @@ public class DirectoryController {
 
         String message = "플랜이 정상적으로 복구되었습니다.";
 
-        return new PlanMoveTrashToMain(HTTPStatus.Created.getCode(), message)
+        return new PlanMoveTrashToMain(HTTPStatus.Created.getCode(), message);
     }
 
 
     //플랜 영구 삭제(trash -> delete)
-    @PostMapping("directories/plans")
+    @DeleteMapping("directories/plans")
     // TODO TEST
     public PlanDelete deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -163,7 +164,7 @@ public class DirectoryController {
 
 
     //user directory 삭제(undelete -> delete)
-    @PostMapping("/directories/members")
+    @DeleteMapping("/directories/members")
     // TODO TEST
     public DeleteUserDirectory deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -224,7 +225,7 @@ public class DirectoryController {
     // TODO TEST
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
-                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString(), m.getPlanComplete()))
+                .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
                 .collect(Collectors.toList());
     }
 }

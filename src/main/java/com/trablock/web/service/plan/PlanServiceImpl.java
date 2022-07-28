@@ -70,7 +70,7 @@ public class PlanServiceImpl implements PlanService {
     // TODO TEST
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
+        return planRepository.findPlansByPlanStatus(member, PlanStatus.TRASH);
     }
 
     // 플랜 삭제(main -> trash)
@@ -108,6 +108,13 @@ public class PlanServiceImpl implements PlanService {
     public void finishedPlan(Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         plan.finished();
+    }
+
+    // 플랜 완성 -> 수정
+    @Override
+    public void unFinishedPlan(Long planId) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
+        plan.unFinished();
     }
 
     /**

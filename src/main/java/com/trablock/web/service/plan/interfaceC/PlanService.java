@@ -42,4 +42,6 @@ public interface PlanService {
     Plan returnPlan(Long planId, Member member);
 
     List<PlanInfoDto> findPlanInfo(Long memberId);
+
+    void unFinishedPlan(Long planId);
 }
