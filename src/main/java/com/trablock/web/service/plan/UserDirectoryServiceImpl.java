@@ -1,21 +1,21 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
-import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
+import com.trablock.web.global.HTTPStatus;
+import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
-import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
+
+import static com.trablock.web.converter.Converter.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,86 +23,84 @@ import java.util.Optional;
 public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     private final UserDirectoryRepository userDirectoryRepository;
-    private final PlanService planService;
-
-    @Override
-    @Transactional
-    // TODO TEST
-    public Long saveUserDirectory(UserDirectory userDirectory) {
-        UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
-        return userDirectories.getId();
-    }
+    private final MemberRepository memberRepository;
 
     //user 디렉터리 삭제
     @Override
     @Transactional
-    // TODO TEST
     public void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId) {
-        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
-            UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(i), memberId);
+        for (int userDirectoryId = 0; userDirectoryId < userDirectoryForm.getUserDirectoryId().size(); userDirectoryId++) {
+            UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(userDirectoryId), memberId);
             userDirectoryById.delete();
         }
     }
 
     //user directory GET 요청
     @Override
-    // TODO TEST
-    public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
-        Member memberId = planService.getMemberFromPayload(request);
-        return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId), Status.UNDELETE);
+    public List<UserDirectory> findMainUserDirectoryMain(Long memberId) {
+        return userDirectoryRepository.findMemberIdForList(memberId, Status.UNDELETE);
     }
 
     //user directory 생성
     @Override
     @Transactional
-    // TODO TEST
-    public Long createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response) {
+    public CreateUserDirectory createUserDirectory(Long memberId, UserDirectoryForm userDirectoryForm) {
 
-        Member memberId = planService.getMemberFromPayload(request);
+        if (memberRepository.findMemberId(memberId) == null) {
+            String errorMessage = "존재하지 않은 사용자입니다..";
+
+            return new CreateUserDirectory(HTTPStatus.InternalServerError.getCode(), errorMessage, null);
+        }
 
         int memberIdForCount = userDirectoryRepository.findMemberIdForCount(memberId);
 
-        if (memberIdForCount >= 6) {
-            response.setStatus(512, "디렉터리는 5개 까지만 생성 가능합니다.");
+        if (memberIdForCount >= 5) {
+            String errorMessage = "디렉터리는 5개 까지만 생성 가능합니다.";
 
-            return null;
+            return new CreateUserDirectory(HTTPStatus.BadRequest.getCode(), errorMessage, null);
         } else {
             UserDirectory userDirectory = UserDirectory.builder()
                     .directoryName(userDirectoryForm.getDirectoryName())
-                    .member(memberId)
+                    .member(memberRepository.findById(memberId).orElseThrow())
                     .status(Status.UNDELETE)
                     .build();
 
             UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
 
-            return userDirectories.getId();
+            String message = "디렉터리가 정상적으로 생성되었습니다.";
+
+            return new CreateUserDirectory(HTTPStatus.Created.getCode(), message, userDirectories.getId());
         }
     }
 
     // user directory 이름 변경
     @Override
     @Transactional
-    // TODO TEST
-    public void updateDirectoryName(Long id,
+    public UpdatePlanName updateDirectoryName(Long userDirectoryId,
                                     DirectoryNameUpdateDto directoryNameUpdateDto,
                                     Long memberId) {
 
-        UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(id, memberId);
-        userDirectory.updateName(directoryNameUpdateDto);
+        if (userDirectoryRepository.findUserDirectoryById(userDirectoryId, memberId) == null) {
+            String errorMessage = "존재하지 않는 디렉터리입니다.";
+
+            return new UpdatePlanName(HTTPStatus.BadRequest.getCode(), errorMessage);
+        } else {
+            UserDirectory userDirectory = userDirectoryRepository.findUserDirectoryById(userDirectoryId, memberId);
+            userDirectory.updateName(directoryNameUpdateDto);
+
+            String message = "디렉터리 이름이 정상적으로 변경되었습니다.";
+
+            return new UpdatePlanName(HTTPStatus.Created.getCode(), message);
+        }
     }
 
     /**
      * user가 생성한 디렉터리 불러오기
-     * @param request
+     * @param memberId
      * @return
      */
     @Override
-    // TODO TEST
-    public List<UserDirectory> findUserDirectory(HttpServletRequest request) {
-
-        Member member = planService.getMemberFromPayload(request);
-
-        return userDirectoryRepository.findUserDirectoryById(member);
-
+    public List<UserDirectory> findUserDirectory(Long memberId) {
+        return userDirectoryRepository.findUserDirectoryById(memberId, Status.UNDELETE);
     }
 }

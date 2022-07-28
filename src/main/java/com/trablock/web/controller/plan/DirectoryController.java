@@ -6,7 +6,6 @@ import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
-import com.trablock.web.dto.plan.PlanInfoDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -16,14 +15,15 @@ import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.trablock.web.converter.Converter.*;
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,16 +36,11 @@ public class DirectoryController {
     // TODO TEST
     @GetMapping("/directories/main")
     public MainDirectory test2(HttpServletRequest request) {
-
         Member member = planService.getMemberFromPayload(request);
-
-        List<PlanInfoDto> testDtos = planService.findPlanInfo(member.getId());
 
         int planCount = planService.countPlan(member); // 플랜 갯수 반환
 
-        String message = "메인 디렉터리를 정상적으로 불러왔습니다.";
-
-        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, testDtos);
+        return planService.findPlanInfo(member, planCount);
     }
 
 
@@ -53,18 +48,22 @@ public class DirectoryController {
     @GetMapping("/directories/members")
     // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
-        List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
+
+        Member member = planService.getMemberFromPayload(request);
+
+        List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(member.getId());
 
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
-                .collect(Collectors.toList());
-
-        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
-        List<Integer> planCount = planItemService.countPlan(userDirectories);
+                .collect(toList());
 
         String message = "모든 사용자 디렉터리를 정상적으로 불러왔습니다.";
 
-        return new MainUserDirectory(HTTPStatus.OK.getCode(), message, planCount, collect);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(member.getId());
+
+        List<Integer> planCount = planItemService.countPlan(userDirectories);
+
+        return new MainUserDirectory(HttpStatus.OK.value(), message, planCount, collect);
     }
 
 
@@ -98,7 +97,7 @@ public class DirectoryController {
             List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(userDirectoryId);
             List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
                     .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             return new ShowUserDirectory(HTTPStatus.OK.getCode(), message, collect);
         } else {
@@ -136,7 +135,7 @@ public class DirectoryController {
 
 
     //플랜 영구 삭제(trash -> delete)
-    @DeleteMapping("directories/plans")
+    @DeleteMapping("/directories/plans")
     // TODO TEST
     public PlanDelete deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -153,13 +152,10 @@ public class DirectoryController {
     @PostMapping("/directories")
     // TODO TEST
     public CreateUserDirectory createUserDirectory(HttpServletRequest request,
-                                      @RequestBody UserDirectoryForm userDirectoryForm,
-                                      HttpServletResponse response) {
-        Long userDirectoryId = userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
+                                      @RequestBody UserDirectoryForm userDirectoryForm) {
+        Member member = planService.getMemberFromPayload(request);
 
-        String message = "디렉터리가 정상적으로 생성되었습니다.";
-
-        return new CreateUserDirectory(HTTPStatus.Created.getCode(), message, userDirectoryId);
+        return userDirectoryService.createUserDirectory(member.getId(), userDirectoryForm);
     }
 
 
@@ -183,11 +179,8 @@ public class DirectoryController {
     @PostMapping("/directories/directory/plans")
     public PlanMoveToUserDirectory moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
-        planItemService.moveUserPlan(moveDirectoryForm, member.getId());
 
-        String message = "플랜이 정상적으로 디렉터리로 이동되었습니다.";
-
-        return new PlanMoveToUserDirectory(HTTPStatus.Created.getCode(), message);
+        return planItemService.moveUserPlan(moveDirectoryForm, member.getId());
     }
 
 
@@ -200,32 +193,14 @@ public class DirectoryController {
 
         Member member = planService.getMemberFromPayload(request);
 
-        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
-
-        String message = "디렉터리 이름이 정상적으로 변경되었습니다.";
-
-        return new UpdatePlanName(HTTPStatus.Created.getCode(), message);
+        return userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
-
-    //    main directory get
-//    @GetMapping("/directories/main")
-//    public MainDirectory mainPlans(HttpServletRequest request) {
-//        Member member = planService.getMemberFromPayload(request);
-//
-//        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
-//        List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
-//
-//        int planCount = planService.countPlan(member); // 플랜 갯수 반환
-//
-//        return new MainDirectory(HTTPStatus.OK.getCode(), planCount, collect);
-//    }
-
 
 
     // TODO TEST
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 }

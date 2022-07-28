@@ -1,13 +1,14 @@
-package com.trablock.web.repository.plan;
+package com.trablock.web.repository.plan.custom;
 
 import com.trablock.web.dto.plan.PlanInfoDto;
+import com.trablock.web.repository.plan.PlanRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PlanRepositoryCustomImpl implements PlanRepositoryCustom{
+public class PlanRepositoryCustomImpl implements PlanRepositoryCustom {
 
     private final EntityManager em;
 
@@ -16,7 +17,7 @@ public class PlanRepositoryCustomImpl implements PlanRepositoryCustom{
         return em.createQuery(
                 "select new com.trablock.web.dto.plan.PlanInfoDto(p.id, p.name, p.periods, p.createdDate, p.planComplete)" +
                         " from Plan p" +
-                        " join p.planItems pi" +
+                        " left join p.planItems pi" +
                         " where p.member.id = :memberId", PlanInfoDto.class)
                 .setParameter("memberId", memberId)
                 .getResultList();

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,15 +27,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
     @Override
     @Transactional
-    // TODO TEST
-    public void saveSelectedLocation(SelectedLocation selectedLocation) {
-        selectedLocationRepository.save(selectedLocation);
-    }
-
-    @Override
-    @Transactional
-    // TODO TEST
-    public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
+    public List<SelectedLocation> createSelectedLocation(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         ArrayList<SelectedLocation> selectedLocationList = new ArrayList<>();
@@ -52,23 +43,21 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
             selectedLocationList.add(selectedLocation);
         }
 
-        selectedLocationRepository.saveAll(selectedLocationList);
+        return selectedLocationRepository.saveAll(selectedLocationList);
     }
 
     /**
      * SelectedLocation Update
-     *
-     * @param planId
-     * @param request
+     *  @param planId
      * @param form
+     * @return
      */
     @Override
     @Transactional
-    // TODO TEST
-    public void updateSelectedLocation(Long planId, HttpServletRequest request, Form form) {
+    public List<SelectedLocation> updateSelectedLocation(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeSelectedLocation(plan);
-        createSelectedLocation(form, request, planId);
+        return createSelectedLocation(form, planId);
     }
 
     /**
@@ -78,7 +67,6 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      */
     @Override
     @Transactional
-    // TODO TEST
     public void removeSelectedLocation(Plan plan) {
         List<SelectedLocation> selectedLocations = selectedLocationRepository.findSelectedLocationByPlanId(plan);
         if (selectedLocations == null || selectedLocations.isEmpty()) {
@@ -94,7 +82,6 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
      * @return
      */
     @Override
-    // TODO TEST
     public List<Long> findLocationIdList(Plan plan) {
         return selectedLocationRepository.findLocationIdByPlanId(plan);
     }
