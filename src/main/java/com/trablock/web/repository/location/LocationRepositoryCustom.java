@@ -1,12 +1,16 @@
 package com.trablock.web.repository.location;
 
-import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.BlockLocationView;
 import com.trablock.web.dto.location.type.*;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.type.*;
+import com.trablock.web.entity.member.Member;
 
 import java.util.List;
 
 public interface LocationRepositoryCustom {
+
+    List<Location> findLocationsByMemberId(Long memberId);
 
     List<BlockLocationView> findSelectedLocationByPlanId(Long planId);
 

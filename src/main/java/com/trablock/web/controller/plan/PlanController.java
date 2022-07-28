@@ -8,6 +8,7 @@ import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.global.HTTPStatus;
+import com.trablock.web.service.location.LocationService;
 import com.trablock.web.service.plan.interfaceC.ConceptService;
 import com.trablock.web.service.plan.interfaceC.DayService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
@@ -22,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.trablock.web.converter.Converter.*;
+import static com.trablock.web.converter.Converter.UserDay;
+import static com.trablock.web.converter.Converter.UserPlan;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class PlanController {
     private final PlanService planService;
     private final DayService dayService;
     private final SelectedLocationService selectedLocationService;
+    private final LocationService locationService;
     private final ConceptService conceptService;
 
     //Plan 생성
@@ -140,11 +143,11 @@ public class PlanController {
     // SelectedLocation 정보 불러오기
     // TODO TEST
     @GetMapping("/members/plan/{planId}/selected-location")
-    public void usersSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request) {
+    public ResponseEntity usersSelectedLocation(@PathVariable("planId") Long planId, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
-
         Plan plan = planService.returnPlan(planId, member); // 토큰 검증과 PathVariable id를 통해 Plan 객체 반환
         List<Long> locationIdList = selectedLocationService.findLocationIdList(plan); // LocationId 리스트 형태로 반환
+        return ResponseEntity.ok().body(locationService.getMarkAndBlockLocationsFromLocationIds(locationIdList));
     }
 
 

@@ -101,7 +101,7 @@ class MemberLocationRepositoryTest {
 
         MemberLocation memberLocation = MemberLocation.builder()
                 .locationId(savedLocId)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
 
@@ -120,7 +120,7 @@ class MemberLocationRepositoryTest {
             assertThat(target.getLocationId()).isEqualTo(memberLocation.getLocationId());
 
             // 프록시를 꺼냈으므로 객체는 다름. Id는 같다.
-            assertThat(target.getMember().getId()).isEqualTo(memberLocation.getMember().getId());
+            assertThat(target.getMemberId()).isEqualTo(memberLocation.getMemberId());
 
             System.out.println("target = " + target);
         });
@@ -136,17 +136,17 @@ class MemberLocationRepositoryTest {
 
         MemberLocation memberLocation = MemberLocation.builder()
                 .locationId(savedLocId)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation2 = MemberLocation.builder()
                 .locationId(savedLocId2)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation3 = MemberLocation.builder()
                 .locationId(savedLocId3)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
 
@@ -164,12 +164,12 @@ class MemberLocationRepositoryTest {
 
         //then
         for (MemberLocation location : allByMember) {
-            assertThat(location.getMember().getId()).isEqualTo(savedMember.getId());
+            assertThat(location.getMemberId()).isEqualTo(savedMember.getId());
             assertThat(location.isPublic()).isEqualTo(true);
         }
 
         for (MemberLocation location : allByMemberAndIsPublicTrue) {
-            assertThat(location.getMember().getId()).isEqualTo(savedMember.getId());
+            assertThat(location.getMemberId()).isEqualTo(savedMember.getId());
             assertThat(location.isPublic()).isEqualTo(true);
         }
     }
@@ -184,17 +184,17 @@ class MemberLocationRepositoryTest {
 
         MemberLocation memberLocation = MemberLocation.builder()
                 .locationId(savedLocId)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation2 = MemberLocation.builder()
                 .locationId(savedLocId2)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation3 = MemberLocation.builder()
                 .locationId(savedLocId3)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
 
@@ -235,17 +235,17 @@ class MemberLocationRepositoryTest {
 
         MemberLocation memberLocation = MemberLocation.builder()
                 .locationId(savedLocId)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation2 = MemberLocation.builder()
                 .locationId(savedLocId2)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
         MemberLocation memberLocation3 = MemberLocation.builder()
                 .locationId(savedLocId3)
-                .member(savedMember)
+                .memberId(savedLocId)
                 .isPublic(true)
                 .build();
 
