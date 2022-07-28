@@ -1,6 +1,6 @@
 package com.trablock.web.global;
 
-public enum HttpStatus {
+public enum HTTPStatus {
     Continue(100),
     SwitchingProtocols(101),
     Processing(102),
@@ -74,7 +74,7 @@ public enum HttpStatus {
         return this.code;
     }
 
-    private HttpStatus(int code) {
+    HTTPStatus(int code) {
         this.code = code;
     }
 }

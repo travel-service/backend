@@ -7,12 +7,12 @@ import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.service.plan.interfaceC.ConceptService;
 import com.trablock.web.service.plan.interfaceC.DayService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.SelectedLocationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +34,15 @@ public class PlanController {
     private final ConceptService conceptService;
 
     //Plan 생성
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan")
-    public Long createPlan(@RequestBody Form form, HttpServletRequest request) {
+    public CreatePlan createPlan(@RequestBody Form form, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
-        return planService.createPlan(form, member).getId();
+        Long planId = planService.createPlan(form, member).getId();
+
+        String message = "Plan이 정상적으로 생성되었습니다.";
+
+        return new CreatePlan(HTTPStatus.Created.getCode(), message, planId);
     }
 
 
@@ -50,18 +53,24 @@ public class PlanController {
         Member member = planService.getMemberFromPayload(request);
 
         PlanDto planDto = planService.getOnePlanDto(planId, member);
-        return new UserPlan(planDto, com.trablock.web.global.HttpStatus.Created.getCode());
+
+        String message = "Plan이 정상적으로 불러와졌습니다.";
+
+        return new UserPlan(HTTPStatus.Created.getCode(), message, planDto);
     }
 
 
     // concept 업데이트
     // TODO TEST
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/concept")
-    public void updateUserPlanConcept(@PathVariable("planId") Long planId,
+    public UpdateConcept updateUserPlanConcept(@PathVariable("planId") Long planId,
                                       HttpServletRequest request,
                                       @RequestBody Form form) {
         conceptService.updateConcept(planId, request, form);
+
+        String message = "Concept이 정상적으로 업데이트 되었습니다.";
+
+        return new UpdateConcept(HTTPStatus.Created.getCode(), message);
     }
 
 
@@ -86,10 +95,13 @@ public class PlanController {
 
     //Day 생성
     // TODO TEST
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/day")
-    public void createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable("planId") Long planId) {
+    public CreateDay createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable("planId") Long planId) {
         dayService.createDay(form, request, planId);
+
+        String message = "Day가 정상적으로 생성되었습니다.";
+
+        return new CreateDay(HTTPStatus.Created.getCode(), message);
     }
 
 
@@ -99,10 +111,12 @@ public class PlanController {
     public UserDay getDaysInPlan(@PathVariable("planId") Long planId, HttpServletRequest request) {
         Member memberFromPayload = planService.getMemberFromPayload(request);
 
+        String message = "Day가 정상적으로 불러와졌습니다.";
+
         if (memberFromPayload.getId() != null) {
             List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
             List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(Collectors.toList());
-            return new UserDay(dayDtos);
+            return new UserDay(HTTPStatus.OK.getCode(), message, dayDtos);
         } else {
             throw new IllegalStateException("가입되지 않은 회원입니다.");
         }
@@ -111,12 +125,15 @@ public class PlanController {
 
     // Day 수정
     // TODO TEST
-    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/members/plan/{planId}/day")
-    public void updateUserPlanDay(@PathVariable("planId") Long planId,
+    public GetDay updateUserPlanDay(@PathVariable("planId") Long planId,
                                   HttpServletRequest request,
                                   @RequestBody Form form) {
         dayService.updateDay(planId, request, form);
+
+        String message = "Day가 정상적으로 수정 되었습니다.";
+
+        return new GetDay(HTTPStatus.Created.getCode(), message);
     }
 
 
@@ -133,25 +150,31 @@ public class PlanController {
 
     // Plan update
     // TODO TEST
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}")
-    public void updateUserPlan(@PathVariable("planId") Long planId,
+    public UpdatePlan updateUserPlan(@PathVariable("planId") Long planId,
                                HttpServletRequest request,
                                @RequestBody UserPlanUpdateDto userPlanUpdateDto) {
 
         Member member = planService.getMemberFromPayload(request);
 
         planService.updateUserPlanContent(planId, member, userPlanUpdateDto);
+
+        String message = "Plan이 정상적으로 수정 되었습니다.";
+
+        return new UpdatePlan(HTTPStatus.Created.getCode(), message);
     }
 
 
     // SelectedLocation 수정
     // TODO TEST
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members/plan/{planId}/selected-location")
-    public void updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
+    public UpdateSelectedLocation updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
                                                HttpServletRequest request,
                                                @RequestBody Form form) {
         selectedLocationService.updateSelectedLocation(planId, request, form);
+
+        String message = "SelectedLocation이 정상적으로 수정 되었습니다.";
+
+        return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
     }
 }
