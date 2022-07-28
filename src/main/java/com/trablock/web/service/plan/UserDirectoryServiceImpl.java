@@ -49,7 +49,7 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     // TODO TEST
     public List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request) {
         Member memberId = planService.getMemberFromPayload(request);
-        return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId));
+        return userDirectoryRepository.findMemberIdForList(Optional.ofNullable(memberId), Status.UNDELETE);
     }
 
     //user directory 생성

@@ -3,6 +3,7 @@ package com.trablock.web.service.plan.interfaceC;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.dto.plan.PlanDto;
+import com.trablock.web.dto.plan.PlanInfoDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -39,4 +40,8 @@ public interface PlanService {
     int countTrashPlan(Member member);
 
     Plan returnPlan(Long planId, Member member);
+
+    List<PlanInfoDto> findPlanInfo(Long memberId);
+
+    void unFinishedPlan(Long planId);
 }

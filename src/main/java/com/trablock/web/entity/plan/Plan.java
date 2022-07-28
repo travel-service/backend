@@ -105,6 +105,13 @@ public class Plan extends BaseTimeEntity {
     }
 
     /**
+     * 플랜 완성 -> 비완성
+     */
+    public void unFinished() {
+        this.planComplete = PlanComplete.UNFINISHED;
+    }
+
+    /**
      * Plan Update
      *
      * @param userPlanUpdateDto

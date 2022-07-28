@@ -92,6 +92,7 @@ public class DayServiceImpl implements DayService {
     public void updateDay(Long planId, HttpServletRequest request, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeDay(plan);
+        planService.unFinishedPlan(planId);
         createDay(form, request, plan.getId());
     }
 

@@ -300,9 +300,13 @@ class PlanServiceTest {
                 .build();
 
         //when
-        assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm1, member));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm1, member));
 
-        assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm2, member));
+        assertThat(e.getMessage()).isEqualTo("이미 휴지통으로 이동된 플랜입니다.");
+
+        IllegalStateException e2 = assertThrows(IllegalStateException.class, () -> planService.cancelPlan(stateChangeForm2, member));
+
+        assertThat(e2.getMessage()).isEqualTo("삭제된 플랜입니다.");
     }
 
     @Test
@@ -422,9 +426,13 @@ class PlanServiceTest {
 
 
         //when
-        assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm1, member));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm1, member));
 
-        assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm2, member));
+        assertThat(e.getMessage()).isEqualTo("이미 삭제된 플랜입니다.");
+
+        IllegalStateException e2 = assertThrows(IllegalStateException.class, () -> planService.deletePlan(stateChangeForm2, member));
+
+        assertThat(e2.getMessage()).isEqualTo("휴지통으로 먼저 이동하시오");
     }
 
     @Test
@@ -549,9 +557,13 @@ class PlanServiceTest {
                 .build();
 
         //when
-        assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm1, member));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm1, member));
 
-        assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm2, member));
+        assertThat(e.getMessage()).isEqualTo("이미 복구된 플랜입니다.");
+
+        IllegalStateException e2 = assertThrows(IllegalStateException.class, () -> planService.revertPlan(stateChangeForm2, member));
+
+        assertThat(e2.getMessage()).isEqualTo("완전 삭제된 플랜은 복구 할 수 없습니다.");
     }
 
 
@@ -602,7 +614,9 @@ class PlanServiceTest {
         planService.finishedPlan(plan.getId());
 
         //then
-        assertThrows(IllegalStateException.class, () -> planService.finishedPlan(plan.getId()));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> planService.finishedPlan(plan.getId()));
+
+        assertThat(e.getMessage()).isEqualTo("이미 완성된 플랜입니다.");
     }
 
     @Test
