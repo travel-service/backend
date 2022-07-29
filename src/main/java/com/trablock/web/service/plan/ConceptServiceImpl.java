@@ -23,8 +23,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     @Transactional
-    // TODO TEST
-    public void createConcept(Form form, Long planId) {
+    public List<Concept> createConcept(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         ArrayList<Concept> conceptList = new ArrayList<>();
@@ -38,39 +37,36 @@ public class ConceptServiceImpl implements ConceptService {
             conceptList.add(concept);
         }
 
-        conceptRepository.saveAll(conceptList);
+        return conceptRepository.saveAll(conceptList);
     }
 
     @Override
-    // TODO TEST
     public List<String> findConceptIdForPlanIdToList(Long planId) {
         return conceptRepository.findConceptNameByPlanId(planId);
     }
 
     /**
      * Concept Update
-     *
-     * @param planId
+     *  @param planId
      * @param form
+     * @return
      */
     @Override
     @Transactional
-    // TODO TEST
-    public void updateConcept(Long planId, Form form) {
+    public List<Concept> updateConcept(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
-        if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
+        if (plan.getConcepts() == null || !plan.getConcepts().isEmpty()) {
             removeConcept(plan);
-        createConcept(form, plan.getId());
+        }
+        return createConcept(form, plan.getId());
     }
 
     /**
      * Concept delete
-     *
      * @param plan
      */
     @Override
     @Transactional
-    // TODO TEST
     public void removeConcept(Plan plan) {
         List<Concept> conceptList = conceptRepository.findConceptByPlan(plan);
 
