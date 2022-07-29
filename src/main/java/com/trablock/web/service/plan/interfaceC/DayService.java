@@ -9,13 +9,11 @@ import java.util.List;
 
 public interface DayService {
 
-    void saveDay(Day day);
-
-    void createDay(Form form, HttpServletRequest request, Long plan);
+    void createDay(Form form, Long plan);
 
     List<Day> findDayIdForPlanIdToList(Long id);
 
-    void updateDay(Long id, HttpServletRequest request, Form form);
+    void updateDay(Long id, Form form);
 
     void removeDay(Plan plan);
 }

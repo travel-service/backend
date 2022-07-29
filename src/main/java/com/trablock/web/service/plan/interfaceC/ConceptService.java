@@ -1,6 +1,7 @@
 package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.Form;
+import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Concept;
 import com.trablock.web.entity.plan.Plan;
 
@@ -9,13 +10,11 @@ import java.util.List;
 
 public interface ConceptService {
 
-    void saveConcept(Concept concept);
-
-    void createConcept(Form form, HttpServletRequest request, Long plan);
+    void createConcept(Form form, Long plan);
 
     List<String> findConceptIdForPlanIdToList(Long planId);
 
-    void updateConcept(Long id, HttpServletRequest request, Form form);
+    void updateConcept(Long planId, Form form);
 
     void removeConcept(Plan plan);
 }

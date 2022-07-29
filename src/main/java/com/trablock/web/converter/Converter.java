@@ -7,6 +7,14 @@ import java.util.List;
 
 public class Converter {
 
+    // error 상태 반환
+    @Data
+    @AllArgsConstructor
+    public static class Error<T> {
+        private int httpStatus;
+        private String message;
+    }
+
     // plan 생성후 responsebody에 정보를 담아 보내기 위한 클래스
     @Data
     @AllArgsConstructor

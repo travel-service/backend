@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.trablock.web.converter.Converter.*;
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class DirectoryController {
 
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
-                .collect(Collectors.toList());
+                .collect(toList());
 
         List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
         List<Integer> planCount = planItemService.countPlan(userDirectories);
@@ -98,7 +99,7 @@ public class DirectoryController {
             List<Plan> userPlanDirectoryUser = planItemService.findUserPlanDirectoryUser(userDirectoryId);
             List<PlanDirectoryDto> collect = userPlanDirectoryUser.stream()
                     .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             return new ShowUserDirectory(HTTPStatus.OK.getCode(), message, collect);
         } else {
@@ -226,6 +227,6 @@ public class DirectoryController {
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 }

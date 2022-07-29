@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +24,7 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     @Transactional
     // TODO TEST
-    public void saveConcept(Concept concept) {
-        conceptRepository.save(concept);
-    }
-
-    @Override
-    @Transactional
-    // TODO TEST
-    public void createConcept(Form form, HttpServletRequest request, Long planId) {
+    public void createConcept(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         ArrayList<Concept> conceptList = new ArrayList<>();
@@ -59,17 +51,16 @@ public class ConceptServiceImpl implements ConceptService {
      * Concept Update
      *
      * @param planId
-     * @param request
      * @param form
      */
     @Override
     @Transactional
     // TODO TEST
-    public void updateConcept(Long planId, HttpServletRequest request, Form form) {
+    public void updateConcept(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
             removeConcept(plan);
-        createConcept(form, request, plan.getId());
+        createConcept(form, plan.getId());
     }
 
     /**

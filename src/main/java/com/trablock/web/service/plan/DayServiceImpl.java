@@ -32,14 +32,7 @@ public class DayServiceImpl implements DayService {
     @Override
     @Transactional
     // TODO TEST
-    public void saveDay(Day day) {
-        dayRepository.save(day);
-    }
-
-    @Override
-    @Transactional
-    // TODO TEST
-    public void createDay(Form form, HttpServletRequest request, Long planId) {
+    public void createDay(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         planService.finishedPlan(planId);
         DayForm dayForm = form.getDayForm();
@@ -83,17 +76,16 @@ public class DayServiceImpl implements DayService {
      * Day Update
      *
      * @param planId
-     * @param request
      * @param form
      */
     @Override
     @Transactional
     // TODO TEST
-    public void updateDay(Long planId, HttpServletRequest request, Form form) {
+    public void updateDay(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeDay(plan);
         planService.unFinishedPlan(planId);
-        createDay(form, request, plan.getId());
+        createDay(form, plan.getId());
     }
 
     /**

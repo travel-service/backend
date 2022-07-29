@@ -13,6 +13,8 @@ import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.ConceptService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,4 +79,17 @@ class ConceptServiceImplTest {
         planService.savePlan(plan2);
         planService.savePlan(plan3);
     }
+
+
+    @Test
+    @DisplayName("concept 생성 test")
+    public void createConceptTest() throws Exception {
+        //given
+
+
+
+        //when
+
+        //then
+     }
 }
