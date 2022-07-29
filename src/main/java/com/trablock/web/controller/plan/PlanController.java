@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.Error;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,10 +207,18 @@ public class PlanController {
     public UpdateSelectedLocation updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
                                                HttpServletRequest request,
                                                @RequestBody Form form) {
-        selectedLocationService.updateSelectedLocation(planId, request, form);
+        Member member = planService.getMemberFromPayload(request);
 
-        String message = "SelectedLocation이 정상적으로 생성 및 업데이트 되었습니다.";
+        if (member.getId() == null) {
+            String errorMessage = "등록되지 않은 회원입니다.";
 
-        return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
+            return new UpdateSelectedLocation(HTTPStatus.Unauthorized.getCode(), errorMessage);
+        } else {
+            selectedLocationService.updateSelectedLocation(planId, form);
+
+            String message = "SelectedLocation이 정상적으로 생성 및 업데이트 되었습니다.";
+
+            return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
+        }
     }
 }
