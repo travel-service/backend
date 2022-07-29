@@ -593,8 +593,35 @@ class PlanServiceTest {
     }
 
     @Test
+    @DisplayName("플랜 수정시 PLanComplete status 가 FINISHED -> UNFINISHED 로 변경되는 지 test")
+    public void unFinishedPlanTest() throws Exception {
+        //given
+        Form form = Form.builder()
+                .planForm(
+                        PlanForm.builder()
+                                .depart("test-depart")
+                                .name("test-name")
+                                .planComplete(PlanComplete.UNFINISHED)
+                                .planStatus(PlanStatus.MAIN)
+                                .thumbnail("test-thumbnail")
+                                .periods(1)
+                                .build()
+                ).build();
+
+        Plan plan = planService.createPlan(form, member);
+
+        planService.finishedPlan(plan.getId());
+
+        //when
+        planService.unFinishedPlan(plan.getId());
+
+        //then
+        assertEquals(plan.getPlanComplete(), PlanComplete.UNFINISHED);
+    }
+
+    @Test
     @DisplayName("플랜 완성시 PLanComplete status 가 UNFINISHED -> FINISHED 로 변경되지 않는 예외 상황 test")
-    public void finishedPlanExceptionTest() throws Exception {
+    public void UnFinishedPlanExceptionTest() throws Exception {
         //given
         Form form = Form.builder()
                 .planForm(

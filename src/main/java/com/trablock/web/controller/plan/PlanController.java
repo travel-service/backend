@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import static com.trablock.web.converter.Converter.*;
 import static com.trablock.web.converter.Converter.UserDay;
 import static com.trablock.web.converter.Converter.UserPlan;
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,11 +72,21 @@ public class PlanController {
     public UpdateConcept updateUserPlanConcept(@PathVariable("planId") Long planId,
                                       HttpServletRequest request,
                                       @RequestBody Form form) {
-        conceptService.updateConcept(planId, request, form);
 
-        String message = "Concept이 정상적으로 생성 및 업데이트 되었습니다.";
+        Member member = planService.getMemberFromPayload(request);
 
-        return new UpdateConcept(HTTPStatus.Created.getCode(), message);
+        if (member.getId() == null) {
+            String errorMessage = "등록되지 않은 회원입니다.";
+
+            return new UpdateConcept(HTTPStatus.Unauthorized.getCode(), errorMessage);
+
+        } else {
+            conceptService.updateConcept(planId, form);
+
+            String message = "Concept이 정상적으로 생성 및 업데이트 되었습니다.";
+
+            return new UpdateConcept(HTTPStatus.Created.getCode(), message);
+        }
     }
 
 
@@ -102,11 +113,20 @@ public class PlanController {
     // TODO TEST
     @PostMapping("/members/plan/{planId}/day")
     public CreateDay createDay(@RequestBody Form form, HttpServletRequest request, @PathVariable("planId") Long planId) {
-        dayService.createDay(form, request, planId);
 
-        String message = "Day가 정상적으로 생성되었습니다.";
+        Member member = planService.getMemberFromPayload(request);
 
-        return new CreateDay(HTTPStatus.Created.getCode(), message);
+        if (member.getId() == null) {
+            String errorMessage = "등록되지 않은 회원입니다.";
+
+            return new CreateDay(HTTPStatus.Unauthorized.getCode(), errorMessage);
+        } else {
+            dayService.createDay(form, planId);
+
+            String message = "Day가 정상적으로 생성되었습니다.";
+
+            return new CreateDay(HTTPStatus.Created.getCode(), message);
+        }
     }
 
 
@@ -120,10 +140,12 @@ public class PlanController {
 
         if (memberFromPayload.getId() != null) {
             List<Day> dayList = dayService.findDayIdForPlanIdToList(planId);
-            List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(Collectors.toList());
+            List<DayDto> dayDtos = dayList.stream().map(Day::toDto).collect(toList());
             return new UserDay(HTTPStatus.OK.getCode(), message, dayDtos);
         } else {
-            throw new IllegalStateException("가입되지 않은 회원입니다.");
+            String errorMessage = "등록되지 않은 회원입니다.";
+
+            return new UserDay(HTTPStatus.Unauthorized.getCode(), errorMessage, null);
         }
     }
 
@@ -134,11 +156,20 @@ public class PlanController {
     public GetDay updateUserPlanDay(@PathVariable("planId") Long planId,
                                   HttpServletRequest request,
                                   @RequestBody Form form) {
-        dayService.updateDay(planId, request, form);
 
-        String message = "Day가 정상적으로 수정 되었습니다.";
+        Member member = planService.getMemberFromPayload(request);
 
-        return new GetDay(HTTPStatus.Created.getCode(), message);
+        if (member.getId() == null) {
+            String errorMessage = "등록되지 않은 회원입니다.";
+
+            return new GetDay(HTTPStatus.Unauthorized.getCode(), errorMessage);
+        } else {
+            dayService.updateDay(planId, form);
+
+            String message = "Day가 정상적으로 수정 되었습니다.";
+
+            return new GetDay(HTTPStatus.Created.getCode(), message);
+        }
     }
 
 
@@ -176,10 +207,18 @@ public class PlanController {
     public UpdateSelectedLocation updateUserPlanSelectedLocation(@PathVariable("planId") Long planId,
                                                HttpServletRequest request,
                                                @RequestBody Form form) {
-        selectedLocationService.updateSelectedLocation(planId, request, form);
+        Member member = planService.getMemberFromPayload(request);
 
-        String message = "SelectedLocation이 정상적으로 생성 및 업데이트 되었습니다.";
+        if (member.getId() == null) {
+            String errorMessage = "등록되지 않은 회원입니다.";
 
-        return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
+            return new UpdateSelectedLocation(HTTPStatus.Unauthorized.getCode(), errorMessage);
+        } else {
+            selectedLocationService.updateSelectedLocation(planId, form);
+
+            String message = "SelectedLocation이 정상적으로 생성 및 업데이트 되었습니다.";
+
+            return new UpdateSelectedLocation(HTTPStatus.Created.getCode(), message);
+        }
     }
 }
