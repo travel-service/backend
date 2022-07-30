@@ -1,24 +1,27 @@
 package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.converter.Converter;
+import com.trablock.web.converter.Converter.CreateUserDirectory;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
+import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.UserDirectory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public interface UserDirectoryService {
+import static com.trablock.web.converter.Converter.*;
 
-    Long saveUserDirectory(UserDirectory userDirectory);
+public interface UserDirectoryService {
 
     void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId);
 
-    List<UserDirectory> findMainUserDirectoryMain(HttpServletRequest request);
+    List<UserDirectory> findMainUserDirectoryMain(Long memberId);
 
-    Long createUserDirectory(HttpServletRequest request, UserDirectoryForm userDirectoryForm, HttpServletResponse response);
+    CreateUserDirectory createUserDirectory(Long memberId, UserDirectoryForm userDirectoryForm);
 
-    void updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto, Long memberId);
+    UpdatePlanName updateDirectoryName(Long id, DirectoryNameUpdateDto directoryNameUpdateDto, Long memberId);
 
-    List<UserDirectory> findUserDirectory(HttpServletRequest request);
+    List<UserDirectory> findUserDirectory(Long memberId);
 }

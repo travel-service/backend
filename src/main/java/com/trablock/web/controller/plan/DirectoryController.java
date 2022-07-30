@@ -54,13 +54,16 @@ public class DirectoryController {
     @GetMapping("/directories/members")
     // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
-        List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(request);
+
+        Member member = planService.getMemberFromPayload(request);
+
+        List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(member.getId());
 
         List<UserDirectoryDto> collect = mainUserDirectoryMain.stream()
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(toList());
 
-        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(request);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(member.getId());
         List<Integer> planCount = planItemService.countPlan(userDirectories);
 
         String message = "모든 사용자 디렉터리를 정상적으로 불러왔습니다.";
@@ -154,13 +157,10 @@ public class DirectoryController {
     @PostMapping("/directories")
     // TODO TEST
     public CreateUserDirectory createUserDirectory(HttpServletRequest request,
-                                      @RequestBody UserDirectoryForm userDirectoryForm,
-                                      HttpServletResponse response) {
-        Long userDirectoryId = userDirectoryService.createUserDirectory(request, userDirectoryForm, response);
+                                      @RequestBody UserDirectoryForm userDirectoryForm) {
+        Member member = planService.getMemberFromPayload(request);
 
-        String message = "디렉터리가 정상적으로 생성되었습니다.";
-
-        return new CreateUserDirectory(HTTPStatus.Created.getCode(), message, userDirectoryId);
+        return userDirectoryService.createUserDirectory(member.getId(), userDirectoryForm);
     }
 
 
@@ -201,11 +201,7 @@ public class DirectoryController {
 
         Member member = planService.getMemberFromPayload(request);
 
-        userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
-
-        String message = "디렉터리 이름이 정상적으로 변경되었습니다.";
-
-        return new UpdatePlanName(HTTPStatus.Created.getCode(), message);
+        return userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
 
     //    main directory get
