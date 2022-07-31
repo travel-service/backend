@@ -3,13 +3,13 @@ package com.trablock.web.service.plan;
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
-import com.trablock.web.dto.plan.PlanDto;
-import com.trablock.web.dto.plan.PlanInfoDto;
-import com.trablock.web.dto.plan.UserDirectoryIdDto;
-import com.trablock.web.dto.plan.UserPlanUpdateDto;
+import com.trablock.web.converter.Converter;
+import com.trablock.web.converter.Converter.MainDirectory;
+import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
+import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -166,18 +168,19 @@ public class PlanServiceImpl implements PlanService {
 
     /**
      * test
-     * @param memberId
+     * @param member
      * @return
      */
     @Override
-    public List<PlanInfoDto> findPlanInfo(Long memberId) {
-        List<PlanInfoDto> planInfo = planRepository.findPlanInfoCustom(memberId);
+    public MainDirectory findPlanInfo(Member member, int planCount) {
+        List<PlanInfoDto> planInfo = planRepository.findPlanInfoCustom(member.getId());
 
         Map<Long, List<UserDirectoryIdDto>> testDtoMap = findPlanItemMap(toPlanId(planInfo));
 
         planInfo.forEach(p -> p.setUserDirectoryId(testDtoMap.get(p.getPlanId())));
 
-        return planInfo;
+        String message = "메인 디렉터리를 정상적으로 불러왔습니다.";
+        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, planInfo);
     }
 
     private Map<Long, List<UserDirectoryIdDto>> findPlanItemMap(List<Long> toPlanId) {

@@ -2,6 +2,8 @@ package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
+import com.trablock.web.converter.Converter;
+import com.trablock.web.converter.Converter.MainDirectory;
 import com.trablock.web.dto.plan.PlanDto;
 import com.trablock.web.dto.plan.PlanInfoDto;
 import com.trablock.web.dto.plan.UserPlanUpdateDto;
@@ -41,7 +43,7 @@ public interface PlanService {
 
     Plan returnPlan(Long planId, Member member);
 
-    List<PlanInfoDto> findPlanInfo(Long memberId);
+    MainDirectory findPlanInfo(Member memberId, int planCount);
 
     void unFinishedPlan(Long planId);
 }

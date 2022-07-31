@@ -37,16 +37,11 @@ public class DirectoryController {
     // TODO TEST
     @GetMapping("/directories/main")
     public MainDirectory test2(HttpServletRequest request) {
-
         Member member = planService.getMemberFromPayload(request);
-
-        List<PlanInfoDto> testDtos = planService.findPlanInfo(member.getId());
 
         int planCount = planService.countPlan(member); // 플랜 갯수 반환
 
-        String message = "메인 디렉터리를 정상적으로 불러왔습니다.";
-
-        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, testDtos);
+        return planService.findPlanInfo(member, planCount);
     }
 
 
@@ -54,7 +49,6 @@ public class DirectoryController {
     @GetMapping("/directories/members")
     // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
-
         Member member = planService.getMemberFromPayload(request);
 
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(member.getId());
@@ -204,8 +198,8 @@ public class DirectoryController {
         return userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
 
-    //    main directory get
-//    @GetMapping("/directories/main")
+//        main directory get
+//    @GetMapping("/directories/main/testasfd")
 //    public MainDirectory mainPlans(HttpServletRequest request) {
 //        Member member = planService.getMemberFromPayload(request);
 //
