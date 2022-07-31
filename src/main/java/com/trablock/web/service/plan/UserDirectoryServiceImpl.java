@@ -3,22 +3,17 @@ package com.trablock.web.service.plan;
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
-import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
-import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 
 import static com.trablock.web.converter.Converter.*;
 
@@ -28,7 +23,6 @@ import static com.trablock.web.converter.Converter.*;
 public class UserDirectoryServiceImpl implements UserDirectoryService {
 
     private final UserDirectoryRepository userDirectoryRepository;
-    private final PlanService planService;
     private final MemberRepository memberRepository;
 
     //user 디렉터리 삭제
@@ -107,6 +101,6 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
      */
     @Override
     public List<UserDirectory> findUserDirectory(Long memberId) {
-        return userDirectoryRepository.findUserDirectoryById(memberId);
+        return userDirectoryRepository.findUserDirectoryById(memberId, Status.UNDELETE);
     }
 }

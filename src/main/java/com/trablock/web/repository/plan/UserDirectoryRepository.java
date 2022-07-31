@@ -1,5 +1,6 @@
 package com.trablock.web.repository.plan;
 
+import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.entity.plan.enumtype.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,8 +20,8 @@ public interface UserDirectoryRepository extends JpaRepository<UserDirectory, Lo
     List<UserDirectory> findMemberIdForList(@Param("memberId") Long memberId, @Param("status") Status status);
 
     // TODO TEST
-    @Query("select u from UserDirectory u where u.member.id = :memberId")
-    List<UserDirectory> findUserDirectoryById(@Param("memberId") Long memberId);
+    @Query("select u from UserDirectory u where u.member.id = :memberId and u.status = :status")
+    List<UserDirectory> findUserDirectoryById(@Param("memberId") Long memberId, @Param("status")Status status);
 
     // TODO TEST
     @Query("select count(u) from UserDirectory as u where u.member.id = :memberId")

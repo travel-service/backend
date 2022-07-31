@@ -6,7 +6,6 @@ import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
-import com.trablock.web.dto.plan.PlanInfoDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -16,10 +15,10 @@ import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +48,7 @@ public class DirectoryController {
     @GetMapping("/directories/members")
     // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
+
         Member member = planService.getMemberFromPayload(request);
 
         List<UserDirectory> mainUserDirectoryMain = userDirectoryService.findMainUserDirectoryMain(member.getId());
@@ -57,12 +57,13 @@ public class DirectoryController {
                 .map(o -> new UserDirectoryDto(o.getId(), o.getDirectoryName()))
                 .collect(toList());
 
-        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(member.getId());
-        List<Integer> planCount = planItemService.countPlan(userDirectories);
-
         String message = "모든 사용자 디렉터리를 정상적으로 불러왔습니다.";
 
-        return new MainUserDirectory(HTTPStatus.OK.getCode(), message, planCount, collect);
+        List<UserDirectory> userDirectories = userDirectoryService.findUserDirectory(member.getId());
+
+        List<Integer> planCount = planItemService.countPlan(userDirectories);
+
+        return new MainUserDirectory(HttpStatus.OK.value(), message, planCount, collect);
     }
 
 
@@ -134,7 +135,7 @@ public class DirectoryController {
 
 
     //플랜 영구 삭제(trash -> delete)
-    @DeleteMapping("directories/plans")
+    @DeleteMapping("/directories/plans")
     // TODO TEST
     public PlanDelete deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);

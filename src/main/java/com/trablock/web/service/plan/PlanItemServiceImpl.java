@@ -34,6 +34,7 @@ public class PlanItemServiceImpl implements PlanItemService {
     // 유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
     @Override
     @Transactional
+    // TODO TEST
     public PlanMoveToUserDirectory moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
 
         UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
@@ -72,6 +73,7 @@ public class PlanItemServiceImpl implements PlanItemService {
     }
 
     @Override
+    // TODO TEST
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
         return planItemRepository.findPlanItemByPI(id);
     }
@@ -88,9 +90,9 @@ public class PlanItemServiceImpl implements PlanItemService {
         List<Integer> countPlanList = new ArrayList<>();
 
         for (UserDirectory userDirectory : userDirectories) {
-            Integer integer = planItemRepository.countPlan(userDirectory);
+            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory, Status.UNDELETE);
 
-            countPlanList.add(integer);
+            countPlanList.add(planItemList.size());
         }
 
         return countPlanList;

@@ -4,6 +4,7 @@ import com.trablock.web.dto.plan.UserDirectoryIdDto;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.PlanItem;
 import com.trablock.web.entity.plan.UserDirectory;
+import com.trablock.web.entity.plan.enumtype.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +21,8 @@ public interface PlanItemRepository extends JpaRepository<PlanItem, Long>, PlanI
     List<Plan> findPlanItemByPI(@Param("userDirectoryId") UserDirectory id);
 
     // TODO TEST
-    @Query("select count(pi) from PlanItem pi where pi.userDirectory = :userDirectoryId")
-    Integer countPlan (@Param("userDirectoryId") UserDirectory id);
+    @Query("select pi from PlanItem pi where pi.userDirectory = :userDirectoryId and pi.status = :status")
+    List<PlanItem> countPlan(@Param("userDirectoryId") UserDirectory id, @Param("status")Status status);
 
     // TODO TEST
     PlanItem findPlanItemById(Long id);
