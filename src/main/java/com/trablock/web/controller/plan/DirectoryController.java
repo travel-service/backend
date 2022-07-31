@@ -178,11 +178,8 @@ public class DirectoryController {
     @PostMapping("/directories/directory/plans")
     public PlanMoveToUserDirectory moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
-        planItemService.moveUserPlan(moveDirectoryForm, member.getId());
 
-        String message = "플랜이 정상적으로 디렉터리로 이동되었습니다.";
-
-        return new PlanMoveToUserDirectory(HTTPStatus.Created.getCode(), message);
+        return planItemService.moveUserPlan(moveDirectoryForm, member.getId());
     }
 
 
@@ -197,20 +194,6 @@ public class DirectoryController {
 
         return userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
-
-//        main directory get
-//    @GetMapping("/directories/main/testasfd")
-//    public MainDirectory mainPlans(HttpServletRequest request) {
-//        Member member = planService.getMemberFromPayload(request);
-//
-//        List<Plan> planDirectoryMain = planService.findMainPlanDirectoryMain(member);
-//        List<PlanDirectoryDto> collect = getPlanDirectoryDtos(planDirectoryMain);
-//
-//        int planCount = planService.countPlan(member); // 플랜 갯수 반환
-//
-//        return new MainDirectory(HTTPStatus.OK.getCode(), planCount, collect);
-//    }
-
 
 
     // TODO TEST
