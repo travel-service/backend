@@ -1,14 +1,14 @@
 package com.trablock.web.service.location;
 
 import com.trablock.web.domain.LocationType;
-import com.trablock.web.dto.location.LocationWrapperDto;
-import com.trablock.web.dto.location.TypeLocationRequestDto;
+import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.LocationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
 import com.trablock.web.dto.location.type.AttractionDto;
 import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.entity.location.Coords;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.repository.member.MemberRepository;
 import org.junit.jupiter.api.*;
@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,11 +33,13 @@ class LocationServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-    Long locationId;
+    private Long locationId;
+
+    private Member member;
 
     @BeforeEach
     void init() {
-        Member member = memberRepository.save(Member.builder()
+        member = memberRepository.save(Member.builder()
                 .userName("name")
                 .password("1234")
                 .build());
@@ -66,8 +72,40 @@ class LocationServiceTest {
     @Test
     @DisplayName("멤버로케이션 생성")
     void createLocationByMember() throws Exception {
-        //then
-        assertThat(locationId).isNotNull();
+        // given
+        LocationRequestDto locationRequestDto = new LocationRequestDto("팀원더", "안성시 석정동", "",
+                new Coords(124.4567, 38.567), "abc.url/456",
+                123, true, LocationType.CULTURE);
+
+        InformationRequestDto informationRequestDto = new InformationRequestDto("요약요약요약22",
+                "긴글긴글긴글긴글긴글긴글긴글긴글긴글긴글22", "이미지3", "이미지4", "010-1234-5678");
+
+        MemberLocationRequestDto memberLocationRequestDto = new MemberLocationRequestDto(member.getId(), true);
+
+        TypeLocationRequestDto typeLocationRequestDto = TypeLocationRequestDto.builder()
+                .parking(true)
+                .restDate("매주 일요일")
+                .fee("무료")
+                .useTime("09:00~22:00")
+                .spendTime("8시간")
+                .build();
+
+        LocationWrapperDto locationWrapperDto = LocationWrapperDto.builder()
+                .location(locationRequestDto)
+                .memberLocation(memberLocationRequestDto)
+                .information(informationRequestDto)
+                .typeLocation(typeLocationRequestDto)
+                .build();
+
+        //when
+        assertThat(locationService.createLocationByMember(locationWrapperDto)).isNotNull();
+        List<Long> locationIdList = new ArrayList<>();
+        locationIdList.add(locationId);
+        List<Location> locationListWithLocationIds = locationService.getLocationListWithLocationIds(locationIdList);
+
+        // then
+        locationListWithLocationIds.forEach(location -> assertThat(location.getIsMember()).isTrue());
+
     }
 
 
@@ -89,5 +127,50 @@ class LocationServiceTest {
         );
 
         System.out.println("locationDetails = " + locationDetails.toString());
+    }
+
+
+    @Test
+    void getMemberLocationList() throws Exception {
+        //given
+        locationService.getMemberLocationList(member.getId());
+        LocationRequestDto locationRequestDto = new LocationRequestDto("팀원더", "안성시 석정동", "",
+                new Coords(124.4567, 38.567), "abc.url/456",
+                123, true, LocationType.CULTURE);
+
+        InformationRequestDto informationRequestDto = new InformationRequestDto("요약요약요약22",
+                "긴글긴글긴글긴글긴글긴글긴글긴글긴글긴글22", "이미지3", "이미지4", "010-1234-5678");
+
+        MemberLocationRequestDto memberLocationRequestDto = new MemberLocationRequestDto(member.getId(), true);
+
+        TypeLocationRequestDto typeLocationRequestDto = TypeLocationRequestDto.builder()
+                .parking(true)
+                .restDate("매주 일요일")
+                .fee("무료")
+                .useTime("09:00~22:00")
+                .spendTime("8시간")
+                .build();
+
+        LocationWrapperDto locationWrapperDto = LocationWrapperDto.builder()
+                .location(locationRequestDto)
+                .memberLocation(memberLocationRequestDto)
+                .information(informationRequestDto)
+                .typeLocation(typeLocationRequestDto)
+                .build();
+        locationService.createLocationByMember(locationWrapperDto);
+
+        //when
+        MarkAndBlockLocationListDto memberLocationList = locationService.getMemberLocationList(member.getId());
+        Map<String, List<BlockLocationDto>> blockLocations = memberLocationList.getBlockLocations();
+        Map<String, List<MarkLocationDto>> markLocations = memberLocationList.getMarkLocations();
+
+        //then
+        Assumptions.assumeFalse(blockLocations.isEmpty());
+        Assumptions.assumeFalse(markLocations.isEmpty());
+        for (List<MarkLocationDto> value : markLocations.values()) {
+            value.stream().map(dto -> "dto = " + dto.getName() + " " + dto.getLocationId() + " " + dto.getType()).forEach(System.out::println);
+        }
+        markLocations.keySet().stream().map(s -> "s = " + s).forEach(System.out::println);
+
     }
 }
