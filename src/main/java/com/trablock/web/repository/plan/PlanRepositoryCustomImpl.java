@@ -16,7 +16,7 @@ public class PlanRepositoryCustomImpl implements PlanRepositoryCustom{
         return em.createQuery(
                 "select new com.trablock.web.dto.plan.PlanInfoDto(p.id, p.name, p.periods, p.createdDate, p.planComplete)" +
                         " from Plan p" +
-                        " join p.planItems pi" +
+                        " left join p.planItems pi" +
                         " where p.member.id = :memberId", PlanInfoDto.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
