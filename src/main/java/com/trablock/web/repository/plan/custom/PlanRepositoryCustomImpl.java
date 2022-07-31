@@ -1,13 +1,14 @@
-package com.trablock.web.repository.plan;
+package com.trablock.web.repository.plan.custom;
 
 import com.trablock.web.dto.plan.PlanInfoDto;
+import com.trablock.web.repository.plan.PlanRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PlanRepositoryCustomImpl implements PlanRepositoryCustom{
+public class PlanRepositoryCustomImpl implements PlanRepositoryCustom {
 
     private final EntityManager em;
 

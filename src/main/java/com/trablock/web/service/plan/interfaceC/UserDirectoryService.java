@@ -4,6 +4,7 @@ import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.converter.Converter;
 import com.trablock.web.converter.Converter.CreateUserDirectory;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
+import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.UserDirectory;
 

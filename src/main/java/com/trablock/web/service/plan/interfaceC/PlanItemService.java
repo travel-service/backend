@@ -2,17 +2,16 @@ package com.trablock.web.service.plan.interfaceC;
 
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.converter.Converter;
+import com.trablock.web.converter.Converter.PlanMoveToUserDirectory;
 import com.trablock.web.entity.plan.Plan;
-import com.trablock.web.entity.plan.PlanItem;
 import com.trablock.web.entity.plan.UserDirectory;
 
 import java.util.List;
 
 public interface PlanItemService {
 
-    void savePlanItem(PlanItem planItem);
-
-    void moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId);
+    PlanMoveToUserDirectory moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId);
 
     void deleteMapping(UserDirectoryForm userDirectoryForm);
 
@@ -20,5 +19,4 @@ public interface PlanItemService {
 
     List<Integer> countPlan(List<UserDirectory> userDirectories);
 
-    List<Long> getUserDirectoriesId(Long planId);
 }
