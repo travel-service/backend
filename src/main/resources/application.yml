@@ -1,23 +1,20 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/GBSB
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/trablock?serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     #    show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         #        show_sql: true
         format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
     defer-datasource-initialization: true
-  h2:
-    console:
-      enabled: true
   security:
     user:
       name: user
