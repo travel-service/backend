@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class LodgeDto {
+public class LodgeDto extends TypeLocationDto {
 
     private Long locationId;
     private String name;

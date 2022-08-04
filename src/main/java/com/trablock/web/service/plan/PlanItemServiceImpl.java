@@ -2,10 +2,12 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
+import com.trablock.web.converter.Converter;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.PlanItem;
 import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
+import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
@@ -14,9 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.trablock.web.converter.Converter.*;
 
 
 @Service
@@ -28,16 +31,11 @@ public class PlanItemServiceImpl implements PlanItemService {
     private final PlanRepository planRepository;
     private final UserDirectoryRepository userDirectoryRepository;
 
+    // 유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
     @Override
     @Transactional
-    public void savePlanItem(PlanItem planItem) {
-        planItemRepository.save(planItem);
-    }
-
-    //유저가 만든 플랜을 main 디렉터리에서 -> user 디렉터리로 이동
-    @Override
-    @Transactional
-    public void moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
+    // TODO TEST
+    public PlanMoveToUserDirectory moveUserPlan(MoveDirectoryForm moveDirectoryForm, Long memberId) {
 
         UserDirectory userDirectoryId = userDirectoryRepository.findUserDirectoryById(moveDirectoryForm.getUserDirectoryId(), memberId);
 
@@ -56,10 +54,15 @@ public class PlanItemServiceImpl implements PlanItemService {
         }
 
         planItemRepository.saveAll(planItemList);
+
+        String message = "플랜이 정상적으로 디렉터리로 이동되었습니다.";
+
+        return new PlanMoveToUserDirectory(HTTPStatus.Created.getCode(), message);
     }
 
     @Override
     @Transactional
+    // TODO TEST
     public void deleteMapping(UserDirectoryForm userDirectoryForm) {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
             List<PlanItem> planItemByUserDirectoryId = planItemRepository.findPlanItemByUserDirectoryId(userDirectoryForm.getUserDirectoryId().get(i));
@@ -70,6 +73,7 @@ public class PlanItemServiceImpl implements PlanItemService {
     }
 
     @Override
+    // TODO TEST
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
         return planItemRepository.findPlanItemByPI(id);
     }
@@ -81,13 +85,14 @@ public class PlanItemServiceImpl implements PlanItemService {
      * @return
      */
     @Override
+    // TODO TEST
     public List<Integer> countPlan(List<UserDirectory> userDirectories) {
         List<Integer> countPlanList = new ArrayList<>();
 
         for (UserDirectory userDirectory : userDirectories) {
-            Integer integer = planItemRepository.countPlan(userDirectory);
+            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory, Status.UNDELETE);
 
-            countPlanList.add(integer);
+            countPlanList.add(planItemList.size());
         }
 
         return countPlanList;

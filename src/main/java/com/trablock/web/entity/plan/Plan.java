@@ -59,17 +59,21 @@ public class Plan extends BaseTimeEntity {
     public void trash() {
         if (getPlanStatus() == PlanStatus.TRASH) {
             throw new IllegalStateException("이미 휴지통으로 이동된 플랜입니다.");
+        } else if (getPlanStatus() == PlanStatus.DELETE) {
+            throw new IllegalStateException("삭제된 플랜입니다.");
         }
 
         this.planStatus = PlanStatus.TRASH;
     }
 
     /**
-     * 플랜 삭제
+     * 플랜 완전 삭제
      */
     public void delete() {
         if (getPlanStatus() == PlanStatus.MAIN) {
             throw new IllegalStateException("휴지통으로 먼저 이동하시오");
+        } else if (getPlanStatus() == PlanStatus.DELETE) {
+            throw new IllegalStateException("이미 삭제된 플랜입니다.");
         }
 
         this.planStatus = PlanStatus.DELETE;
@@ -81,6 +85,8 @@ public class Plan extends BaseTimeEntity {
     public void revert() {
         if (getPlanStatus() == PlanStatus.MAIN) {
             throw new IllegalStateException("이미 복구된 플랜입니다.");
+        } else if (getPlanStatus() == PlanStatus.DELETE) {
+            throw new IllegalStateException("완전 삭제된 플랜은 복구 할 수 없습니다.");
         }
 
         this.planStatus = PlanStatus.MAIN;
@@ -91,8 +97,18 @@ public class Plan extends BaseTimeEntity {
      * 플랜 완성
      */
     public void finished() {
-        PlanComplete planComplete = PlanComplete.FINISHED;
-        this.planComplete = planComplete;
+        if (getPlanComplete() == PlanComplete.FINISHED) {
+            throw new IllegalStateException("이미 완성된 플랜입니다.");
+        }
+
+        this.planComplete = PlanComplete.FINISHED;
+    }
+
+    /**
+     * 플랜 완성 -> 비완성
+     */
+    public void unFinished() {
+        this.planComplete = PlanComplete.UNFINISHED;
     }
 
     /**

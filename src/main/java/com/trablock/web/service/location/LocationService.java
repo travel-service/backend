@@ -1,33 +1,37 @@
 package com.trablock.web.service.location;
 
+import com.trablock.web.controller.exception.MemberHasNoneOwnershipException;
 import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.save.InformationRequestDto;
 import com.trablock.web.dto.location.save.MemberLocationRequestDto;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.entity.location.Location;
+import com.trablock.web.entity.location.MemberLocation;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 
 public interface LocationService {
 
-    Object getLocationDetails(Long locationId, LocationType locationType);
+    TypeLocationDto getLocationDetails(Long locationId, LocationType locationType);
 
     Long createLocationByMember(LocationWrapperDto wrapperDto);
 
-    boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type);
+    boolean saveTypeLocation(TypeLocationRequestDto requestDto, LocationType type) throws NoSuchElementException;
 
     boolean updateLocationInformation(InformationRequestDto informationDto, Long locationId);
 
     boolean updateMemberLocation(MemberLocationRequestDto memberLocationDto, Long locationId);
 
-    boolean deleteLocationByMember(Long locationId);
+    boolean deleteLocationByMember(Long locationId, Long memberId);
 
-    boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId);
+    boolean updateLocationByMember(LocationWrapperDto wrapperDto, Long locationId, Long memberId) throws MemberHasNoneOwnershipException;
+
+    MarkAndBlockLocationListDto getMarkAndBlockLocationsFromLocationIds(List<Long> locationIds);
 
     Map<String, List<BlockLocationDto>> getBlockLocationListFromLocationList(List<Location> locationList);
 
@@ -51,4 +55,7 @@ public interface LocationService {
 
     HashSet<BlockLocationView> getBlockLocationListWithType(LocationType type);
 
+    boolean verifyLocationOwnership(Long memberId, MemberLocation memberLocation);
+
+    MarkAndBlockLocationListDto getMemberLocationList(Long memberId);
 }

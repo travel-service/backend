@@ -5,6 +5,7 @@ import com.trablock.web.controller.form.Form;
 import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.plan.Day;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.repository.location.LocationRepository;
 import com.trablock.web.repository.plan.DayRepository;
 import com.trablock.web.repository.plan.PlanRepository;
@@ -14,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,14 +31,12 @@ public class DayServiceImpl implements DayService {
 
     @Override
     @Transactional
-    public void saveDay(Day day) {
-        dayRepository.save(day);
-    }
-
-    @Override
-    @Transactional
-    public void createDay(Form form, HttpServletRequest request, Long planId) {
+    public List<Day> createDay(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
+
+        if (plan.getPlanComplete() == PlanComplete.FINISHED) {
+            planService.unFinishedPlan(planId);
+        }
         planService.finishedPlan(planId);
         DayForm dayForm = form.getDayForm();
 
@@ -61,7 +59,7 @@ public class DayServiceImpl implements DayService {
             }
         }
 
-        dayRepository.saveAll(dayList);
+        return dayRepository.saveAll(dayList);
     }
 
     /**
@@ -78,17 +76,17 @@ public class DayServiceImpl implements DayService {
 
     /**
      * Day Update
-     *
-     * @param planId
-     * @param request
+     *  @param planId
      * @param form
+     * @return
      */
     @Override
     @Transactional
-    public void updateDay(Long planId, HttpServletRequest request, Form form) {
+    public List<Day> updateDay(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeDay(plan);
-        createDay(form, request, plan.getId());
+        planService.unFinishedPlan(planId);
+        return createDay(form, plan.getId());
     }
 
     /**

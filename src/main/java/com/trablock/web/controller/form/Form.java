@@ -1,8 +1,10 @@
 package com.trablock.web.controller.form;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Form {
 
     private PlanForm planForm;

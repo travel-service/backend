@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class AttractionDto {
+public class AttractionDto extends TypeLocationDto {
 
     private Long locationId;
     private String name;
@@ -28,5 +28,6 @@ public class AttractionDto {
 
     private boolean parking;
     private String restDate;
+    private String useTime;
 
 }

@@ -3,12 +3,15 @@ package com.trablock.web.service.plan;
 import com.trablock.web.config.jwt.JwtTokenProvider;
 import com.trablock.web.controller.form.Form;
 import com.trablock.web.controller.form.StateChangeForm;
-import com.trablock.web.dto.plan.PlanDto;
-import com.trablock.web.dto.plan.UserPlanUpdateDto;
+import com.trablock.web.converter.Converter;
+import com.trablock.web.converter.Converter.MainDirectory;
+import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
+import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
+import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.service.plan.interfaceC.PlanService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,6 +32,7 @@ import java.util.Optional;
 public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
+    private final PlanItemRepository planItemRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
@@ -32,6 +40,14 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     public void savePlan(Plan plan) {
         planRepository.save(plan);
+    }
+
+    @Override
+    @Transactional
+    public Plan createPlan(Form form, Member member) {
+        Plan plan = form.getPlanForm().toEntity(member);
+        savePlan(plan);
+        return plan;
     }
 
     @Override
@@ -47,45 +63,32 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    @Transactional
-    public Plan createPlan(Form form, HttpServletRequest request) {
-        Plan plan = form.getPlanForm().toEntity(getMemberFromPayload(request));
-        savePlan(plan);
-        return plan;
+    public List<Plan> findMainPlanDirectoryMain(Member member) {
+        Member optionalMember = Optional.ofNullable(member).orElseThrow();
+        return planRepository.findPlansByPlanStatus(optionalMember, PlanStatus.MAIN);
     }
 
     @Override
-    public List<Plan> findMainPlanDirectoryMain(HttpServletRequest request) {
-        Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findPlansByPlanStatus(member, PlanStatus.MAIN);
-    }
-
-    @Override
+    // TODO TEST
     public List<Plan> findTrashPlanDirectoryMain(HttpServletRequest request) {
         Member member = Optional.ofNullable(getMemberFromPayload(request)).orElseThrow();
-        return planRepository.findPlansByPlanStatus(member, PlanStatus.DELETE);
+        return planRepository.findPlansByPlanStatus(member, PlanStatus.TRASH);
     }
 
     // 플랜 삭제(main -> trash)
     @Override
     @Transactional
-    public void cancelPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-
-        Member member = getMemberFromPayload(request);
-
+    public void cancelPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.trash();
-
         }
     }
 
     // 플랜 완전 삭제(trash -> delete)
     @Override
     @Transactional
-    public void deletePlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void deletePlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.delete();
@@ -95,9 +98,7 @@ public class PlanServiceImpl implements PlanService {
     // 플랜 복구(trash -> main)
     @Override
     @Transactional
-    public void revertPlan(StateChangeForm stateChangeForm, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
-
+    public void revertPlan(StateChangeForm stateChangeForm, Member member) {
         for (int i = 0; i < stateChangeForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanByMember(stateChangeForm.getPlanId().get(i), member).orElseThrow();
             plan.revert();
@@ -111,6 +112,13 @@ public class PlanServiceImpl implements PlanService {
         plan.finished();
     }
 
+    // 플랜 완성 -> 수정
+    @Override
+    public void unFinishedPlan(Long planId) {
+        Plan plan = planRepository.findPlanById(planId).orElseThrow();
+        plan.unFinished();
+    }
+
     /**
      * User Plan Update
      *
@@ -119,8 +127,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     @Transactional
-    public void updateUserPlanContent(Long planId, HttpServletRequest request, UserPlanUpdateDto userPlanUpdateDto) {
-        Member member = getMemberFromPayload(request);
+    public void updateUserPlanContent(Long planId, Member member, UserPlanUpdateDto userPlanUpdateDto) {
         Plan plan = planRepository.findPlanByMember(planId, member).orElseThrow();
         plan.updatePlan(userPlanUpdateDto);
     }
@@ -128,24 +135,22 @@ public class PlanServiceImpl implements PlanService {
     /**
      * 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public int countPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countPlan(Member member) {
         return planRepository.planCount(member);
     }
 
     /**
      * 휴지통 플랜 갯수 반환
      *
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public int countTrashPlan(HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public int countTrashPlan(Member member) {
         return planRepository.trashPlanCount(member);
     }
 
@@ -153,12 +158,41 @@ public class PlanServiceImpl implements PlanService {
      * SelectedLocation의 locationId를 불러오기 위한 Plan 객체 가져오기
      *
      * @param planId
-     * @param request
+     * @param member
      * @return
      */
     @Override
-    public Plan returnPlan(Long planId, HttpServletRequest request) {
-        Member member = getMemberFromPayload(request);
+    public Plan returnPlan(Long planId, Member member) {
         return planRepository.findPlanByMember(planId, member).orElseThrow();
+    }
+
+    /**
+     * test
+     * @param member
+     * @return
+     */
+    @Override
+    public MainDirectory findPlanInfo(Member member, int planCount) {
+        List<PlanInfoDto> planInfo = planRepository.findPlanInfoCustom(member.getId());
+
+        Map<Long, List<UserDirectoryIdDto>> testDtoMap = findPlanItemMap(toPlanId(planInfo));
+
+        planInfo.forEach(p -> p.setUserDirectoryId(testDtoMap.get(p.getPlanId())));
+
+        String message = "메인 디렉터리를 정상적으로 불러왔습니다.";
+        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, planInfo);
+    }
+
+    private Map<Long, List<UserDirectoryIdDto>> findPlanItemMap(List<Long> toPlanId) {
+        List<UserDirectoryIdDto> userDirectoryIds = planItemRepository.findUserDirectoryIdByPlanIdCustom(toPlanId);
+
+        return userDirectoryIds.stream()
+                .collect(Collectors.groupingBy(UserDirectoryIdDto::getPlanId));
+    }
+
+    private List<Long> toPlanId(List<PlanInfoDto> planInfo) {
+        return planInfo.stream()
+                .map(p -> p.getPlanId())
+                .collect(Collectors.toList());
     }
 }

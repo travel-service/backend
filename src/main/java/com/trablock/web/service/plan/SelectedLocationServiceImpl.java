@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +27,7 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
 
     @Override
     @Transactional
-    public void saveSelectedLocation(SelectedLocation selectedLocation) {
-        selectedLocationRepository.save(selectedLocation);
-    }
-
-    @Override
-    @Transactional
-    public void createSelectedLocation(Form form, HttpServletRequest request, Long planId) {
+    public List<SelectedLocation> createSelectedLocation(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         ArrayList<SelectedLocation> selectedLocationList = new ArrayList<>();
@@ -50,22 +43,21 @@ public class SelectedLocationServiceImpl implements SelectedLocationService {
             selectedLocationList.add(selectedLocation);
         }
 
-        selectedLocationRepository.saveAll(selectedLocationList);
+        return selectedLocationRepository.saveAll(selectedLocationList);
     }
 
     /**
      * SelectedLocation Update
-     *
-     * @param planId
-     * @param request
+     *  @param planId
      * @param form
+     * @return
      */
     @Override
     @Transactional
-    public void updateSelectedLocation(Long planId, HttpServletRequest request, Form form) {
+    public List<SelectedLocation> updateSelectedLocation(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
         removeSelectedLocation(plan);
-        createSelectedLocation(form, request, planId);
+        return createSelectedLocation(form, planId);
     }
 
     /**

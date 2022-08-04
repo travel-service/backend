@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +23,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     @Transactional
-    public void saveConcept(Concept concept) {
-        conceptRepository.save(concept);
-    }
-
-    @Override
-    @Transactional
-    public void createConcept(Form form, HttpServletRequest request, Long planId) {
+    public List<Concept> createConcept(Form form, Long planId) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
 
         ArrayList<Concept> conceptList = new ArrayList<>();
@@ -44,7 +37,7 @@ public class ConceptServiceImpl implements ConceptService {
             conceptList.add(concept);
         }
 
-        conceptRepository.saveAll(conceptList);
+        return conceptRepository.saveAll(conceptList);
     }
 
     @Override
@@ -54,23 +47,22 @@ public class ConceptServiceImpl implements ConceptService {
 
     /**
      * Concept Update
-     *
-     * @param planId
-     * @param request
+     *  @param planId
      * @param form
+     * @return
      */
     @Override
     @Transactional
-    public void updateConcept(Long planId, HttpServletRequest request, Form form) {
+    public List<Concept> updateConcept(Long planId, Form form) {
         Plan plan = planRepository.findPlanById(planId).orElseThrow();
-        if (plan.getConcepts() == null || !plan.getConcepts().isEmpty())
+        if (plan.getConcepts() == null || !plan.getConcepts().isEmpty()) {
             removeConcept(plan);
-        createConcept(form, request, plan.getId());
+        }
+        return createConcept(form, plan.getId());
     }
 
     /**
      * Concept delete
-     *
      * @param plan
      */
     @Override

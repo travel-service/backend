@@ -2,10 +2,12 @@ package com.trablock.web.repository.location;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.trablock.web.dto.location.*;
+import com.trablock.web.dto.location.BlockLocationView;
 import com.trablock.web.dto.location.type.*;
+import com.trablock.web.entity.location.Location;
 import com.trablock.web.entity.location.QInformation;
 import com.trablock.web.entity.location.QLocation;
+import com.trablock.web.entity.location.QMemberLocation;
 import com.trablock.web.entity.location.type.*;
 import com.trablock.web.entity.plan.QSelectedLocation;
 
@@ -23,6 +25,18 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
     public LocationRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
+
+    @Override
+    public List<Location> findLocationsByMemberId(Long memberId) {
+        QLocation location = QLocation.location;
+        QMemberLocation memberLocation = QMemberLocation.memberLocation;
+
+        return queryFactory.selectFrom(location)
+                .leftJoin(memberLocation).on(location.id.eq(memberLocation.locationId))
+                .where(memberLocation.memberId.eq(memberId))
+                .fetch();
+    }
+
 
     @Override
     public List<BlockLocationView> findSelectedLocationByPlanId(Long planId) {
@@ -66,7 +80,8 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                         information.report,
                         location.type,
                         attraction.parking,
-                        attraction.restDate
+                        attraction.restDate,
+                        attraction.useTime
                 )).from(location)
                 .leftJoin(attraction).on(location.id.eq(attraction.locationId))
                 .leftJoin(information).on(location.id.eq(information.locationId))
