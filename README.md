@@ -17,3 +17,7 @@
 ![image](https://user-images.githubusercontent.com/68547545/180674075-e8060543-24e1-4ab7-8041-0f0b471afcf9.png)
 
 
+## ERD 다이어그램
+
+![image](https://user-images.githubusercontent.com/68547545/183236068-e11aa7ab-4805-4f5b-830d-1f043a191c25.png)
+
