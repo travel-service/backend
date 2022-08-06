@@ -2,6 +2,7 @@ package com.trablock.web.service.member;
 
 import com.trablock.web.dto.mail.EmailAuthDto;
 import com.trablock.web.dto.member.MemberPwdDto;
+import com.trablock.web.dto.member.MemberResponseDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.member.LoginForm;
@@ -14,33 +15,33 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 
 public interface MemberService {
-    String memberSignUp(MemberSaveDto memberSaveDto);
+    ResponseEntity<MemberResponseDto> memberSignUp(MemberSaveDto memberSaveDto);
 
-    String confirmEmail(EmailAuthDto requestDto);
+    ResponseEntity<MemberResponseDto> confirmEmail(EmailAuthDto requestDto);
 
-    String memberLogin(LoginForm loginForm, HttpServletResponse response);
+    ResponseEntity<MemberResponseDto> memberLogin(LoginForm loginForm, HttpServletResponse response);
 
-    String memberLogout(HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<MemberResponseDto> memberLogout(HttpServletRequest request, HttpServletResponse response);
 
-    Map<String, Object> getMemberPage(HttpServletRequest request);
+    ResponseEntity<MemberResponseDto> getMemberPage(HttpServletRequest request);
 
-    ResponseEntity<Resource> getMemberImg(HttpServletRequest request) throws FileNotFoundException;
+    ResponseEntity<Object> getMemberImg(HttpServletRequest request) throws FileNotFoundException;
 
-    Map<String, Object> memberEditPage(HttpServletRequest request);
+    ResponseEntity<MemberResponseDto> memberEditPage(HttpServletRequest request);
 
-    void updateComment(String bio, HttpServletRequest request);
+    ResponseEntity<MemberResponseDto> updateComment(String bio, HttpServletRequest request);
 
-    void updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request);
+    ResponseEntity<MemberResponseDto> updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request);
 
-    boolean getTmpPassword(Map<String, String> userInfo);
+    ResponseEntity<MemberResponseDto> getTmpPassword(Map<String, String> userInfo);
 
-    Map<String, Object> getMemberInfo(HttpServletRequest request);
+    ResponseEntity<MemberResponseDto> getMemberInfo(HttpServletRequest request);
 
-    boolean memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<MemberResponseDto> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response);
 
-    void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto);
+    ResponseEntity<MemberResponseDto> updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto);
 
-    boolean memberValidation(String userName);
+    ResponseEntity<MemberResponseDto> memberValidation(String userName);
 
-    boolean checkValidNickName(String nickname);
+    ResponseEntity<MemberResponseDto> checkValidNickName(String nickname);
 }

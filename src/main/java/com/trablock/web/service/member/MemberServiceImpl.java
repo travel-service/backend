@@ -7,6 +7,7 @@ import com.trablock.web.controller.exception.MemberException;
 import com.trablock.web.dto.mail.EmailAuthDto;
 import com.trablock.web.dto.mail.MailDto;
 import com.trablock.web.dto.member.MemberPwdDto;
+import com.trablock.web.dto.member.MemberResponseDto;
 import com.trablock.web.dto.member.MemberSaveDto;
 import com.trablock.web.dto.member.MemberUpdateDto;
 import com.trablock.web.entity.auth.RefreshToken;
@@ -16,10 +17,12 @@ import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.member.TokenRepository;
 import com.trablock.web.service.file.FileService;
 import com.trablock.web.service.mail.MailServiceImpl;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,6 +54,7 @@ public class MemberServiceImpl implements MemberService{
     private final FileService fileService;
     private final JwtTokenService jwtTokenService;
     private final MailServiceImpl mailService;
+    private final MemberResponseDto responseDto;
 
     /**
      * 회원가입
@@ -58,31 +62,39 @@ public class MemberServiceImpl implements MemberService{
      * @return 회원 nickName
      */
     @Override
-    public String memberSignUp(MemberSaveDto memberSaveDto) {
-        boolean CanSignUp = memberValidation(memberSaveDto.getUserName()); // 아이디 중복 검사
+    public ResponseEntity<MemberResponseDto> memberSignUp(MemberSaveDto memberSaveDto) {
+        boolean CanSignUp = memberRepository.existsByUserName((memberSaveDto.getUserName())); // 아이디 중복 검사
         String pwd = passwordEncoder.encode(memberSaveDto.getPassword());
 
         if (!CanSignUp) {
             EmailAuth emailAuth = emailAuthRepository.save(EmailAuth.builder(memberSaveDto).build());
-            Member member =  memberRepository.save(Member.builder(memberSaveDto, pwd).build());
+            memberRepository.save(Member.builder(memberSaveDto, pwd).build());
 
             MailDto mailDto = mailService.emailAuthMail(emailAuth.getEmail(), emailAuth.getUuid());
             mailService.sendMail(mailDto); // 메일 전송 (구글 메일 서버)
 
-            return member.getMemberProfile().getNickName();
+            MemberResponseDto res = responseDto.successMemberSignUp(memberSaveDto.getNickName());
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
 
-        } else throw new IllegalArgumentException("중복 되는 아이디 존재");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(responseDto.failMemberSignUp());
+
     }
 
     @Override
-    public String confirmEmail(EmailAuthDto requestDto) {
-        EmailAuth emailAuth = emailAuthRepository.findValidAuthByEmail(requestDto.getEmail(), requestDto.getUuid(), LocalDateTime.now())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 UUID"));
+    public ResponseEntity<MemberResponseDto> confirmEmail(EmailAuthDto requestDto) {
+        EmailAuth emailAuth = emailAuthRepository.findValidAuthByEmail(requestDto.getEmail(), requestDto.getUuid(), LocalDateTime.now()).orElse(null);
+
+        if (emailAuth == null) {
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(responseDto.failEmailAuth());
+        }
+
         Member member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(MemberException::new);
         emailAuth.useToken();
         member.emailVerifiedSuccess();
 
-        return "인증이 완료되었습니다.";
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseDto.successEmailAuth());
     }
 
     /**
@@ -92,22 +104,25 @@ public class MemberServiceImpl implements MemberService{
      * @return 회원 nickName
      */
     @Override
-    public String memberLogin(LoginForm loginForm, HttpServletResponse response) {
+    public ResponseEntity<MemberResponseDto> memberLogin(LoginForm loginForm, HttpServletResponse response) {
         Member member = memberRepository.findByUserName(loginForm.getUserName())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+                .orElse(null);
+
+        if (member == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto.invalidUserNameOrPwd());
+        }
 
         if (!passwordEncoder.matches(loginForm.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto.invalidUserNameOrPwd());
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(member.getUsername(), member.getRoles());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getUsername(), member.getRoles());
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-
         tokenRepository.save(RefreshToken.builder().refreshToken(refreshToken).build());
 
-        return member.getMemberProfile().getNickName();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.successLogin(member.getMemberProfile().getNickName()));
     }
 
     /**
@@ -116,14 +131,14 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
-    public String memberLogout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<MemberResponseDto> memberLogout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         Long id = tokenRepository.findByRefreshToken(refreshToken);
 
         tokenRepository.deleteById(id);
         jwtTokenProvider.setHeaderLogoutRefreshToken(response, "");
 
-        return "Logout Success";
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.successLogout());
     }
 
     /**
@@ -132,19 +147,15 @@ public class MemberServiceImpl implements MemberService{
      * @return nickname, bio, + .. 추가 가능
      */
     @Override
-    public Map<String, Object> getMemberPage(HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> getMemberPage(HttpServletRequest request) {
         String userName = jwtTokenService.tokenToUserName(request);
-        Member member = memberRepository.findByUserName(userName).get();
+        Member member = memberRepository.findByUserName(userName).orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
 
         // 회원 닉네임 + ..
         String nickName = jwtTokenService.tokenToNickName(request);
         String bio = member.getMemberProfile().getBio();
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("nickName", nickName);
-        res.put("bio", bio);
-
-        return res;
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.successGetMemberPage(nickName, bio));
     }
 
     /**
@@ -154,7 +165,7 @@ public class MemberServiceImpl implements MemberService{
      * @throws FileNotFoundException
      */
     @Override
-    public ResponseEntity<Resource> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
+    public ResponseEntity<Object> getMemberImg(HttpServletRequest request) throws FileNotFoundException {
 //        String fileName = jwtTokenService.TokenToUserName(request) + ".png"; # 현재 이미지 처리 규칙이 없기에 잠궈놓겠습니다 (22-06-23)
         String fileName = "default_profile.png";
         Resource fileResource = fileService.loadFile(fileName);
@@ -182,18 +193,14 @@ public class MemberServiceImpl implements MemberService{
      * @return MemberProfile, MemberInfo (닉네임, 회원사진, 생일, 성별, 전화번호, 이메일)
      */
     @Override
-    public Map<String, Object> memberEditPage(HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> memberEditPage(HttpServletRequest request) {
         String userName = jwtTokenService.tokenToUserName(request);
         Member member = memberRepository.findByUserName(userName).orElseThrow();
 
         MemberProfile mp = member.getMemberProfile();
         MemberInfo mi = member.getMemberInfo();
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("Profile", mp);
-        res.put("Information", mi);
-
-        return res;
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.successGetMemberEditPage(mp, mi));
     }
 
     /**
@@ -202,10 +209,12 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      */
     @Override
-    public void updateComment(String bio, HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> updateComment(String bio, HttpServletRequest request) {
         Long id = jwtTokenService.tokenToUserId(request);
         Member member = memberRepository.findMemberId(id).orElseThrow();
         member.getMemberProfile().setBio(bio);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberBio(member.getMemberProfile()));
 
     }
 
@@ -215,7 +224,7 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      */
     @Override
-    public void updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> updateMember(MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
         Long id = jwtTokenService.tokenToUserId(request);
         Member member = memberRepository.findMemberId(id).orElseThrow();
 
@@ -224,6 +233,8 @@ public class MemberServiceImpl implements MemberService{
         member.getMemberInfo().setBirthday(memberUpdateDto.getBirthday());
         member.getMemberInfo().setEmail(memberUpdateDto.getEmail());
         member.getMemberInfo().setGender(memberUpdateDto.getGender());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberInfo(member.getMemberProfile(), member.getMemberInfo()));
     }
 
     /**
@@ -231,20 +242,28 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
-    public boolean getTmpPassword(Map<String, String> userInfo) {
+    public ResponseEntity<MemberResponseDto> getTmpPassword(Map<String, String> userInfo) {
         String userName = userInfo.get("userName");
         String userEmail = userInfo.get("userEmail");
 
-        Optional<Member> member = Optional.of(memberRepository.findByUserName(userName).orElseThrow(() -> new MemberException("잘못된 아이디")));
-        if (member.get().getMemberInfo().getEmail().equals(userEmail)) {
+        Member member = memberRepository.findByUserName(userName).orElse(null);
+
+        if (member == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto.notFoundUserName());
+        }
+
+        if (member.getMemberInfo().getEmail().equals(userEmail)) {
             String tmpPwd = passwordEncoder.encode(pwdCombination());
             memberRepository.updateMemberPwd(tmpPwd, userName);
 
             MailDto mail = mailService.findPwdMail(tmpPwd, userEmail);
             mailService.sendMail(mail);
 
-            return true;
-        } else throw new MemberException("아이디와 이메일이 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successIssuePwd());
+
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto.failIssuePwd());
     }
 
     /**
@@ -253,18 +272,17 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
-    public Map<String, Object> getMemberInfo(HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> getMemberInfo(HttpServletRequest request) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
 
         if (accessToken != null) {
             if (jwtTokenProvider.validateToken(accessToken)) {
                 String nickName = jwtTokenService.tokenToNickName(request);
-                Map<String, Object> res = new HashMap<>();
-                res.put("nickName", nickName);
-                return res;
-            } else throw new MemberException("Token-Error");
+                return ResponseEntity.status(HttpStatus.OK).body(responseDto.successLogin(nickName));
+
+            } return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto.expireToken());
         }
-        throw new MemberException("AccessToken 이 없습니다.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto.notFoundAccessToken());
     }
 
     /**
@@ -273,23 +291,22 @@ public class MemberServiceImpl implements MemberService{
      * @param response
      */
     @Override
-    public boolean memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<MemberResponseDto> memberRefreshToAccess(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
         if (refreshToken != null) {
             if (jwtTokenProvider.validateToken(refreshToken)) {
                 String userName = jwtTokenProvider.getUserName(refreshToken);
                 List<String> roles = jwtTokenProvider.getRoles(userName);
-
                 String newAccessToken = jwtTokenProvider.createAccessToken(userName, roles);
-                System.out.println("newAccessToken = " + newAccessToken);
                 jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
                 this.setAuthentication(newAccessToken);
 
-                return true;
+                return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successCreateToken());
             }
-        } else throw new MemberException("Token-Error");
-        return false;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto.expireToken());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto.notFoundRefreshToken());
     }
 
     public void setAuthentication(String token) {
@@ -301,7 +318,7 @@ public class MemberServiceImpl implements MemberService{
      * 회원 비밀번호 수정
       */
     @Override
-    public void updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
+    public ResponseEntity<MemberResponseDto>updateMemberPwd(HttpServletRequest request, MemberPwdDto memberPwdDto){
         String userName = jwtTokenService.tokenToUserName(request);
         Optional<Member> member = memberRepository.findByUserName(userName);
 
@@ -310,9 +327,10 @@ public class MemberServiceImpl implements MemberService{
         if (passwordEncoder.matches(origin, member.get().getPassword())) {
             String newPwd = passwordEncoder.encode(memberPwdDto.getNewPwd());
             memberRepository.updateMemberPwd(newPwd, userName);
-        } else {
-            throw new MemberException("잘못된 비밀번호 입력.");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberPwd());
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto.failEditMemberPwd());
     }
 
     /**
@@ -321,8 +339,13 @@ public class MemberServiceImpl implements MemberService{
      * @return boolean
      */
     @Override
-    public boolean memberValidation(String userName) {
-        return memberRepository.existsByUserName((userName));
+    public ResponseEntity<MemberResponseDto> memberValidation(String userName) {
+        boolean isvalid = memberRepository.existsByUserName(userName);
+        if (isvalid) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDto.duplicateUserName());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.canUseUserName());
     }
 
     /**
@@ -331,8 +354,12 @@ public class MemberServiceImpl implements MemberService{
      * @return boolean
      */
     @Override
-    public boolean checkValidNickName(String nickname) {
-        return memberRepository.existsByNickName(nickname);
+    public ResponseEntity<MemberResponseDto> checkValidNickName(String nickname) {
+        boolean isvalid = memberRepository.existsByNickName(nickname);
+        if (isvalid) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDto.duplicateNickName());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto.canUseNickName());
     }
 
     /**

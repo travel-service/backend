@@ -1,11 +1,14 @@
 package com.trablock.web.service.file;
 
 import com.trablock.web.domain.FileStorageProperties;
+import com.trablock.web.dto.member.MemberResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,9 +26,11 @@ import java.util.Objects;
 public class FileService {
 
     private final Path dirLocation;
+    private final MemberResponseDto responseDto;
 
     @Autowired
-    public FileService(FileStorageProperties fileStorageProperties) {
+    public FileService(FileStorageProperties fileStorageProperties, MemberResponseDto responseDto) {
+        this.responseDto = responseDto;
         dirLocation = Path.of("./image");
         try {
             Files.createDirectories(dirLocation);
@@ -78,16 +83,18 @@ public class FileService {
      * @return /경로/userName.png
      * 사용자가 이전에 저장한 프로필 사진을 원하면? 히스토리를 구현해야 할까?
      */
-    public String saveProfileImg(MultipartFile multipartFile, String userName) {
+    public ResponseEntity<MemberResponseDto> saveProfileImg(MultipartFile multipartFile, String userName) {
         String filename = userName + ".png";
         try {
             Path targetLocation = dirLocation.resolve(filename);
             Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return "OK";
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successChangeMemberImg());
 
         } catch (IOException e) {
-            throw new RuntimeException("해당 파일을 저장에 실패했습니다. 이유는 ..." + filename, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto.failChangeMemberImg());
         }
+
     }
 
 }
