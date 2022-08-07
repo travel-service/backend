@@ -1,7 +1,6 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
-import com.trablock.web.converter.Converter;
 import com.trablock.web.converter.Converter.CreateUserDirectory;
 import com.trablock.web.converter.Converter.UpdatePlanName;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
@@ -10,7 +9,6 @@ import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.member.MemberInfo;
 import com.trablock.web.entity.member.MemberProfile;
 import com.trablock.web.entity.plan.UserDirectory;
-import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
@@ -26,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import org.assertj.core.api.Assertions;
 
 @SpringBootTest
 @Transactional
@@ -169,10 +165,7 @@ class UserDirectoryServiceImplTest {
         //when
         userDirectoryService.deleteUserDirectory(deleteUserDirectoryForm, member.getId());
 
-        int count = userDirectoryRepository.findUserDirectoryByStatus(Status.UNDELETE);
-
         //then
-        assertThat(count).isEqualTo(1);
     }
 
     @Test

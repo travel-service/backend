@@ -83,8 +83,8 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                         attraction.restDate,
                         attraction.useTime
                 )).from(location)
-                .leftJoin(attraction).on(location.id.eq(attraction.locationId))
-                .leftJoin(information).on(location.id.eq(information.locationId))
+                .leftJoin(attraction).on(location.id.eq(attraction.locationId)).fetchJoin()
+                .leftJoin(information).on(location.id.eq(information.locationId)).fetchJoin()
                 .where(location.id.eq(locationId))
                 .fetchOne();
     }

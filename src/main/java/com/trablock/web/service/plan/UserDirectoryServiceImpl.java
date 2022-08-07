@@ -1,9 +1,7 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.UserDirectoryForm;
-import com.trablock.web.converter.Converter;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
-import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
@@ -29,16 +27,15 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
     @Override
     @Transactional
     public void deleteUserDirectory(UserDirectoryForm userDirectoryForm, Long memberId) {
-        for (int userDirectoryId = 0; userDirectoryId < userDirectoryForm.getUserDirectoryId().size(); userDirectoryId++) {
-            UserDirectory userDirectoryById = userDirectoryRepository.findUserDirectoryById(userDirectoryForm.getUserDirectoryId().get(userDirectoryId), memberId);
-            userDirectoryById.delete();
+        for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
+            userDirectoryRepository.deleteById(userDirectoryForm.getUserDirectoryId().get(i));
         }
     }
 
     //user directory GET 요청
     @Override
     public List<UserDirectory> findMainUserDirectoryMain(Long memberId) {
-        return userDirectoryRepository.findMemberIdForList(memberId, Status.UNDELETE);
+        return userDirectoryRepository.findMemberIdForList(memberId);
     }
 
     //user directory 생성
@@ -62,7 +59,6 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
             UserDirectory userDirectory = UserDirectory.builder()
                     .directoryName(userDirectoryForm.getDirectoryName())
                     .member(memberRepository.findById(memberId).orElseThrow())
-                    .status(Status.UNDELETE)
                     .build();
 
             UserDirectory userDirectories = userDirectoryRepository.save(userDirectory);
@@ -101,6 +97,6 @@ public class UserDirectoryServiceImpl implements UserDirectoryService {
      */
     @Override
     public List<UserDirectory> findUserDirectory(Long memberId) {
-        return userDirectoryRepository.findUserDirectoryById(memberId, Status.UNDELETE);
+        return userDirectoryRepository.findUserDirectoryById(memberId);
     }
 }

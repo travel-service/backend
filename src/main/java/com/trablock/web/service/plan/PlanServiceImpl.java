@@ -140,7 +140,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     public int countPlan(Member member) {
-        return planRepository.planCount(member);
+        return planRepository.planCount(member, PlanStatus.MAIN);
     }
 
     /**
