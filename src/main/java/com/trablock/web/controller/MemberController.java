@@ -111,10 +111,16 @@ public class MemberController {
         return memberService.updateMember(memberUpdateDto, request);
     }
 
-    // 회원 - 한 줄 소개 수정 - 사용보류
-    @PostMapping("/members/profile/edit/{bio}")
-    public ResponseEntity<MemberResponseDto> updateComment(@PathVariable("bio") String bio, HttpServletRequest request) {
+    // 회원 - 한 줄 소개 수정
+    @PostMapping("/members/profile/bio")
+    public ResponseEntity<MemberResponseDto> updateComment(@RequestBody Map<String, String> bio, HttpServletRequest request) {
         return memberService.updateComment(bio, request);
+    }
+
+    // 회원 - 닉네임 변경
+    @PostMapping("/members/profile/{nickname}")
+    public ResponseEntity<MemberResponseDto> updateNickName(@PathVariable("nickname") String nickname, HttpServletRequest request) {
+        return memberService.updateNickName(nickname, request);
     }
 
     // 회원 - 비밀번호 수정

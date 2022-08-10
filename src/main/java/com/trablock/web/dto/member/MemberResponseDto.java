@@ -232,7 +232,7 @@ public class MemberResponseDto {
         return res;
     }
 
-    public MemberResponseDto successEditMemberBio(MemberProfile bio) {
+    public MemberResponseDto successEditMemberProfile(MemberProfile bio) {
         MemberResponseDto res = new MemberResponseDto();
         res.setStatus(HttpStatus.CREATED.value());
         res.setMessage("성공적으로 변경되었습니다.");
@@ -240,6 +240,7 @@ public class MemberResponseDto {
 
         return res;
     }
+
 
     public MemberResponseDto successEditMemberPwd() {
         MemberResponseDto res = new MemberResponseDto();

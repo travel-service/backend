@@ -209,13 +209,28 @@ public class MemberServiceImpl implements MemberService{
      * @param request
      */
     @Override
-    public ResponseEntity<MemberResponseDto> updateComment(String bio, HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> updateComment(Map<String, String> bio, HttpServletRequest request) {
         Long id = jwtTokenService.tokenToUserId(request);
         Member member = memberRepository.findMemberId(id).orElseThrow();
-        member.getMemberProfile().setBio(bio);
+        member.getMemberProfile().setBio(bio.get("bio"));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberBio(member.getMemberProfile()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberProfile(member.getMemberProfile()));
 
+    }
+
+    /**
+     * 회원 닉네임 변경
+     * @param nickname
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseEntity<MemberResponseDto> updateNickName(String nickname, HttpServletRequest request) {
+        Long id = jwtTokenService.tokenToUserId(request);
+        Member member = memberRepository.findMemberId(id).orElseThrow();
+        member.getMemberProfile().setNickName(nickname);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto.successEditMemberProfile(member.getMemberProfile()));
     }
 
     /**
