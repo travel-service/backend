@@ -53,7 +53,6 @@ public class Member implements UserDetails{
     @OneToMany(mappedBy = "member")
     private List<UserDirectory> userDirectories = new ArrayList<>();
 
-    @Builder
     public static MemberBuilder builder(MemberSaveDto memberSaveDto, String pwd) {
         return MemberBuilder()
                 .userName(memberSaveDto.getUserName())

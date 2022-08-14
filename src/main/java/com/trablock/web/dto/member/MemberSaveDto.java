@@ -8,14 +8,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MemberSaveDto {
-
     private String userName;
     private String password;
-    private String realName;
     private String nickName;
     private String birthday;
     private String gender;
-    private String phoneNum;
     private String email;
-
 }
