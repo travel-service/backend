@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,7 @@ public class MailServiceImpl implements MailService {
         return mailDto;
     }
 
+    @Async
     public void sendMail(MailDto mailDto) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mailDto.getToAddress());

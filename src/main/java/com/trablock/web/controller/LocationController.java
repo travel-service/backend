@@ -40,7 +40,7 @@ public class LocationController {
 
     @GetMapping("locations/member")
     public ResponseEntity<MarkAndBlockLocationListDto> viewMemberLocations(HttpServletRequest request) {
-        Long memberId = jwtTokenService.TokenToUserId(request);
+        Long memberId = jwtTokenService.tokenToUserId(request);
         return ResponseEntity.ok().body(locationService.getMemberLocationList(memberId));
     }
 
@@ -59,7 +59,7 @@ public class LocationController {
      */
     @PostMapping("/locations/member")
     public ResponseEntity<Long> memberLocationAdd(@RequestBody LocationWrapperDto wrapperDto, HttpServletRequest request) {
-        Long memberId = jwtTokenService.TokenToUserId(request);
+        Long memberId = jwtTokenService.tokenToUserId(request);
         wrapperDto.getMemberLocation().setMemberId(memberId);
         System.out.println("memberId = " + memberId);
         return new ResponseEntity<Long>(locationService.createLocationByMember(wrapperDto), HttpStatus.CREATED);
@@ -71,7 +71,7 @@ public class LocationController {
      */
     @DeleteMapping("/locations/member/{locationId}")
     public ResponseEntity<String> memberLocationRemove(@PathVariable("locationId") Long locationId, HttpServletRequest request) {
-        Long memberId = jwtTokenService.TokenToUserId(request);
+        Long memberId = jwtTokenService.tokenToUserId(request);
         return locationService.deleteLocationByMember(locationId, memberId) ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
     }
 
