@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -175,24 +176,22 @@ public class PlanServiceImpl implements PlanService {
     public MainDirectory findPlanInfo(Member member, int planCount) {
         List<PlanInfoDto> planInfo = planRepository.findPlanInfoCustom(member.getId());
 
-        Map<Long, List<UserDirectoryIdDto>> testDtoMap = findPlanItemMap(toPlanId(planInfo));
 
-        planInfo.forEach(p -> p.setUserDirectoryId(testDtoMap.get(p.getPlanId())));
+        List<PlanInfoDto> result = new ArrayList<>();
+
+
+        for (int i = 0; i < planInfo.size(); i++) {
+            List<Long> userDirectoriesIds = planItemRepository.getUserDirectoriesIdByPlanId(planInfo.get(i).getPlanId());
+            result.add(new PlanInfoDto(
+                    planInfo.get(i).getPlanId(),
+                    planInfo.get(i).getName(),
+                    planInfo.get(i).getPeriods(),
+                    planInfo.get(i).getCreatedDate().substring(0, 10),
+                    planInfo.get(i).getPlanComplete(),
+                    userDirectoriesIds));
+        }
 
         String message = "메인 디렉터리를 정상적으로 불러왔습니다.";
-        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, planInfo);
-    }
-
-    private Map<Long, List<UserDirectoryIdDto>> findPlanItemMap(List<Long> toPlanId) {
-        List<UserDirectoryIdDto> userDirectoryIds = planItemRepository.findUserDirectoryIdByPlanIdCustom(toPlanId);
-
-        return userDirectoryIds.stream()
-                .collect(Collectors.groupingBy(UserDirectoryIdDto::getPlanId));
-    }
-
-    private List<Long> toPlanId(List<PlanInfoDto> planInfo) {
-        return planInfo.stream()
-                .map(p -> p.getPlanId())
-                .collect(Collectors.toList());
+        return new MainDirectory(HTTPStatus.OK.getCode(), message, planCount, result);
     }
 }
