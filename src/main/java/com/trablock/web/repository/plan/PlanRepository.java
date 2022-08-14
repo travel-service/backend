@@ -30,8 +30,8 @@ public interface PlanRepository extends JpaRepository<Plan, Long>, PlanRepositor
     List<Plan> findPlansByPlanStatus(@Param("member") Member member, @Param("status") PlanStatus status);
 
     // TODO TEST
-    @Query("select count(p) from Plan p where p.member = :member")
-    int planCount(@Param("member") Member member);
+    @Query("select count(p) from Plan p where p.member = :member and p.planStatus = :status")
+    int planCount(@Param("member") Member member, @Param("status")PlanStatus status);
 
     // TODO TEST
     @Query("select count(p) from Plan p where p.member = :member and p.planStatus = 'TRASH'")

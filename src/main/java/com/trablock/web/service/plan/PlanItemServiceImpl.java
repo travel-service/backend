@@ -2,10 +2,8 @@ package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.MoveDirectoryForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
-import com.trablock.web.converter.Converter;
 import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.PlanItem;
-import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.plan.PlanItemRepository;
@@ -47,7 +45,6 @@ public class PlanItemServiceImpl implements PlanItemService {
             PlanItem planItem = PlanItem.builder()
                     .userDirectory(userDirectoryId)
                     .plan(plan)
-                    .status(Status.UNDELETE)
                     .build();
 
             planItemList.add(planItem);
@@ -67,7 +64,7 @@ public class PlanItemServiceImpl implements PlanItemService {
         for (int i = 0; i < userDirectoryForm.getUserDirectoryId().size(); i++) {
             List<PlanItem> planItemByUserDirectoryId = planItemRepository.findPlanItemByUserDirectoryId(userDirectoryForm.getUserDirectoryId().get(i));
             for (PlanItem planItem : planItemByUserDirectoryId) {
-                planItem.delete();
+                planRepository.deleteById(planItem.getId());
             }
         }
     }
@@ -90,7 +87,7 @@ public class PlanItemServiceImpl implements PlanItemService {
         List<Integer> countPlanList = new ArrayList<>();
 
         for (UserDirectory userDirectory : userDirectories) {
-            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory, Status.UNDELETE);
+            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory);
 
             countPlanList.add(planItemList.size());
         }

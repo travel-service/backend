@@ -2,10 +2,10 @@ package com.trablock.web.entity.plan;
 
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.entity.member.Member;
-import com.trablock.web.entity.plan.enumtype.Status;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,22 +22,10 @@ public class UserDirectory {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "userDirectory", cascade = CascadeType.ALL)
+    private List<PlanItem> planItems;
+
     private String directoryName;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    //==비지니스 로직==//
-    /**
-     * user 디렉터리 삭제
-     */
-    public void delete() {
-        if (getStatus() == Status.DELETE) {
-            throw new IllegalStateException("이미 삭제된 디렉터리입니다.");
-        }
-
-        this.status = Status.DELETE;
-    }
 
     /**
      * user 디렉터리 이름 변경

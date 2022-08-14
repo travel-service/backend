@@ -166,6 +166,7 @@ public class DirectoryController {
         Member member = planService.getMemberFromPayload(request);
 
         userDirectoryService.deleteUserDirectory(userDirectoryForm, member.getId());
+
         planItemService.deleteMapping(userDirectoryForm);
 
         String message = "디렉터리가 정상적으로 삭제되었습니다.";

@@ -16,7 +16,7 @@ public class PlanInfoDto {
     private int periods;
     private String createdDate;
     private PlanComplete planComplete;
-    private List<UserDirectoryIdDto> userDirectoryId;
+    private List<Long> userDirectoryIds;
 
     public PlanInfoDto(Long planId, String name, int periods, LocalDateTime createdDate, PlanComplete planComplete) {
         this.planId = planId;
@@ -24,5 +24,14 @@ public class PlanInfoDto {
         this.periods = periods;
         this.createdDate = createdDate.toString().substring(0, 10);
         this.planComplete = planComplete;
+    }
+
+    public PlanInfoDto(Long planId, String name, int periods, String createdDate, PlanComplete planComplete, List<Long> userDirectoryIds) {
+        this.planId = planId;
+        this.name = name;
+        this.periods = periods;
+        this.createdDate = createdDate.substring(0, 10);
+        this.planComplete = planComplete;
+        this.userDirectoryIds = userDirectoryIds;
     }
 }

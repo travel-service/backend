@@ -1,8 +1,6 @@
 package com.trablock.web.service.plan;
 
 import com.trablock.web.controller.form.MoveDirectoryForm;
-import com.trablock.web.controller.form.UserDirectoryForm;
-import com.trablock.web.converter.Converter;
 import com.trablock.web.entity.member.Gender;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.member.MemberInfo;
@@ -11,14 +9,12 @@ import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.entity.plan.enumtype.PlanComplete;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
-import com.trablock.web.entity.plan.enumtype.Status;
 import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
 import com.trablock.web.repository.plan.UserDirectoryRepository;
 import com.trablock.web.service.plan.interfaceC.PlanItemService;
 import com.trablock.web.service.plan.interfaceC.UserDirectoryService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,7 +107,6 @@ class PlanItemServiceImplTest {
         UserDirectory userDirectory1 = UserDirectory.builder()
                 .directoryName("제주1")
                 .member(member)
-                .status(Status.UNDELETE)
                 .build();
 
         testUserDirectory1 = userDirectoryRepository.save(userDirectory1);
@@ -119,7 +114,6 @@ class PlanItemServiceImplTest {
         UserDirectory userDirectory2 = UserDirectory.builder()
                 .directoryName("제주2")
                 .member(member)
-                .status(Status.UNDELETE)
                 .build();
 
         testUserDirectory2 = userDirectoryRepository.save(userDirectory2);
