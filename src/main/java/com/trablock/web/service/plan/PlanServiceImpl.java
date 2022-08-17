@@ -8,6 +8,7 @@ import com.trablock.web.converter.Converter.MainDirectory;
 import com.trablock.web.dto.plan.*;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
+import com.trablock.web.entity.plan.enumtype.PlanItemStatus;
 import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.member.MemberRepository;
@@ -181,7 +182,7 @@ public class PlanServiceImpl implements PlanService {
 
 
         for (int i = 0; i < planInfo.size(); i++) {
-            List<Long> userDirectoriesIds = planItemRepository.getUserDirectoriesIdByPlanId(planInfo.get(i).getPlanId());
+            List<Long> userDirectoriesIds = planItemRepository.getUserDirectoriesIdByPlanId(planInfo.get(i).getPlanId(), PlanItemStatus.UNDELETE);
             result.add(new PlanInfoDto(
                     planInfo.get(i).getPlanId(),
                     planInfo.get(i).getName(),
