@@ -6,6 +6,7 @@ import com.trablock.web.controller.form.StateChangeForm;
 import com.trablock.web.controller.form.UserDirectoryForm;
 import com.trablock.web.dto.plan.DirectoryNameUpdateDto;
 import com.trablock.web.dto.plan.PlanDirectoryDto;
+import com.trablock.web.dto.plan.PlansDeleteDto;
 import com.trablock.web.dto.plan.UserDirectoryDto;
 import com.trablock.web.entity.member.Member;
 import com.trablock.web.entity.plan.Plan;
@@ -33,7 +34,6 @@ public class DirectoryController {
     private final UserDirectoryService userDirectoryService;
     private final PlanItemService planItemService;
 
-    // TODO TEST
     @GetMapping("/directories/main")
     public MainDirectory test2(HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -46,7 +46,6 @@ public class DirectoryController {
 
     //main-user directory get
     @GetMapping("/directories/members")
-    // TODO TEST
     public MainUserDirectory usersPlans(HttpServletRequest request) {
 
         Member member = planService.getMemberFromPayload(request);
@@ -69,7 +68,6 @@ public class DirectoryController {
 
     //trash directory get
     @GetMapping("/directories/trash")
-    // TODO TEST
     public TrashDirectory trashPlans(HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -86,7 +84,6 @@ public class DirectoryController {
 
     // user directory get
     @GetMapping("/directories/{directoryId}")
-    // TODO TEST
     public ShowUserDirectory usersDirectoryPlans(@PathVariable("directoryId") UserDirectory userDirectoryId,
                                                            HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -108,7 +105,6 @@ public class DirectoryController {
 
     //플랜 삭제(main -> trash)
     @PostMapping("/directories/trash")
-    // TODO TEST
     public PlanMoveMainToTrash cancelPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -122,7 +118,6 @@ public class DirectoryController {
 
     //플랜 복구(trash -> main)
     @PostMapping("/directories/main")
-    // TODO TEST
     public PlanMoveTrashToMain revertPlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -136,7 +131,6 @@ public class DirectoryController {
 
     //플랜 영구 삭제(trash -> delete)
     @DeleteMapping("/directories/plans")
-    // TODO TEST
     public PlanDelete deletePlan(@RequestBody StateChangeForm stateChangeForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -150,7 +144,6 @@ public class DirectoryController {
 
     //user directory 생성
     @PostMapping("/directories")
-    // TODO TEST
     public CreateUserDirectory createUserDirectory(HttpServletRequest request,
                                       @RequestBody UserDirectoryForm userDirectoryForm) {
         Member member = planService.getMemberFromPayload(request);
@@ -161,7 +154,6 @@ public class DirectoryController {
 
     //user directory 삭제(undelete -> delete)
     @DeleteMapping("/directories/members")
-    // TODO TEST
     public DeleteUserDirectory deleteUserDirectory(@RequestBody UserDirectoryForm userDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
 
@@ -176,7 +168,6 @@ public class DirectoryController {
 
 
     //plan 이동(main 디렉터리 -> user 디렉터리)
-    // TODO TEST
     @PostMapping("/directories/directory/plans")
     public PlanMoveToUserDirectory moveUserDirectory(@RequestBody MoveDirectoryForm moveDirectoryForm, HttpServletRequest request) {
         Member member = planService.getMemberFromPayload(request);
@@ -186,7 +177,6 @@ public class DirectoryController {
 
 
     // user directory 이름 변경
-    // TODO TEST
     @PostMapping("/directories/{directoryId}/name")
     public UpdatePlanName updateUserDirectoryName(@PathVariable("directoryId") Long id,
                                         @RequestBody DirectoryNameUpdateDto directoryNameUpdateDto,
@@ -197,8 +187,17 @@ public class DirectoryController {
         return userDirectoryService.updateDirectoryName(id, directoryNameUpdateDto, member.getId());
     }
 
+    // user directory 플랜 삭제
+    @DeleteMapping("directories/{directoryId}/plans")
+    public DeletePlans deletePlans(@PathVariable("directoryId") Long userDirectoryId,
+                                   @RequestBody PlansDeleteDto plansDeleteDto,
+                                   HttpServletRequest request) {
+        Member member = planService.getMemberFromPayload(request);
 
-    // TODO TEST
+        return planItemService.deletePlans(userDirectoryId, plansDeleteDto);
+    }
+
+
     private List<PlanDirectoryDto> getPlanDirectoryDtos(List<Plan> planDirectoryMain) {
         return planDirectoryMain.stream()
                 .map(m -> new PlanDirectoryDto(m.getId(), m.getName(), m.getPeriods(), m.getCreatedDate().toString().substring(0, 10), m.getPlanComplete()))
