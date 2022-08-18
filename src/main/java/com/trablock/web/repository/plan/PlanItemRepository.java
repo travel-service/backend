@@ -27,4 +27,7 @@ public interface PlanItemRepository extends JpaRepository<PlanItem, Long>, PlanI
 
     @Query("select pi from PlanItem pi where pi.userDirectory.id = :userDirectoryId and pi.plan.id = :planId")
     PlanItem getUserDirectoriesIdByPlanIdAndUdir(@Param("userDirectoryId") Long userDirectoryId, @Param("planId") Long planId);
+
+    @Query("select count(pi) from PlanItem pi where pi.userDirectory.id = :userDirectoryId and pi.plan.id = :planId")
+    Long countPlanItem(@Param("userDirectoryId") Long userDirectoryId, @Param("planId") Long planId);
 }
