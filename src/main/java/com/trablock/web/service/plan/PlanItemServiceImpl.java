@@ -43,13 +43,22 @@ public class PlanItemServiceImpl implements PlanItemService {
         for (int i = 0; i < moveDirectoryForm.getPlanId().size(); i++) {
             Plan plan = planRepository.findPlanById(moveDirectoryForm.getPlanId().get(i)).orElseThrow();
 
-            PlanItem planItem = PlanItem.builder()
-                    .userDirectory(userDirectoryId)
-                    .plan(plan)
-                    .planItemStatus(PlanItemStatus.UNDELETE)
-                    .build();
+            Long countPlanItem = planItemRepository.countPlanItem(userDirectoryId.getId(), plan.getId());
 
-            planItemList.add(planItem);
+            if (countPlanItem != 0) {
+                PlanItem planItem = planItemRepository.getUserDirectoriesIdByPlanIdAndUdir(userDirectoryId.getId(), plan.getId());
+
+                planItem.revertPlan();
+
+            } else {
+                PlanItem planItem = PlanItem.builder()
+                        .userDirectory(userDirectoryId)
+                        .plan(plan)
+                        .planItemStatus(PlanItemStatus.UNDELETE)
+                        .build();
+
+                planItemList.add(planItem);
+            }
         }
 
         planItemRepository.saveAll(planItemList);

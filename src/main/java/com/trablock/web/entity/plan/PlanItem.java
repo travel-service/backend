@@ -29,5 +29,9 @@ public class PlanItem {
     public void deletePlan() {
         this.planItemStatus = PlanItemStatus.DELETE;
     }
+
+    public void revertPlan() {
+        this.planItemStatus = PlanItemStatus.UNDELETE;
+    }
 }
 
