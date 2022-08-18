@@ -7,6 +7,7 @@ import com.trablock.web.entity.plan.Plan;
 import com.trablock.web.entity.plan.PlanItem;
 import com.trablock.web.entity.plan.UserDirectory;
 import com.trablock.web.entity.plan.enumtype.PlanItemStatus;
+import com.trablock.web.entity.plan.enumtype.PlanStatus;
 import com.trablock.web.global.HTTPStatus;
 import com.trablock.web.repository.plan.PlanItemRepository;
 import com.trablock.web.repository.plan.PlanRepository;
@@ -81,7 +82,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 
     @Override
     public List<Plan> findUserPlanDirectoryUser(UserDirectory id) {
-        return planItemRepository.findPlanItemByPI(id, PlanItemStatus.UNDELETE);
+        return planItemRepository.findPlanItemByPI(id, PlanItemStatus.UNDELETE, PlanStatus.MAIN);
     }
 
     /**
@@ -95,7 +96,7 @@ public class PlanItemServiceImpl implements PlanItemService {
         List<Integer> countPlanList = new ArrayList<>();
 
         for (UserDirectory userDirectory : userDirectories) {
-            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory, PlanItemStatus.UNDELETE);
+            List<PlanItem> planItemList = planItemRepository.countPlan(userDirectory, PlanItemStatus.UNDELETE, PlanStatus.MAIN);
 
             countPlanList.add(planItemList.size());
         }
