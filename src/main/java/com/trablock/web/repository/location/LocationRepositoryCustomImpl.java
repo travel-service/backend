@@ -155,7 +155,6 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                         location.address1,
                         location.address2,
                         location.image,
-                        location.type,
                         information.tel,
                         information.summary,
                         information.report,
@@ -244,12 +243,12 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
                         information.summary,
                         information.report,
                         location.type,
-                        lodge.checkInTime,
-                        lodge.checkOutTime,
-                        lodge.cooking,
-                        lodge.parking,
-                        lodge.numOfRooms,
-                        lodge.reservationUrl,
+                        lodge.checkInTime.as("checkInTime"),
+                        lodge.checkOutTime.as("checkOutTime"),
+                        lodge.cooking.as("cooking"),
+                        lodge.parking.as("parking"),
+                        lodge.numOfRooms.as("numOfRooms"),
+                        lodge.reservationUrl.as("reservationUrl"),
                         lodge.subFacility
                 )).from(location)
                 .leftJoin(lodge).on(location.id.eq(lodge.locationId))
