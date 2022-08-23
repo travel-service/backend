@@ -21,7 +21,6 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Builder(builderMethodName = "MemberBuilder")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements UserDetails{
@@ -54,15 +53,14 @@ public class Member implements UserDetails{
     private List<UserDirectory> userDirectories = new ArrayList<>();
 
     @Builder
-    public static MemberBuilder builder(MemberSaveDto memberSaveDto, String pwd) {
-        return MemberBuilder()
-                .userName(memberSaveDto.getUserName())
-                .password(pwd)
-                .emailAuth(false)
-                .memberProfile(new MemberProfile(memberSaveDto.getNickName(), null))
-                .memberInfo(new MemberInfo(memberSaveDto.getBirthday(), Gender.valueOf(memberSaveDto.getGender()),
-                        memberSaveDto.getEmail()))
-                .roles(Collections.singletonList("ROLE_USER")); // 일반 유저
+    public Member(MemberSaveDto memberSaveDto, String pwd) {
+        this.userName = memberSaveDto.getUserName();
+        this.password = pwd;
+        this.emailAuth = false;
+        this.memberProfile = new MemberProfile(memberSaveDto.getNickName(), null);
+        this.memberInfo = new MemberInfo(memberSaveDto.getBirthday(), Gender.valueOf(memberSaveDto.getGender()),
+                memberSaveDto.getEmail());
+        this.roles = Collections.singletonList("ROLE_USER");
     }
 
     public void emailVerifiedSuccess() {

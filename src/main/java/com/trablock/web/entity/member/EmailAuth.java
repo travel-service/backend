@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Builder(builderMethodName = "EmailAuthBuilder")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EmailAuth {
@@ -29,12 +28,11 @@ public class EmailAuth {
     private LocalDateTime expireDate;
 
     @Builder
-    public static EmailAuthBuilder builder(MemberSaveDto memberSaveDto) {
-        return EmailAuthBuilder()
-                .email(memberSaveDto.getEmail())
-                .uuid(UUID.randomUUID().toString())
-                .expired(false)
-                .expireDate(LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME));
+    public EmailAuth(String email) {
+        this.email = email;
+        this.uuid= UUID.randomUUID().toString();
+        this.expired = false;
+        this.expireDate = LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME);
     }
 
     // 인증 했으면 True
