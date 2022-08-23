@@ -1,6 +1,8 @@
 package com.trablock.web.controller;
 
+import com.querydsl.core.util.StringUtils;
 import com.trablock.web.config.jwt.JwtTokenService;
+import com.trablock.web.domain.LocationType;
 import com.trablock.web.dto.location.*;
 import com.trablock.web.dto.location.type.TypeLocationDto;
 import com.trablock.web.service.location.LocationService;
@@ -26,8 +28,8 @@ public class LocationController {
      * -> 지도의 markup이나 block 을 클릭할 때 response
      */
     @GetMapping("/locations/{locationId}")
-    public ResponseEntity<TypeLocationDto> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestBody LocationTypeDto locationTypeDto) {
-        return ResponseEntity.ok(locationService.getLocationDetails(locationId, locationTypeDto.getType()));
+    public ResponseEntity<TypeLocationDto> viewLocationDetails(@PathVariable("locationId") Long locationId, @RequestParam String locationType) {
+        return ResponseEntity.ok(locationService.getLocationDetails(locationId, LocationType.fromValue(StringUtils.capitalize(locationType))));
     }
 
     /**

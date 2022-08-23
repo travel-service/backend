@@ -29,7 +29,7 @@ public class LodgeDto extends TypeLocationDto {
     private String checkOutTime;
     private boolean cooking;
     private boolean parking;
-    private Long numOfRooms;
+    private Integer numOfRooms;
     private String reservationUrl;
     private String subFacility;
 
