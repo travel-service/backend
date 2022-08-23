@@ -59,8 +59,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     /* Swagger UI */
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    //    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    //    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 //querydsl 추가 시작
@@ -79,6 +79,49 @@ compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 //querydsl 추가 끝
+
+// 리액트 프로젝트 install, build 시작
+def frontendDir = "$projectDir/src/main/reactApp"
+
+sourceSets {
+    main {
+        resources { srcDirs = ["$projectDir/src/main/resources"]
+        }
+    }
+}
+
+processResources { dependsOn "copyReactBuildFiles" }
+
+task installReact(type: Exec) {
+    workingDir "$frontendDir"
+    inputs.dir "$frontendDir"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "yarn.cmd", "audit", "fix"
+        commandLine 'yarn.cmd' }
+    else {
+        commandLine "npm", "audit", "fix" commandLine 'npm', 'install'
+    }
+}
+
+task buildReact(type: Exec) {
+    dependsOn "installReact"
+    workingDir "$frontendDir"
+    inputs.dir "$frontendDir"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "yarn.cmd", "run", "build"
+    } else {
+        commandLine "npm", "run-script", "build"
+    }
+}
+
+task copyReactBuildFiles(type: Copy) {
+    dependsOn "buildReact"
+    from "$frontendDir/build"
+    into "$projectDir/src/main/resources/static"
+}
+// 리액트 프로젝트 install, build 끝
 
 tasks.named('test') {
     useJUnitPlatform()

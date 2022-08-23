@@ -17,7 +17,7 @@ import com.trablock.web.repository.member.MemberRepository;
 import com.trablock.web.repository.member.TokenRepository;
 import com.trablock.web.service.file.FileService;
 import com.trablock.web.service.mail.MailServiceImpl;
-import io.swagger.models.Response;
+//import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;

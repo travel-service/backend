@@ -1,0 +1,3 @@
+[submodule "src/main/reactApp"]
+	path = src/main/reactApp
+	url = https://github.com/travel-service/frontend.git
