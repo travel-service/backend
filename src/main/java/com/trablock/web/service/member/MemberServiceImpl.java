@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService{
         if (!CanSignUp) {
             EmailAuth emailAuth = emailAuthRepository.save(EmailAuth.builder().email(memberSaveDto.getEmail()).build());
             memberRepository.save(Member.builder().memberSaveDto(memberSaveDto).pwd(pwd).build());
-            
+
             MailDto mailDto = mailService.emailAuthMail(emailAuth.getEmail(), emailAuth.getUuid());
             mailService.sendMail(mailDto); // 메일 전송 (구글 메일 서버)
 
