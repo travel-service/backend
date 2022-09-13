@@ -1,6 +1,7 @@
 package com.trablock.web.dto.location;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.dto.location.type.TypeLocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,8 @@ public class BlockLocationDto {
     private String address2;
     private String image;
     private LocationType type;
+    private String useTime;
+    private String restDate;
+    private String openTime;
+
 }

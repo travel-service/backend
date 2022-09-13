@@ -17,10 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,7 +77,8 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Map<String, List<BlockLocationDto>> getBlockLocationListFromLocationList(List<Location> locationList) {
-        List<BlockLocationDto> blockLocationDtoList = toBlockLocationDtoList(locationList);
+        List<Long> locationIds = locationList.stream().map(Location::getId).collect(Collectors.toList());
+        List<BlockLocationDto> blockLocationDtoList = getBlockLocationsFromTypeLocations(getTypeLocationDtoListByLocationIds(locationIds));
         return classifyBlockLocationListWithType(blockLocationDtoList);
     }
 
@@ -101,8 +99,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Map<String, List<BlockLocationDto>> classifyBlockLocationListWithType(List<BlockLocationDto> blockLocationDtoListList) {
-        return blockLocationDtoListList.stream().collect(Collectors
+    public Map<String, List<BlockLocationDto>> classifyBlockLocationListWithType(List<BlockLocationDto> blockLocationDtoList) {
+        return blockLocationDtoList.stream().collect(Collectors
                 .groupingBy(blockLocationDto -> blockLocationDto.getType().getType()));
     }
 
@@ -163,9 +161,15 @@ public class LocationServiceImpl implements LocationService {
         throw new NoSuchElementException("해당 타입의 관광지가 없어요!");
     }
 
+    public BlockLocationDto detailsToBlockLocation(TypeLocationDto typeLocationDto) {
+        return typeLocationDto.toBlockLocationDto();
+    }
+
     @Override
     public MarkAndBlockLocationListDto getMarkAndBlockLocationsFromLocationIds(List<Long> locationIds) {
         List<Location> locations = getLocationListWithLocationIds(locationIds);
+
+
         return new MarkAndBlockLocationListDto(getMarkLocationListFromLocationList(locations),
                 getBlockLocationListFromLocationList(locations));
     }
@@ -214,6 +218,24 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public boolean verifyLocationOwnership(Long memberId, MemberLocation memberLocation) {
         return memberLocation.getMemberId().equals(memberId);
+    }
+
+    @Override
+    public List<TypeLocationDto> getTypeLocationDtoListByLocationIds(List<Long> locationIds) {
+        List<TypeLocationDto> typeLocationDtoList = new ArrayList<>();
+        typeLocationDtoList.addAll(locationRepository.findAttractionsByLocationIds(locationIds));
+        typeLocationDtoList.addAll(locationRepository.findCulturesByLocationIds(locationIds));
+        typeLocationDtoList.addAll(locationRepository.findFestivalsByLocationIds(locationIds));
+        typeLocationDtoList.addAll(locationRepository.findLeportsByLocationIds(locationIds));
+        typeLocationDtoList.addAll(locationRepository.findLodgesByLocationIds(locationIds));
+        typeLocationDtoList.addAll(locationRepository.findRestaurantsByLocationIds(locationIds));
+
+        return typeLocationDtoList;
+    }
+
+    @Override
+    public List<BlockLocationDto> getBlockLocationsFromTypeLocations(List<TypeLocationDto> typeLocationDtoList) {
+        return typeLocationDtoList.stream().map(TypeLocationDto::toBlockLocationDto).collect(Collectors.toList());
     }
 
 }

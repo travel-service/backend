@@ -304,4 +304,184 @@ public class LocationRepositoryCustomImpl implements LocationRepositoryCustom {
         em.remove(restaurant);
     }
 
+    @Override
+    public List<AttractionDto> findAttractionsByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QAttraction attraction = QAttraction.attraction;
+        QInformation information = QInformation.information;
+
+        return queryFactory.select(Projections.constructor(AttractionDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        attraction.parking,
+                        attraction.restDate,
+                        attraction.useTime
+                )).from(location)
+                .leftJoin(attraction).on(location.id.eq(attraction.locationId)).fetchJoin()
+                .leftJoin(information).on(location.id.eq(information.locationId)).fetchJoin()
+                .fetch();
+    }
+
+    @Override
+    public List<CultureDto> findCulturesByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QInformation information = new QInformation("information");
+
+        QCulture culture = new QCulture("culture");
+
+        return queryFactory.select(Projections.constructor(CultureDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        culture.parking,
+                        culture.restDate,
+                        culture.fee,
+                        culture.useTime,
+                        culture.spendTime
+                )).from(location)
+                .leftJoin(culture).on(location.id.eq(culture.locationId))
+                .leftJoin(information).on(location.id.eq(information.locationId))
+                .where(location.id.in(locationIds))
+                .fetch();
+    }
+
+    @Override
+    public List<FestivalDto> findFestivalsByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QInformation information = new QInformation("information");
+
+        QFestival festival = new QFestival("festival");
+
+        return queryFactory.select(Projections.constructor(FestivalDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        festival.homepage,
+                        festival.place,
+                        festival.placeInfo,
+                        festival.startDate,
+                        festival.endDate,
+                        festival.playTime,
+                        festival.program,
+                        festival.fee
+                )).from(location)
+                .leftJoin(festival).on(location.id.eq(festival.locationId))
+                .leftJoin(information).on(location.id.eq(information.locationId))
+                .where(location.id.in(locationIds))
+                .fetch();
+    }
+
+    @Override
+    public List<LeportsDto> findLeportsByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QInformation information = new QInformation("information");
+        QLeports leports = new QLeports("leports");
+
+        return queryFactory.select(Projections.constructor(LeportsDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        leports.openPeriod,
+                        leports.parking,
+                        leports.reservation,
+                        leports.restDate,
+                        leports.fee,
+                        leports.useTime
+                )).from(location)
+                .leftJoin(leports).on(location.id.eq(leports.locationId))
+                .leftJoin(information).on(location.id.eq(information.locationId))
+                .where(location.id.in(locationIds))
+                .fetch();
+    }
+
+    @Override
+    public List<LodgeDto> findLodgesByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QInformation information = new QInformation("information");
+        QLodge lodge = new QLodge("lodge");
+
+        return queryFactory.select(Projections.constructor(LodgeDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        lodge.checkInTime.as("checkInTime"),
+                        lodge.checkOutTime.as("checkOutTime"),
+                        lodge.cooking.as("cooking"),
+                        lodge.parking.as("parking"),
+                        lodge.numOfRooms.as("numOfRooms"),
+                        lodge.reservationUrl.as("reservationUrl"),
+                        lodge.subFacility
+                )).from(location)
+                .leftJoin(lodge).on(location.id.eq(lodge.locationId))
+                .leftJoin(information).on(location.id.eq(information.locationId))
+                .where(location.id.in(locationIds))
+                .fetch();
+    }
+
+    @Override
+    public List<RestaurantDto> findRestaurantsByLocationIds(List<Long> locationIds) {
+        QLocation location = QLocation.location;
+        QInformation information = new QInformation("information");
+        QRestaurant restaurant = new QRestaurant("restaurant");
+
+        return queryFactory.select(Projections.constructor(RestaurantDto.class,
+                        location.id.as("locationId"),
+                        location.name,
+                        location.areaCode,
+                        location.address1,
+                        location.address2,
+                        location.image,
+                        information.tel,
+                        information.summary,
+                        information.report,
+                        location.type,
+                        restaurant.popularMenu,
+                        restaurant.openTime,
+                        restaurant.packing,
+                        restaurant.parking,
+                        restaurant.restDate,
+                        restaurant.menu
+                )).from(location)
+                .leftJoin(restaurant).on(location.id.eq(restaurant.locationId))
+                .leftJoin(information).on(location.id.eq(information.locationId))
+                .where(location.id.in(locationIds))
+                .fetch();
+    }
+
 }

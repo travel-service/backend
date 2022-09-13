@@ -50,4 +50,16 @@ public interface LocationRepositoryCustom {
 
     void deleteRestaurant(Restaurant restaurant);
 
+    List<AttractionDto> findAttractionsByLocationIds(List<Long> locationIds);
+
+    List<CultureDto> findCulturesByLocationIds(List<Long> locationIds);
+
+    List<FestivalDto> findFestivalsByLocationIds(List<Long> locationIds);
+
+    List<LeportsDto> findLeportsByLocationIds(List<Long> locationIds);
+
+    List<LodgeDto> findLodgesByLocationIds(List<Long> locationIds);
+
+    List<RestaurantDto> findRestaurantsByLocationIds(List<Long> locationIds);
+
 }

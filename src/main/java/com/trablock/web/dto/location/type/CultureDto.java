@@ -1,6 +1,7 @@
 package com.trablock.web.dto.location.type;
 
 import com.trablock.web.domain.LocationType;
+import com.trablock.web.dto.location.BlockLocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class CultureDto extends TypeLocationDto {
+public class CultureDto implements TypeLocationDto {
 
     private Long locationId;
     private String name;
@@ -31,4 +32,17 @@ public class CultureDto extends TypeLocationDto {
     private String useTime;
     private String spendTime;
 
+    @Override
+    public BlockLocationDto toBlockLocationDto() {
+        return BlockLocationDto.builder()
+                .locationId(locationId)
+                .name(name)
+                .address1(address1)
+                .address2(address2)
+                .image(image)
+                .type(type)
+                .useTime(useTime)
+                .restDate(restDate)
+                .build();
+    }
 }

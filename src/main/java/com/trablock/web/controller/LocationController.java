@@ -63,7 +63,6 @@ public class LocationController {
     public ResponseEntity<Long> memberLocationAdd(@RequestBody LocationWrapperDto wrapperDto, HttpServletRequest request) {
         Long memberId = jwtTokenService.tokenToUserId(request);
         wrapperDto.getMemberLocation().setMemberId(memberId);
-        System.out.println("memberId = " + memberId);
         return new ResponseEntity<Long>(locationService.createLocationByMember(wrapperDto), HttpStatus.CREATED);
     }
 

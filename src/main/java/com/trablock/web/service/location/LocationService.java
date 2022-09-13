@@ -58,4 +58,9 @@ public interface LocationService {
     boolean verifyLocationOwnership(Long memberId, MemberLocation memberLocation);
 
     MarkAndBlockLocationListDto getMemberLocationList(Long memberId);
+
+    public List<TypeLocationDto> getTypeLocationDtoListByLocationIds(List<Long> locationIds);
+
+    public List<BlockLocationDto> getBlockLocationsFromTypeLocations(List<TypeLocationDto> typeLocationDtoList);
+
 }
